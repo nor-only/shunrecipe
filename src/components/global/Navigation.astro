@@ -1,27 +1,79 @@
 ---
+import { regions } from '@data/regions';
+
 const links = [
-  { href: '/', label: 'ホーム', icon: 'home' },
-  { href: '/seasonal/', label: '四季の図鑑', icon: 'eco' },
-  { href: '/recipes/', label: 'レシピ', icon: 'menu_book' },
+  { href: '/', label: 'ホーム', en: 'Home' },
+  { href: '/seasonal/', label: '四季の図鑑', en: 'Seasonal' },
+  { href: '/recipes/', label: 'レシピ', en: 'Recipes' },
+  { href: '/favorites/', label: 'お気に入り', en: 'Favorites' },
 ];
 ---
 
 <div class="nav-overlay">
-  <div class="flex flex-col items-center justify-center h-full gap-8">
-    <a href="/" class="flex items-center gap-3 mb-12">
-      <span class="material-symbols-outlined text-4xl text-accent" style="font-variation-settings: 'wght' 400;">psychiatry</span>
-      <span class="font-outfit text-2xl font-extrabold tracking-[0.15em] text-white">SHUNRECIPE</span>
-    </a>
-
-    {links.map((link, i) => (
-      <a
-        href={link.href}
-        class="nav-link flex items-center gap-4"
-        style={`transition-delay: ${(i + 1) * 0.08}s`}
-      >
-        <span class="material-symbols-outlined text-accent">{link.icon}</span>
-        {link.label}
+  <div class="container-site h-full flex flex-col justify-between py-24">
+    <div>
+      <a href="/" class="brand-mark mb-16">
+        <span class="brand-mark-icon">SR</span>
+        <span class="brand-mark-text">SHUNRECIPE</span>
       </a>
-    ))}
+
+      <nav class="flex flex-col gap-8 mt-12">
+        {links.map((link, i) => (
+          <a
+            href={link.href}
+            class="nav-link group flex items-baseline gap-6"
+            style={`transition-delay: ${(i + 1) * 0.08}s`}
+          >
+            <span class="font-outfit text-xs tracking-[0.3em] text-white/30 w-8">
+              0{i + 1}
+            </span>
+            <span class="font-heading">{link.label}</span>
+            <span class="font-outfit text-xs tracking-[0.2em] text-white/30 ml-2">
+              {link.en}
+            </span>
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <!-- Mobile Region Picker -->
+    <div class="border-t border-white/10 pt-8 mt-12 md:hidden">
+      <p class="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white/40 mb-3">
+        Your region
+      </p>
+      <div class="flex flex-wrap gap-2" id="mobileRegionList">
+        <button type="button" class="region-pill" data-mobile-region="all">全国</button>
+        {regions.map(r => (
+          <button type="button" class="region-pill" data-mobile-region={r.id}>
+            {r.name}
+          </button>
+        ))}
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+  function initMobileRegion() {
+    const list = document.getElementById('mobileRegionList');
+    if (!list) return;
+    const buttons = list.querySelectorAll<HTMLElement>('[data-mobile-region]');
+    const store = (window as any).__shunrecipe;
+    const current = store?.getRegion?.() || 'all';
+    buttons.forEach((b) => {
+      b.classList.toggle('is-active', b.dataset.mobileRegion === current);
+      b.addEventListener('click', () => {
+        const value = b.dataset.mobileRegion || 'all';
+        store?.setRegion?.(value);
+        buttons.forEach((x) =>
+          x.classList.toggle('is-active', x.dataset.mobileRegion === value),
+        );
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileRegion);
+  } else {
+    initMobileRegion();
+  }
+</script>

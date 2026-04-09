@@ -4,23 +4,30 @@ interface Props {
   subtitle?: string;
   variant?: 'emerald' | 'dark';
   enTitle?: string;
+  meta?: string;
 }
 
-const { title, subtitle, variant = 'emerald', enTitle } = Astro.props;
+const { title, subtitle, variant = 'dark', enTitle, meta } = Astro.props;
 ---
 
 <section class:list={['page-hero', `page-hero-${variant}`]}>
   <div class="container-site relative z-10">
     {enTitle && (
-      <p class="font-outfit text-sm font-semibold tracking-[0.3em] uppercase text-white/50 mb-4 reveal">
-        {enTitle}
-      </p>
+      <div class="flex items-center gap-3 mb-6 reveal">
+        <span class="block w-10 h-px bg-white/40"></span>
+        <p class="font-outfit text-[0.6875rem] font-semibold tracking-[0.28em] uppercase text-white/60">
+          {enTitle}
+        </p>
+      </div>
     )}
-    <h1 class="font-heading text-[var(--font-size-display)] text-white mb-4 reveal">
+    <h1 class="font-heading text-[var(--font-size-display)] text-white mb-4 reveal leading-[1.25]">
       {title}
     </h1>
     {subtitle && (
-      <p class="text-lg text-white/70 max-w-xl reveal">{subtitle}</p>
+      <p class="text-base md:text-lg text-white/60 max-w-xl reveal leading-relaxed">{subtitle}</p>
+    )}
+    {meta && (
+      <p class="mt-6 text-[0.75rem] tracking-[0.18em] uppercase text-white/40 font-outfit reveal">{meta}</p>
     )}
   </div>
 </section>

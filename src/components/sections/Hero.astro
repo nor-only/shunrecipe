@@ -1,54 +1,110 @@
 ---
+import { getCurrentSeason, seasonNames, getVegetablesBySeason } from '@data/vegetables';
+
+const season = getCurrentSeason();
+const info = seasonNames[season];
+const seasonalVegs = getVegetablesBySeason(season).slice(0, 4);
+const today = new Date();
+const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padStart(2, '0')} / ${String(today.getDate()).padStart(2, '0')}`;
 ---
 
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+<section class="relative min-h-screen flex items-end overflow-hidden bg-primary">
   <!-- Background -->
   <div class="absolute inset-0 z-0">
     <img
       src="/images/pumpkin_soup.png"
       alt=""
-      class="w-full h-full object-cover scale-105"
-      style="animation: heroZoom 25s infinite alternate linear;"
+      class="w-full h-full object-cover scale-[1.04]"
+      style="object-position: center 50%; animation: heroZoom 28s infinite alternate linear;"
     />
-    <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/30"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(15,20,25,0.55) 0%, rgba(15,20,25,0.35) 40%, rgba(15,20,25,0.92) 100%);"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(90deg, rgba(15,20,25,0.55) 0%, transparent 50%);"></div>
+  </div>
+
+  <!-- Subtle Grid -->
+  <div class="absolute inset-0 z-0 pointer-events-none opacity-30"
+       style="background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 80px 80px;"></div>
+
+  <!-- Top date strip -->
+  <div class="absolute top-0 left-0 right-0 z-10 pt-28">
+    <div class="container-site flex items-center justify-between text-white/50 text-[0.6875rem] tracking-[0.2em] uppercase font-outfit">
+      <span>Edition · {dateLabel}</span>
+      <span class="hidden md:inline">No. 001 — A Seasonal Recipe Journal</span>
+    </div>
   </div>
 
   <!-- Content -->
-  <div class="relative z-10 text-center text-white px-6 max-w-3xl mx-auto">
-    <p class="font-outfit text-xs font-semibold tracking-[0.4em] uppercase text-accent mb-6 reveal">
-      Premium Recipe Experience
-    </p>
-    <h1 class="font-heading-hero text-[var(--font-size-hero)] mb-6 reveal">
-      SHUNRECIPE
-    </h1>
-    <p class="text-xl font-semibold text-white/70 mb-4 tracking-wide reveal">
-      テクノロジーが紡ぐ、至高のひと皿。
-    </p>
-    <p class="text-base text-white/50 mb-12 leading-relaxed max-w-lg mx-auto reveal">
-      日本の美しい四季が育んだ旬の野菜と、<br class="hidden md:block" />
-      プレミアムなレシピで毎日の食卓を特別に。
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
-      <a href="/recipes/" class="btn-primary">
-        <span>レシピを探す</span>
-        <span class="material-symbols-outlined text-lg">arrow_forward</span>
-      </a>
-      <a href="/seasonal/" class="btn-outline border-white/20 text-white hover:border-accent hover:text-accent">
-        四季の図鑑
-      </a>
+  <div class="relative z-10 w-full pb-24 md:pb-32">
+    <div class="container-site">
+      <div class="grid lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8">
+          <div class="flex items-center gap-3 mb-6 reveal">
+            <span class="block w-10 h-px bg-accent-glow"></span>
+            <p class="font-outfit text-[0.6875rem] font-semibold tracking-[0.28em] uppercase text-accent-glow">
+              A Seasonal Recipe Journal
+            </p>
+          </div>
+
+          <h1 class="font-heading text-white text-[clamp(2.5rem,7vw,5.5rem)] leading-[1.1] tracking-tight mb-8 reveal">
+            旬を知る、<br />
+            食を編み直す。
+          </h1>
+
+          <p class="text-base md:text-lg text-white/65 max-w-lg leading-relaxed mb-10 reveal">
+            日本の四季と地域が育む旬の野菜と、その魅力を最大限に引き出すレシピ。<br class="hidden md:block" />
+            毎日の食卓を、ひとつ上の体験へ。
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3 reveal">
+            <a href="/recipes/" class="btn-primary">
+              <span>レシピを見る</span>
+              <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+            </a>
+            <a href="/seasonal/" class="btn-outline border-white/30 text-white hover:border-white hover:text-white">
+              四季の図鑑
+            </a>
+          </div>
+        </div>
+
+        <!-- Right info card -->
+        <div class="lg:col-span-4 reveal">
+          <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-[var(--radius-lg)] p-7">
+            <p class="text-[0.6875rem] font-outfit tracking-[0.2em] uppercase text-white/40 mb-3">In Season Now</p>
+            <p class="font-heading text-2xl text-white mb-1">{info.jp}の旬</p>
+            <p class="text-[0.75rem] text-white/50 mb-6 font-outfit tracking-wide">{info.en} · {info.months}</p>
+
+            <div class="space-y-2 mb-6">
+              {seasonalVegs.map(v => (
+                <a href={`/vegetables/${v.id}/`} class="flex items-center justify-between text-[0.875rem] text-white/80 hover:text-white py-1.5 border-b border-white/10 last:border-0 transition-colors">
+                  <span class="flex items-center gap-2">
+                    <span class="text-base">{v.emoji}</span>
+                    <span>{v.name}</span>
+                  </span>
+                  <span class="material-symbols-outlined text-white/30" style="font-size:16px">arrow_forward</span>
+                </a>
+              ))}
+            </div>
+
+            <a href="/seasonal/" class="text-[0.75rem] tracking-wider uppercase font-outfit text-accent-glow hover:text-white transition-colors flex items-center gap-2">
+              すべての旬野菜を見る
+              <span class="material-symbols-outlined" style="font-size:14px">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 scroll-indicator">
-    <span class="text-xs font-outfit tracking-widest">SCROLL</span>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 scroll-indicator">
+    <span class="text-[0.625rem] font-outfit tracking-[0.3em]">SCROLL</span>
     <span class="scroll-indicator-line"></span>
   </div>
 </section>
 
 <style>
   @keyframes heroZoom {
-    from { transform: scale(1); }
+    from { transform: scale(1.02); }
     to { transform: scale(1.12); }
   }
 </style>
