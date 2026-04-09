@@ -1,0 +1,54 @@
+---
+---
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background -->
+  <div class="absolute inset-0 z-0">
+    <img
+      src="/images/pumpkin_soup.png"
+      alt=""
+      class="w-full h-full object-cover scale-105"
+      style="animation: heroZoom 25s infinite alternate linear;"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/30"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center text-white px-6 max-w-3xl mx-auto">
+    <p class="font-outfit text-xs font-semibold tracking-[0.4em] uppercase text-accent mb-6 reveal">
+      Premium Recipe Experience
+    </p>
+    <h1 class="font-heading-hero text-[var(--font-size-hero)] mb-6 reveal">
+      SHUNRECIPE
+    </h1>
+    <p class="text-xl font-semibold text-white/70 mb-4 tracking-wide reveal">
+      テクノロジーが紡ぐ、至高のひと皿。
+    </p>
+    <p class="text-base text-white/50 mb-12 leading-relaxed max-w-lg mx-auto reveal">
+      日本の美しい四季が育んだ旬の野菜と、<br class="hidden md:block" />
+      プレミアムなレシピで毎日の食卓を特別に。
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
+      <a href="/recipes/" class="btn-primary">
+        <span>レシピを探す</span>
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </a>
+      <a href="/seasonal/" class="btn-outline border-white/20 text-white hover:border-accent hover:text-accent">
+        四季の図鑑
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 scroll-indicator">
+    <span class="text-xs font-outfit tracking-widest">SCROLL</span>
+    <span class="scroll-indicator-line"></span>
+  </div>
+</section>
+
+<style>
+  @keyframes heroZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.12); }
+  }
+</style>

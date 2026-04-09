@@ -1,0 +1,33 @@
+---
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { recipes } from '@data/recipes';
+import { getCurrentSeason } from '@data/vegetables';
+
+const season = getCurrentSeason();
+const seasonalRecipes = recipes.filter(r => r.season === season).slice(0, 3);
+const featured = seasonalRecipes.length >= 3 ? seasonalRecipes : recipes.slice(0, 3);
+---
+
+<section class="section-padding bg-bg-muted">
+  <div class="container-site">
+    <SectionHeading
+      enTitle="Featured Recipes"
+      title="おすすめレシピ"
+      subtitle="季節の食材を活かした、選りすぐりのプレミアムレシピ。"
+    />
+
+    <div class="grid-recipes stagger-children">
+      {featured.map(r => (
+        <RecipeCard recipe={r} />
+      ))}
+    </div>
+
+    <div class="mt-12 text-center reveal">
+      <a href="/recipes/" class="btn-primary">
+        <span>すべてのレシピを見る</span>
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/ui/PageHero.astro';
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import { recipes } from '@data/recipes';
+import { seasonNames } from '@data/vegetables';
+---
+
+<BaseLayout title="プレミアムレシピ | SHUNRECIPE" darkHero={true}>
+  <PageHero
+    title="プレミアムレシピ"
+    subtitle="選び抜かれた至高のレシピを、季節ごとにご用意しました。"
+    enTitle="Premium Recipes"
+    variant="emerald"
+  />
+
+  <section class="section-padding">
+    <div class="container-site">
+      <!-- Filters -->
+      <div class="pill-tabs mb-12" id="recipeFilters">
+        <button class="pill-tab is-active" data-filter="all">すべて</button>
+        <button class="pill-tab" data-filter="spring">春</button>
+        <button class="pill-tab" data-filter="summer">夏</button>
+        <button class="pill-tab" data-filter="autumn">秋</button>
+        <button class="pill-tab" data-filter="winter">冬</button>
+        <button class="pill-tab" data-filter="easy">かんたん時短</button>
+      </div>
+
+      <!-- Recipe count -->
+      <p class="text-sm text-text-muted mb-8" id="recipeCount">
+        全 {recipes.length} レシピ
+      </p>
+
+      <!-- All recipes rendered, hidden/shown via JS -->
+      <div class="grid-recipes stagger-children" id="recipesGrid">
+        {recipes.map(r => (
+          <div
+            class="recipe-item"
+            data-season={r.season}
+            data-difficulty={r.difficulty}
+          >
+            <RecipeCard recipe={r} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const filters = document.querySelectorAll('#recipeFilters .pill-tab');
+    const items = document.querySelectorAll('.recipe-item');
+    const countEl = document.getElementById('recipeCount');
+
+    function applyFilter(filter: string) {
+      filters.forEach(f => {
+        f.classList.toggle('is-active', f.getAttribute('data-filter') === filter);
+      });
+
+      let visible = 0;
+      items.forEach(item => {
+        const season = item.getAttribute('data-season');
+        const difficulty = item.getAttribute('data-difficulty');
+        let show = false;
+
+        if (filter === 'all') show = true;
+        else if (filter === 'easy') show = difficulty === 'かんたん時短';
+        else show = season === filter;
+
+        (item as HTMLElement).style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      if (countEl) countEl.textContent = `${visible} レシピ`;
+    }
+
+    filters.forEach(f => {
+      f.addEventListener('click', () => {
+        applyFilter(f.getAttribute('data-filter') || 'all');
+      });
+    });
+  </script>
+</BaseLayout>

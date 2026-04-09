@@ -1,0 +1,56 @@
+---
+interface Props {
+  darkHero?: boolean;
+}
+const { darkHero = false } = Astro.props;
+---
+
+<header class:list={['header', { 'is-dark': darkHero }]}>
+  <div class="container-site">
+    <div class="flex items-center justify-between py-5">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="material-symbols-outlined text-3xl text-accent" style="font-variation-settings: 'wght' 400;">psychiatry</span>
+        <span class:list={[
+          'font-outfit text-xl font-extrabold tracking-[0.15em]',
+          darkHero ? 'text-white' : 'text-primary'
+        ]}>SHUNRECIPE</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-10">
+        {[
+          { href: '/', label: 'ホーム' },
+          { href: '/seasonal/', label: '四季の図鑑' },
+          { href: '/recipes/', label: 'レシピ' },
+        ].map(link => (
+          <a
+            href={link.href}
+            class:list={[
+              'text-sm font-semibold tracking-wide transition-colors duration-300',
+              darkHero
+                ? 'text-white/80 hover:text-white'
+                : 'text-text-muted hover:text-text'
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button
+        data-nav-toggle
+        aria-expanded="false"
+        aria-label="メニューを開く"
+        class:list={[
+          'md:hidden flex flex-col gap-1.5 w-8 h-8 items-center justify-center',
+          darkHero ? 'text-white' : 'text-primary'
+        ]}
+      >
+        <span class="block w-6 h-0.5 bg-current transition-all"></span>
+        <span class="block w-4 h-0.5 bg-current transition-all"></span>
+      </button>
+    </div>
+  </div>
+</header>

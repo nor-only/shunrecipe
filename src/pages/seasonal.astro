@@ -1,0 +1,90 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/ui/PageHero.astro';
+import VegCard from '@components/ui/VegCard.astro';
+import { vegetables, seasonNames, getCurrentSeason } from '@data/vegetables';
+import type { Season } from '@data/vegetables';
+
+const seasons = Object.keys(seasonNames) as Season[];
+---
+
+<BaseLayout title="四季の図鑑 | SHUNRECIPE" darkHero={true}>
+  <PageHero
+    title="四季の図鑑"
+    subtitle="日本ならではの美しい季節の移ろいと、旬の野菜たち。"
+    enTitle="Seasonal Encyclopedia"
+    variant="dark"
+  />
+
+  <section class="section-padding">
+    <div class="container-site">
+      <!-- Season Filter Tabs -->
+      <div class="pill-tabs mb-12" id="seasonTabs">
+        <button class="pill-tab" data-season="all">すべて</button>
+        {seasons.map(s => (
+          <button class="pill-tab" data-season={s}>
+            {seasonNames[s].jp}
+          </button>
+        ))}
+      </div>
+
+      <!-- Season Sections -->
+      {seasons.map(s => {
+        const info = seasonNames[s];
+        const vegs = vegetables.filter(v => v.season === s);
+        return (
+          <div class="mb-20 season-group" data-season-group={s}>
+            <div class="flex items-center gap-4 mb-8 reveal">
+              <span class="text-4xl">
+                {s === 'spring' ? '\u{1F338}' : s === 'summer' ? '\u{2600}\u{FE0F}' : s === 'autumn' ? '\u{1F341}' : '\u{2744}\u{FE0F}'}
+              </span>
+              <div>
+                <h2 class="font-heading text-[var(--font-size-h2)]">
+                  {info.jp}の野菜
+                </h2>
+                <p class="text-sm text-text-muted font-outfit">{info.en} — {info.months}</p>
+              </div>
+            </div>
+            <div class="grid-vegetables stagger-children">
+              {vegs.map(v => (
+                <VegCard vegetable={v} showMonths={true} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <script>
+    const tabs = document.querySelectorAll('#seasonTabs .pill-tab');
+    const groups = document.querySelectorAll('.season-group');
+
+    function setActive(season: string) {
+      tabs.forEach(t => {
+        t.classList.toggle('is-active', t.getAttribute('data-season') === season);
+      });
+      groups.forEach(g => {
+        const groupSeason = g.getAttribute('data-season-group');
+        if (season === 'all') {
+          (g as HTMLElement).style.display = '';
+        } else {
+          (g as HTMLElement).style.display = groupSeason === season ? '' : 'none';
+        }
+      });
+    }
+
+    // Check URL params
+    const params = new URLSearchParams(window.location.search);
+    const initialSeason = params.get('season') || 'all';
+    setActive(initialSeason);
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const season = tab.getAttribute('data-season') || 'all';
+        setActive(season);
+        history.replaceState(null, '', season === 'all' ? '/seasonal/' : `/seasonal/?season=${season}`);
+      });
+    });
+  </script>
+</BaseLayout>

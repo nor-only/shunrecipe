@@ -1,0 +1,32 @@
+---
+import VegCard from '@components/ui/VegCard.astro';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { getCurrentSeason, getVegetablesBySeason, seasonNames } from '@data/vegetables';
+
+const season = getCurrentSeason();
+const vegs = getVegetablesBySeason(season);
+const info = seasonNames[season];
+---
+
+<section class="section-padding">
+  <div class="container-site">
+    <SectionHeading
+      enTitle="Seasonal Vegetables"
+      title={`いま旬の「${info.jp}野菜」`}
+      subtitle={`${info.months} — 最も栄養価が高く、美味しい季節の恵みをお届け。`}
+    />
+
+    <div class="grid-vegetables stagger-children">
+      {vegs.slice(0, 5).map(v => (
+        <VegCard vegetable={v} />
+      ))}
+    </div>
+
+    <div class="mt-12 text-center reveal">
+      <a href="/seasonal/" class="btn-outline">
+        すべての旬野菜を見る
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+{
+  "name": "shunrecipe",
+  "version": "1.0.0",
+  "description": "SHUNRECIPE - 旬野菜レシピエクスペリエンス",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.4",
+    "gsap": "^3.14.2",
+    "lenis": "^1.3.21",
+    "tailwindcss": "^4.2.2"
+  },
+  "overrides": {
+    "vite": "^7"
+  }
+}

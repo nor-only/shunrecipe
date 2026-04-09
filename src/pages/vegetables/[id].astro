@@ -1,0 +1,95 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { vegetables, seasonNames, getVegetableById } from '@data/vegetables';
+import { getRecipesForVegetable } from '@data/recipes';
+
+export function getStaticPaths() {
+  return vegetables.map(v => ({
+    params: { id: v.id },
+  }));
+}
+
+const { id } = Astro.params;
+const veg = getVegetableById(id!);
+
+if (!veg) {
+  return Astro.redirect('/seasonal/');
+}
+
+const seasonInfo = seasonNames[veg.season];
+const vegRecipes = getRecipesForVegetable(veg.id);
+
+const infoSections = [
+  { icon: 'nutrition', title: '栄養情報', content: veg.nutrition },
+  { icon: 'search', title: '選び方のコツ', content: veg.tips },
+  { icon: 'kitchen', title: '保存方法', content: veg.storage },
+  { icon: 'lightbulb', title: '豆知識', content: veg.facts },
+];
+---
+
+<BaseLayout title={`${veg.name} | SHUNRECIPE`} darkHero={true}>
+  <!-- Hero -->
+  <section class:list={['page-hero', `page-hero-dark`]}>
+    <div class="container-site relative z-10">
+      <a
+        href="/seasonal/"
+        class="inline-flex items-center gap-2 text-sm font-semibold text-white/60 hover:text-white transition-colors mb-8"
+      >
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        四季の図鑑に戻る
+      </a>
+
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <span class="text-8xl md:text-[10rem] leading-none reveal" style="filter: drop-shadow(0 12px 32px rgba(0,0,0,0.3));">
+          {veg.emoji}
+        </span>
+        <div>
+          <span class:list={['season-badge mb-4 inline-block', `season-badge-${veg.season}`]}>
+            {seasonInfo.jp}の野菜 — {veg.months.map(m => `${m}月`).join('・')}
+          </span>
+          <h1 class="font-heading text-[var(--font-size-display)] text-white mb-2 reveal">
+            {veg.name}
+          </h1>
+          <p class="font-outfit text-lg text-white/50 tracking-wide reveal">
+            {veg.nameEn}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Sections -->
+  <section class="section-padding">
+    <div class="container-site max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-6 mb-20 stagger-children">
+        {infoSections.map(section => (
+          <div class="detail-section">
+            <h3 class="detail-section-title">
+              <span class="material-symbols-outlined text-accent">{section.icon}</span>
+              {section.title}
+            </h3>
+            <p class="text-text-muted leading-relaxed">{section.content}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Recipes using this vegetable */}
+      {vegRecipes.length > 0 && (
+        <div>
+          <SectionHeading
+            enTitle="Recipes"
+            title={`${veg.name}を使ったレシピ`}
+            subtitle="旬の美味しさを最大限に引き出すレシピをご紹介。"
+          />
+          <div class="grid-recipes stagger-children">
+            {vegRecipes.map(r => (
+              <RecipeCard recipe={r} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
