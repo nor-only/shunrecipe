@@ -15,8 +15,9 @@ const label = showMonths
 ---
 
 <a href={`/vegetables/${vegetable.id}/`} class="veg-card block group">
-  <span class="veg-card-emoji">{vegetable.emoji}</span>
-  <span class="block font-bold text-lg mb-3 group-hover:text-accent transition-colors">
+  <span class="veg-card-mark">{vegetable.emoji}</span>
+  <span class="veg-card-name-en">{vegetable.nameEn}</span>
+  <span class="block font-heading text-[1.0625rem] mb-3 group-hover:text-accent transition-colors">
     {vegetable.name}
   </span>
   <span class:list={['season-badge', `season-badge-${vegetable.season}`]}>

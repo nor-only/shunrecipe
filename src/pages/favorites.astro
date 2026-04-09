@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/ui/PageHero.astro';
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import { recipes } from '@data/recipes';
+---
+
+<BaseLayout title="お気に入り | SHUNRECIPE" darkHero={true}>
+  <PageHero
+    title="お気に入りレシピ"
+    subtitle="あなたが気になったレシピをここに保存できます。気軽にコレクションしてください。"
+    enTitle="Favorites"
+    variant="dark"
+  />
+
+  <section class="section-padding">
+    <div class="container-site">
+      <p class="text-[0.8125rem] text-text-muted mb-8 font-mono-num" id="favCount">
+        — 件のお気に入り
+      </p>
+
+      <div class="grid-recipes stagger-children" id="favGrid">
+        {recipes.map(r => (
+          <div class="fav-item" data-id={r.id} style="display:none">
+            <RecipeCard recipe={r} />
+          </div>
+        ))}
+      </div>
+
+      <div class="empty-state text-center py-24 hidden" id="emptyState">
+        <span class="material-symbols-outlined text-5xl text-text-subtle mb-4 inline-block">favorite_border</span>
+        <p class="font-heading text-xl mb-3">まだお気に入りがありません</p>
+        <p class="text-[0.875rem] text-text-muted mb-8">気になるレシピのハートマークから追加してください。</p>
+        <a href="/recipes/" class="btn-primary">
+          <span>レシピを探す</span>
+          <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function render() {
+      const favs = new Set(((window as any).__shunrecipe?.getFavorites?.() || []) as string[]);
+      const items = document.querySelectorAll<HTMLElement>('.fav-item');
+      const countEl = document.getElementById('favCount');
+      const emptyEl = document.getElementById('emptyState');
+      let visible = 0;
+      items.forEach((item) => {
+        const id = item.dataset.id || '';
+        const show = favs.has(id);
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (countEl) countEl.textContent = `${visible} 件のお気に入り`;
+      if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0);
+    }
+
+    document.addEventListener('favorites:change', render);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', render);
+    } else {
+      render();
+    }
+  </script>
+</BaseLayout>

@@ -4,6 +4,7 @@ import RecipeCard from '@components/ui/RecipeCard.astro';
 import SectionHeading from '@components/ui/SectionHeading.astro';
 import { vegetables, seasonNames, getVegetableById } from '@data/vegetables';
 import { getRecipesForVegetable } from '@data/recipes';
+import { regions, getRegionById } from '@data/regions';
 
 export function getStaticPaths() {
   return vegetables.map(v => ({
@@ -22,39 +23,50 @@ const seasonInfo = seasonNames[veg.season];
 const vegRecipes = getRecipesForVegetable(veg.id);
 
 const infoSections = [
-  { icon: 'nutrition', title: '栄養情報', content: veg.nutrition },
-  { icon: 'search', title: '選び方のコツ', content: veg.tips },
-  { icon: 'kitchen', title: '保存方法', content: veg.storage },
-  { icon: 'lightbulb', title: '豆知識', content: veg.facts },
+  { icon: 'nutrition', title: 'Nutrition · 栄養情報', content: veg.nutrition },
+  { icon: 'search', title: 'Selection · 選び方のコツ', content: veg.tips },
+  { icon: 'kitchen', title: 'Storage · 保存方法', content: veg.storage },
+  { icon: 'auto_awesome', title: 'Trivia · 豆知識', content: veg.facts },
 ];
+
+const vegRegions = veg.regions
+  .map((r) => getRegionById(r))
+  .filter((r): r is NonNullable<typeof r> => Boolean(r));
 ---
 
 <BaseLayout title={`${veg.name} | SHUNRECIPE`} darkHero={true}>
   <!-- Hero -->
-  <section class:list={['page-hero', `page-hero-dark`]}>
+  <section class="page-hero page-hero-dark">
     <div class="container-site relative z-10">
       <a
         href="/seasonal/"
-        class="inline-flex items-center gap-2 text-sm font-semibold text-white/60 hover:text-white transition-colors mb-8"
+        class="inline-flex items-center gap-2 text-[0.75rem] font-semibold text-white/60 hover:text-white transition-colors mb-10 tracking-wider uppercase font-outfit"
       >
-        <span class="material-symbols-outlined text-lg">arrow_back</span>
-        四季の図鑑に戻る
+        <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span>
+        Back to encyclopedia
       </a>
 
-      <div class="flex flex-col md:flex-row items-center gap-8">
-        <span class="text-8xl md:text-[10rem] leading-none reveal" style="filter: drop-shadow(0 12px 32px rgba(0,0,0,0.3));">
-          {veg.emoji}
-        </span>
-        <div>
-          <span class:list={['season-badge mb-4 inline-block', `season-badge-${veg.season}`]}>
-            {seasonInfo.jp}の野菜 — {veg.months.map(m => `${m}月`).join('・')}
-          </span>
-          <h1 class="font-heading text-[var(--font-size-display)] text-white mb-2 reveal">
-            {veg.name}
-          </h1>
-          <p class="font-outfit text-lg text-white/50 tracking-wide reveal">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-2 reveal">
+          <div class="w-32 h-32 lg:w-full lg:aspect-square rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-7xl backdrop-blur-md">
+            {veg.emoji}
+          </div>
+        </div>
+        <div class="lg:col-span-10">
+          <div class="flex items-center gap-3 mb-4 reveal">
+            <span class:list={['season-badge', `season-badge-${veg.season}`]}>
+              {seasonInfo.jp}
+            </span>
+            <span class="text-[0.75rem] text-white/40 font-outfit tracking-wide">
+              {veg.months.map(m => `${m}月`).join('・')}
+            </span>
+          </div>
+          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase text-white/40 mb-2">
             {veg.nameEn}
           </p>
+          <h1 class="font-heading text-[var(--font-size-display)] text-white reveal leading-[1.25]">
+            {veg.name}
+          </h1>
         </div>
       </div>
     </div>
@@ -62,17 +74,41 @@ const infoSections = [
 
   <!-- Info Sections -->
   <section class="section-padding">
-    <div class="container-site max-w-4xl">
-      <div class="grid md:grid-cols-2 gap-6 mb-20 stagger-children">
+    <div class="container-narrow">
+      <div class="grid md:grid-cols-2 gap-5 mb-16 stagger-children">
         {infoSections.map(section => (
           <div class="detail-section">
             <h3 class="detail-section-title">
-              <span class="material-symbols-outlined text-accent">{section.icon}</span>
+              <span class="material-symbols-outlined" style="font-size:16px">{section.icon}</span>
               {section.title}
             </h3>
-            <p class="text-text-muted leading-relaxed">{section.content}</p>
+            <p class="text-text leading-relaxed text-[0.9375rem]">{section.content}</p>
           </div>
         ))}
+      </div>
+
+      <!-- Region Section -->
+      <div class="detail-section mb-20 reveal">
+        <h3 class="detail-section-title">
+          <span class="material-symbols-outlined" style="font-size:16px">location_on</span>
+          Producing Regions · 主な産地
+        </h3>
+        <div class="flex flex-wrap gap-2 mb-6">
+          {vegRegions.map((r) => (
+            <a href={`/seasonal/?region=${r.id}`} class="region-pill hover:border-accent transition-colors">
+              {r.name}
+            </a>
+          ))}
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {vegRegions.map((r) => (
+            <div class="border-l-2 border-border-strong pl-4">
+              <p class="font-heading text-[0.9375rem] mb-1">{r.name}</p>
+              <p class="text-[0.75rem] text-text-muted leading-relaxed">{r.description}</p>
+              <p class="text-[0.6875rem] text-text-subtle mt-1 font-outfit tracking-wide">{r.prefectures.slice(0, 4).join('・')}{r.prefectures.length > 4 ? '…' : ''}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Recipes using this vegetable */}
@@ -81,7 +117,7 @@ const infoSections = [
           <SectionHeading
             enTitle="Recipes"
             title={`${veg.name}を使ったレシピ`}
-            subtitle="旬の美味しさを最大限に引き出すレシピをご紹介。"
+            subtitle="旬の美味しさを最大限に引き出すレシピをご紹介します。"
           />
           <div class="grid-recipes stagger-children">
             {vegRecipes.map(r => (

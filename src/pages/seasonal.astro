@@ -2,8 +2,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import PageHero from '@components/ui/PageHero.astro';
 import VegCard from '@components/ui/VegCard.astro';
-import { vegetables, seasonNames, getCurrentSeason } from '@data/vegetables';
+import { vegetables, seasonNames } from '@data/vegetables';
 import type { Season } from '@data/vegetables';
+import { regions } from '@data/regions';
 
 const seasons = Object.keys(seasonNames) as Season[];
 ---
@@ -11,22 +12,46 @@ const seasons = Object.keys(seasonNames) as Season[];
 <BaseLayout title="四季の図鑑 | SHUNRECIPE" darkHero={true}>
   <PageHero
     title="四季の図鑑"
-    subtitle="日本ならではの美しい季節の移ろいと、旬の野菜たち。"
+    subtitle="日本の四季と地域が育む、旬野菜たちの記録。栄養・選び方・保存法まで編集部が編む。"
     enTitle="Seasonal Encyclopedia"
     variant="dark"
+    meta={`${vegetables.length} Vegetables · ${regions.length} Regions`}
   />
 
   <section class="section-padding">
     <div class="container-site">
-      <!-- Season Filter Tabs -->
-      <div class="pill-tabs mb-12" id="seasonTabs">
-        <button class="pill-tab" data-season="all">すべて</button>
-        {seasons.map(s => (
-          <button class="pill-tab" data-season={s}>
-            {seasonNames[s].jp}
-          </button>
-        ))}
+      <!-- Filter Bar -->
+      <div class="mb-12 reveal">
+        <!-- Season Filter -->
+        <div class="mb-6">
+          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase font-semibold text-text-subtle mb-3">Season</p>
+          <div class="pill-tabs" id="seasonTabs">
+            <button class="pill-tab is-active" data-season="all">すべて</button>
+            {seasons.map(s => (
+              <button class="pill-tab" data-season={s}>
+                {seasonNames[s].jp}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Region Filter -->
+        <div>
+          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase font-semibold text-text-subtle mb-3">Region — 産地</p>
+          <div class="pill-tabs" id="regionTabs">
+            <button class="pill-tab is-active" data-region="all">全国</button>
+            {regions.map(r => (
+              <button class="pill-tab" data-region={r.id}>
+                {r.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
+
+      <p class="text-[0.8125rem] text-text-muted mb-8 font-mono-num" id="vegCountLabel">
+        {vegetables.length} 種類の旬野菜
+      </p>
 
       <!-- Season Sections -->
       {seasons.map(s => {
@@ -34,22 +59,27 @@ const seasons = Object.keys(seasonNames) as Season[];
         const vegs = vegetables.filter(v => v.season === s);
         return (
           <div class="mb-20 season-group" data-season-group={s}>
-            <div class="flex items-center gap-4 mb-8 reveal">
-              <span class="text-4xl">
-                {s === 'spring' ? '\u{1F338}' : s === 'summer' ? '\u{2600}\u{FE0F}' : s === 'autumn' ? '\u{1F341}' : '\u{2744}\u{FE0F}'}
-              </span>
+            <div class="flex items-end justify-between gap-4 mb-8 pb-4 border-b border-border-light reveal">
               <div>
+                <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase font-semibold mb-2" style={`color: ${info.color}`}>
+                  {info.en} · {info.months}
+                </p>
                 <h2 class="font-heading text-[var(--font-size-h2)]">
                   {info.jp}の野菜
                 </h2>
-                <p class="text-sm text-text-muted font-outfit">{info.en} — {info.months}</p>
               </div>
+              <span class="text-[0.75rem] text-text-subtle font-mono-num" data-season-count={s}>{vegs.length} items</span>
             </div>
-            <div class="grid-vegetables stagger-children">
+            <div class="grid-vegetables stagger-children" data-veg-grid={s}>
               {vegs.map(v => (
-                <VegCard vegetable={v} showMonths={true} />
+                <div class="veg-item" data-regions={v.regions.join(',')}>
+                  <VegCard vegetable={v} showMonths={true} />
+                </div>
               ))}
             </div>
+            <p class="empty-state text-[0.8125rem] text-text-muted mt-6 hidden" data-empty={s}>
+              選択した地域に該当する{info.jp}の野菜は見つかりませんでした。
+            </p>
           </div>
         );
       })}
@@ -57,34 +87,95 @@ const seasons = Object.keys(seasonNames) as Season[];
   </section>
 
   <script>
-    const tabs = document.querySelectorAll('#seasonTabs .pill-tab');
-    const groups = document.querySelectorAll('.season-group');
+    const seasonTabs = document.querySelectorAll<HTMLElement>('#seasonTabs .pill-tab');
+    const regionTabs = document.querySelectorAll<HTMLElement>('#regionTabs .pill-tab');
+    const groups = document.querySelectorAll<HTMLElement>('.season-group');
+    const allItems = document.querySelectorAll<HTMLElement>('.veg-item');
+    const countLabel = document.getElementById('vegCountLabel');
 
-    function setActive(season: string) {
-      tabs.forEach(t => {
-        t.classList.toggle('is-active', t.getAttribute('data-season') === season);
-      });
-      groups.forEach(g => {
-        const groupSeason = g.getAttribute('data-season-group');
-        if (season === 'all') {
-          (g as HTMLElement).style.display = '';
-        } else {
-          (g as HTMLElement).style.display = groupSeason === season ? '' : 'none';
+    let currentSeason = 'all';
+    let currentRegion = (window as any).__shunrecipe?.getRegion?.() || 'all';
+
+    function applyFilters() {
+      let totalVisible = 0;
+
+      groups.forEach((group) => {
+        const groupSeason = group.getAttribute('data-season-group');
+        const seasonMatch = currentSeason === 'all' || groupSeason === currentSeason;
+
+        if (!seasonMatch) {
+          group.style.display = 'none';
+          return;
         }
+
+        group.style.display = '';
+        let visibleInGroup = 0;
+        const items = group.querySelectorAll<HTMLElement>('.veg-item');
+        items.forEach((item) => {
+          const itemRegions = (item.getAttribute('data-regions') || '').split(',');
+          const regionMatch = currentRegion === 'all' || itemRegions.includes(currentRegion);
+          item.style.display = regionMatch ? '' : 'none';
+          if (regionMatch) visibleInGroup++;
+        });
+
+        const countEl = group.querySelector(`[data-season-count="${groupSeason}"]`);
+        if (countEl) countEl.textContent = `${visibleInGroup} items`;
+
+        const emptyEl = group.querySelector(`[data-empty="${groupSeason}"]`);
+        if (emptyEl) emptyEl.classList.toggle('hidden', visibleInGroup > 0);
+
+        totalVisible += visibleInGroup;
       });
+
+      if (countLabel) {
+        countLabel.textContent = `${totalVisible} 種類の旬野菜`;
+      }
     }
 
-    // Check URL params
+    function setSeason(season: string) {
+      currentSeason = season;
+      seasonTabs.forEach((t) =>
+        t.classList.toggle('is-active', t.getAttribute('data-season') === season),
+      );
+      applyFilters();
+    }
+
+    function setRegion(region: string) {
+      currentRegion = region;
+      regionTabs.forEach((t) =>
+        t.classList.toggle('is-active', t.getAttribute('data-region') === region),
+      );
+      applyFilters();
+    }
+
+    // URL params
     const params = new URLSearchParams(window.location.search);
     const initialSeason = params.get('season') || 'all';
-    setActive(initialSeason);
+    setSeason(initialSeason);
+    setRegion(currentRegion);
 
-    tabs.forEach(tab => {
+    seasonTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         const season = tab.getAttribute('data-season') || 'all';
-        setActive(season);
-        history.replaceState(null, '', season === 'all' ? '/seasonal/' : `/seasonal/?season=${season}`);
+        setSeason(season);
+        const url = new URL(window.location.href);
+        if (season === 'all') url.searchParams.delete('season');
+        else url.searchParams.set('season', season);
+        history.replaceState(null, '', url.toString());
       });
+    });
+
+    regionTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const region = tab.getAttribute('data-region') || 'all';
+        setRegion(region);
+        (window as any).__shunrecipe?.setRegion?.(region);
+      });
+    });
+
+    // Sync from header region selector
+    document.addEventListener('region:change', (e) => {
+      setRegion((e as CustomEvent).detail);
     });
   </script>
 </BaseLayout>

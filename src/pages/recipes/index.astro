@@ -3,80 +3,181 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import PageHero from '@components/ui/PageHero.astro';
 import RecipeCard from '@components/ui/RecipeCard.astro';
 import { recipes } from '@data/recipes';
-import { seasonNames } from '@data/vegetables';
+import { vegetables, seasonNames } from '@data/vegetables';
+
+// Build a map of mainVegetable -> regions for region filter
+const vegRegionMap = new Map(vegetables.map((v) => [v.id, v.regions]));
 ---
 
-<BaseLayout title="プレミアムレシピ | SHUNRECIPE" darkHero={true}>
+<BaseLayout title="レシピ | SHUNRECIPE" darkHero={true}>
   <PageHero
-    title="プレミアムレシピ"
-    subtitle="選び抜かれた至高のレシピを、季節ごとにご用意しました。"
-    enTitle="Premium Recipes"
-    variant="emerald"
+    title="プレミアム レシピ"
+    subtitle="編集部が選び抜いた、季節を味わうレシピ。手順は簡潔に、味わいは確かに。"
+    enTitle="Recipes"
+    variant="dark"
+    meta={`${recipes.length} Recipes — Curated`}
   />
 
   <section class="section-padding">
     <div class="container-site">
-      <!-- Filters -->
-      <div class="pill-tabs mb-12" id="recipeFilters">
-        <button class="pill-tab is-active" data-filter="all">すべて</button>
-        <button class="pill-tab" data-filter="spring">春</button>
-        <button class="pill-tab" data-filter="summer">夏</button>
-        <button class="pill-tab" data-filter="autumn">秋</button>
-        <button class="pill-tab" data-filter="winter">冬</button>
-        <button class="pill-tab" data-filter="easy">かんたん時短</button>
+      <!-- Search & Filter Toolbar -->
+      <div class="mb-12 reveal">
+        <div class="flex flex-col lg:flex-row gap-4 lg:items-center mb-6">
+          <div class="search-field">
+            <span class="material-symbols-outlined">search</span>
+            <input
+              type="search"
+              id="recipeSearch"
+              placeholder="レシピ名・材料で検索..."
+              autocomplete="off"
+            />
+          </div>
+          <div class="flex items-center gap-3 lg:ml-auto">
+            <label class="flex items-center gap-2 text-[0.8125rem] font-semibold text-text-muted cursor-pointer">
+              <input type="checkbox" id="favOnly" class="accent-accent w-4 h-4" />
+              お気に入りのみ
+            </label>
+          </div>
+        </div>
+
+        <!-- Season Filter -->
+        <div class="mb-4">
+          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase font-semibold text-text-subtle mb-2">Season</p>
+          <div class="pill-tabs" id="seasonFilters">
+            <button class="pill-tab is-active" data-filter="all">すべて</button>
+            <button class="pill-tab" data-filter="spring">春</button>
+            <button class="pill-tab" data-filter="summer">夏</button>
+            <button class="pill-tab" data-filter="autumn">秋</button>
+            <button class="pill-tab" data-filter="winter">冬</button>
+          </div>
+        </div>
+
+        <!-- Difficulty / Time Filter -->
+        <div>
+          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase font-semibold text-text-subtle mb-2">Style</p>
+          <div class="pill-tabs" id="styleFilters">
+            <button class="pill-tab is-active" data-style="all">すべて</button>
+            <button class="pill-tab" data-style="easy">かんたん時短</button>
+            <button class="pill-tab" data-style="quick">30分以内</button>
+            <button class="pill-tab" data-style="light">300kcal以下</button>
+          </div>
+        </div>
       </div>
 
-      <!-- Recipe count -->
-      <p class="text-sm text-text-muted mb-8" id="recipeCount">
-        全 {recipes.length} レシピ
+      <p class="text-[0.8125rem] text-text-muted mb-8 font-mono-num" id="recipeCount">
+        {recipes.length} レシピ
       </p>
 
-      <!-- All recipes rendered, hidden/shown via JS -->
       <div class="grid-recipes stagger-children" id="recipesGrid">
-        {recipes.map(r => (
-          <div
-            class="recipe-item"
-            data-season={r.season}
-            data-difficulty={r.difficulty}
-          >
-            <RecipeCard recipe={r} />
-          </div>
-        ))}
+        {recipes.map(r => {
+          const regs = vegRegionMap.get(r.mainVegetable) || [];
+          const ingredientText = r.ingredients.map((i) => i.name).join(' ');
+          return (
+            <div
+              class="recipe-item"
+              data-season={r.season}
+              data-difficulty={r.difficulty}
+              data-time={r.time}
+              data-cal={r.calories}
+              data-id={r.id}
+              data-regions={regs.join(',')}
+              data-search={`${r.title} ${r.subtitle} ${ingredientText}`}
+            >
+              <RecipeCard recipe={r} />
+            </div>
+          );
+        })}
       </div>
+
+      <p class="empty-state text-center text-text-muted py-20 hidden" id="emptyState">
+        条件に合うレシピが見つかりませんでした。<br />
+        フィルタや検索条件を変更してお試しください。
+      </p>
     </div>
   </section>
 
   <script>
-    const filters = document.querySelectorAll('#recipeFilters .pill-tab');
-    const items = document.querySelectorAll('.recipe-item');
+    const items = document.querySelectorAll<HTMLElement>('.recipe-item');
+    const seasonFilters = document.querySelectorAll<HTMLElement>('#seasonFilters .pill-tab');
+    const styleFilters = document.querySelectorAll<HTMLElement>('#styleFilters .pill-tab');
+    const searchInput = document.getElementById('recipeSearch') as HTMLInputElement;
+    const favOnly = document.getElementById('favOnly') as HTMLInputElement;
     const countEl = document.getElementById('recipeCount');
+    const emptyEl = document.getElementById('emptyState');
 
-    function applyFilter(filter: string) {
-      filters.forEach(f => {
-        f.classList.toggle('is-active', f.getAttribute('data-filter') === filter);
-      });
+    const state = {
+      season: 'all' as string,
+      style: 'all' as string,
+      query: '',
+      favOnly: false,
+      region: (window as any).__shunrecipe?.getRegion?.() || 'all',
+    };
 
+    function applyFilters() {
+      const favs = new Set(((window as any).__shunrecipe?.getFavorites?.() || []) as string[]);
       let visible = 0;
-      items.forEach(item => {
-        const season = item.getAttribute('data-season');
-        const difficulty = item.getAttribute('data-difficulty');
-        let show = false;
 
-        if (filter === 'all') show = true;
-        else if (filter === 'easy') show = difficulty === 'かんたん時短';
-        else show = season === filter;
+      items.forEach((item) => {
+        const season = item.dataset.season || '';
+        const difficulty = item.dataset.difficulty || '';
+        const time = parseInt(item.dataset.time || '0', 10);
+        const cal = parseInt(item.dataset.cal || '0', 10);
+        const id = item.dataset.id || '';
+        const regions = (item.dataset.regions || '').split(',');
+        const search = (item.dataset.search || '').toLowerCase();
 
-        (item as HTMLElement).style.display = show ? '' : 'none';
+        let show = true;
+        if (state.season !== 'all' && season !== state.season) show = false;
+        if (show && state.style === 'easy' && difficulty !== 'かんたん時短') show = false;
+        if (show && state.style === 'quick' && time > 30) show = false;
+        if (show && state.style === 'light' && cal > 300) show = false;
+        if (show && state.region !== 'all' && !regions.includes(state.region)) show = false;
+        if (show && state.query && !search.includes(state.query)) show = false;
+        if (show && state.favOnly && !favs.has(id)) show = false;
+
+        item.style.display = show ? '' : 'none';
         if (show) visible++;
       });
 
       if (countEl) countEl.textContent = `${visible} レシピ`;
+      if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0);
     }
 
-    filters.forEach(f => {
+    seasonFilters.forEach((f) => {
       f.addEventListener('click', () => {
-        applyFilter(f.getAttribute('data-filter') || 'all');
+        state.season = f.getAttribute('data-filter') || 'all';
+        seasonFilters.forEach((x) => x.classList.toggle('is-active', x === f));
+        applyFilters();
       });
     });
+
+    styleFilters.forEach((f) => {
+      f.addEventListener('click', () => {
+        state.style = f.getAttribute('data-style') || 'all';
+        styleFilters.forEach((x) => x.classList.toggle('is-active', x === f));
+        applyFilters();
+      });
+    });
+
+    searchInput?.addEventListener('input', () => {
+      state.query = searchInput.value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    favOnly?.addEventListener('change', () => {
+      state.favOnly = favOnly.checked;
+      applyFilters();
+    });
+
+    document.addEventListener('region:change', (e) => {
+      state.region = (e as CustomEvent).detail;
+      applyFilters();
+    });
+
+    document.addEventListener('favorites:change', () => {
+      if (state.favOnly) applyFilters();
+    });
+
+    applyFilters();
   </script>
 </BaseLayout>

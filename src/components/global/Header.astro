@@ -1,4 +1,6 @@
 ---
+import { regions } from '@data/regions';
+
 interface Props {
   darkHero?: boolean;
 }
@@ -9,27 +11,25 @@ const { darkHero = false } = Astro.props;
   <div class="container-site">
     <div class="flex items-center justify-between py-5">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 group">
-        <span class="material-symbols-outlined text-3xl text-accent" style="font-variation-settings: 'wght' 400;">psychiatry</span>
-        <span class:list={[
-          'font-outfit text-xl font-extrabold tracking-[0.15em]',
-          darkHero ? 'text-white' : 'text-primary'
-        ]}>SHUNRECIPE</span>
+      <a href="/" class="brand-mark group">
+        <span class="brand-mark-icon">SR</span>
+        <span class="brand-mark-text">SHUNRECIPE</span>
       </a>
 
       <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-10">
+      <nav class="hidden md:flex items-center gap-9">
         {[
           { href: '/', label: 'ホーム' },
           { href: '/seasonal/', label: '四季の図鑑' },
           { href: '/recipes/', label: 'レシピ' },
+          { href: '/favorites/', label: 'お気に入り' },
         ].map(link => (
           <a
             href={link.href}
             class:list={[
-              'text-sm font-semibold tracking-wide transition-colors duration-300',
+              'text-[0.8125rem] font-semibold tracking-wider transition-colors duration-300',
               darkHero
-                ? 'text-white/80 hover:text-white'
+                ? 'text-white/75 hover:text-white'
                 : 'text-text-muted hover:text-text'
             ]}
           >
@@ -38,19 +38,100 @@ const { darkHero = false } = Astro.props;
         ))}
       </nav>
 
-      <!-- Mobile Menu Toggle -->
-      <button
-        data-nav-toggle
-        aria-expanded="false"
-        aria-label="メニューを開く"
-        class:list={[
-          'md:hidden flex flex-col gap-1.5 w-8 h-8 items-center justify-center',
-          darkHero ? 'text-white' : 'text-primary'
-        ]}
-      >
-        <span class="block w-6 h-0.5 bg-current transition-all"></span>
-        <span class="block w-4 h-0.5 bg-current transition-all"></span>
-      </button>
+      <div class="flex items-center gap-3">
+        <!-- Region Selector -->
+        <div class="region-selector hidden md:block" id="regionSelector">
+          <button type="button" class="region-selector-trigger" data-region-trigger>
+            <span class="material-symbols-outlined" style="font-size:18px">location_on</span>
+            <span data-region-label>全国</span>
+            <span class="material-symbols-outlined" style="font-size:16px">expand_more</span>
+          </button>
+          <div class="region-selector-panel">
+            <p class="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-text-subtle mb-1">Region</p>
+            <p class="text-[0.8125rem] text-text-muted">あなたの地域に関連する旬野菜を表示します</p>
+            <div class="region-selector-grid">
+              <button type="button" class="region-option" data-region-value="all">全国</button>
+              {regions.map(r => (
+                <button type="button" class="region-option" data-region-value={r.id}>
+                  {r.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          data-nav-toggle
+          aria-expanded="false"
+          aria-label="メニューを開く"
+          class:list={[
+            'md:hidden flex flex-col gap-1.5 w-10 h-10 items-center justify-center rounded-full',
+            darkHero ? 'text-white' : 'text-primary'
+          ]}
+        >
+          <span class="block w-5 h-px bg-current transition-all"></span>
+          <span class="block w-5 h-px bg-current transition-all"></span>
+          <span class="block w-5 h-px bg-current transition-all"></span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
+
+<script>
+  import { regions } from '@data/regions';
+
+  function regionLabel(id: string): string {
+    if (id === 'all') return '全国';
+    const r = regions.find((x) => x.id === id);
+    return r ? r.name : '全国';
+  }
+
+  function initRegionSelector() {
+    const selector = document.getElementById('regionSelector');
+    if (!selector) return;
+    const trigger = selector.querySelector<HTMLElement>('[data-region-trigger]');
+    const labelEl = selector.querySelector<HTMLElement>('[data-region-label]');
+    const options = selector.querySelectorAll<HTMLElement>('[data-region-value]');
+
+    const store = (window as any).__shunrecipe;
+    const current = store?.getRegion?.() || 'all';
+    if (labelEl) labelEl.textContent = regionLabel(current);
+    options.forEach((o) => {
+      o.classList.toggle('is-active', o.dataset.regionValue === current);
+    });
+
+    trigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selector.classList.toggle('is-open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!selector.contains(e.target as Node)) {
+        selector.classList.remove('is-open');
+      }
+    });
+
+    options.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const value = opt.dataset.regionValue || 'all';
+        store?.setRegion?.(value);
+        if (labelEl) labelEl.textContent = regionLabel(value);
+        options.forEach((o) =>
+          o.classList.toggle('is-active', o.dataset.regionValue === value),
+        );
+        selector.classList.remove('is-open');
+        store?.showToast?.(
+          value === 'all' ? '全国の旬を表示します' : `${regionLabel(value)}の旬を表示します`,
+        );
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRegionSelector);
+  } else {
+    initRegionSelector();
+  }
+</script>

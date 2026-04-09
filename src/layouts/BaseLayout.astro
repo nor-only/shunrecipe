@@ -39,7 +39,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;800&family=Noto+Sans+JP:wght@300;400;600;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -76,6 +76,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <Footer />
+
+    <!-- Global Toast -->
+    <div id="globalToast" class="toast" role="status" aria-live="polite"></div>
 
     <!-- Global Scripts: Lenis + GSAP base -->
     <script>
@@ -165,11 +168,74 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         });
       }
 
+      // ---------- Global Store: Region & Favorites ----------
+      const REGION_KEY = 'shunrecipe.region';
+      const FAVORITES_KEY = 'shunrecipe.favorites';
+
+      function getRegion(): string {
+        return localStorage.getItem(REGION_KEY) || 'all';
+      }
+
+      function setRegion(value: string) {
+        if (value === 'all') localStorage.removeItem(REGION_KEY);
+        else localStorage.setItem(REGION_KEY, value);
+        document.dispatchEvent(new CustomEvent('region:change', { detail: value }));
+      }
+
+      function getFavorites(): string[] {
+        try {
+          return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+        } catch {
+          return [];
+        }
+      }
+
+      function toggleFavorite(id: string): boolean {
+        const favs = getFavorites();
+        const idx = favs.indexOf(id);
+        if (idx === -1) {
+          favs.push(id);
+        } else {
+          favs.splice(idx, 1);
+        }
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+        document.dispatchEvent(new CustomEvent('favorites:change', { detail: favs }));
+        return idx === -1;
+      }
+
+      function showToast(message: string) {
+        const el = document.getElementById('globalToast');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('is-visible');
+        window.setTimeout(() => el.classList.remove('is-visible'), 2200);
+      }
+
+      (window as any).__shunrecipe = {
+        getRegion, setRegion, getFavorites, toggleFavorite, showToast,
+      };
+
+      function initFavoriteButtons() {
+        const favs = new Set(getFavorites());
+        document.querySelectorAll<HTMLElement>('[data-fav-id]').forEach((btn) => {
+          const id = btn.dataset.favId!;
+          if (favs.has(id)) btn.classList.add('is-active');
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isAdded = toggleFavorite(id);
+            btn.classList.toggle('is-active', isAdded);
+            showToast(isAdded ? 'お気に入りに追加しました' : 'お気に入りから外しました');
+          });
+        });
+      }
+
       function initAll() {
         document.documentElement.classList.add('gsap-ready');
         initReveals();
         initHeader();
         initNavigation();
+        initFavoriteButtons();
       }
 
       if (document.readyState === 'loading') {
