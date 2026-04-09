@@ -1,0 +1,51 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-primary text-white">
+  <div class="container-site py-20">
+    <div class="grid md:grid-cols-3 gap-12 mb-16">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-3xl text-accent" style="font-variation-settings: 'wght' 400;">psychiatry</span>
+          <span class="font-outfit text-xl font-extrabold tracking-[0.15em]">SHUNRECIPE</span>
+        </a>
+        <p class="text-sm text-white/50 leading-relaxed">
+          旬の野菜とプレミアムレシピで、<br />毎日の食卓を特別に。
+        </p>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <h4 class="font-semibold text-sm tracking-wider text-white/40 mb-6 uppercase font-outfit">Navigation</h4>
+        <nav class="flex flex-col gap-3">
+          <a href="/" class="text-sm text-white/70 hover:text-accent transition-colors">ホーム</a>
+          <a href="/seasonal/" class="text-sm text-white/70 hover:text-accent transition-colors">四季の図鑑</a>
+          <a href="/recipes/" class="text-sm text-white/70 hover:text-accent transition-colors">プレミアムレシピ</a>
+        </nav>
+      </div>
+
+      <!-- Seasons -->
+      <div>
+        <h4 class="font-semibold text-sm tracking-wider text-white/40 mb-6 uppercase font-outfit">Seasons</h4>
+        <nav class="flex flex-col gap-3">
+          <a href="/seasonal/?season=spring" class="text-sm text-white/70 hover:text-spring transition-colors">春の野菜</a>
+          <a href="/seasonal/?season=summer" class="text-sm text-white/70 hover:text-summer transition-colors">夏の野菜</a>
+          <a href="/seasonal/?season=autumn" class="text-sm text-white/70 hover:text-autumn transition-colors">秋の野菜</a>
+          <a href="/seasonal/?season=winter" class="text-sm text-white/70 hover:text-winter transition-colors">冬の野菜</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-white/30 font-outfit">
+        &copy; {currentYear} SHUNRECIPE. All rights reserved.
+      </p>
+      <p class="text-xs text-white/30">
+        Powered by AIさんいんプロジェクト
+      </p>
+    </div>
+  </div>
+</footer>

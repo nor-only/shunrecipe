@@ -1,0 +1,159 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { recipes, getRecipeById, getRecipesForVegetable } from '@data/recipes';
+import { seasonNames, getVegetableById } from '@data/vegetables';
+
+export function getStaticPaths() {
+  return recipes.map(r => ({
+    params: { id: r.id },
+  }));
+}
+
+const { id } = Astro.params;
+const recipe = getRecipeById(id!);
+
+if (!recipe) {
+  return Astro.redirect('/recipes/');
+}
+
+const seasonInfo = seasonNames[recipe.season];
+const veg = getVegetableById(recipe.mainVegetable);
+const relatedRecipes = getRecipesForVegetable(recipe.mainVegetable)
+  .filter(r => r.id !== recipe.id)
+  .slice(0, 3);
+---
+
+<BaseLayout title={`${recipe.title} | SHUNRECIPE`} darkHero={true}>
+  <!-- Hero Image -->
+  <section class="relative pt-24">
+    <div class="container-site">
+      <!-- Back link -->
+      <a
+        href="/recipes/"
+        class="inline-flex items-center gap-2 text-sm font-semibold text-text-muted hover:text-text transition-colors mb-8"
+      >
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        レシピ一覧に戻る
+      </a>
+
+      <!-- Image -->
+      <div class="clip-reveal rounded-[var(--radius-lg)] overflow-hidden mb-12 max-h-[500px]">
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Title -->
+      <div class="max-w-3xl mb-16">
+        <span class:list={['season-badge mb-4 inline-block', `season-badge-${recipe.season}`]}>
+          {seasonInfo.jp}のレシピ
+        </span>
+        <h1 class="font-heading text-[var(--font-size-display)] mb-4 reveal">
+          {recipe.title}
+        </h1>
+        <p class="text-lg text-text-muted reveal">{recipe.subtitle}</p>
+
+        <!-- Meta -->
+        <div class="flex flex-wrap gap-6 mt-8 reveal">
+          <div class="flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-accent">schedule</span>
+            <span class="font-semibold">{recipe.time}分</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-accent">local_fire_department</span>
+            <span class="font-semibold">{recipe.calories}kcal</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-accent">group</span>
+            <span class="font-semibold">{recipe.servings}人分</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="material-symbols-outlined text-accent">signal_cellular_alt</span>
+            <span class="font-semibold">{recipe.difficulty}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="grid lg:grid-cols-3 gap-8 mb-20">
+        <!-- Ingredients (sidebar) -->
+        <div class="lg:col-span-1">
+          <div class="detail-section sticky top-28 reveal">
+            <h3 class="detail-section-title">
+              <span class="material-symbols-outlined text-accent">kitchen</span>
+              材料
+            </h3>
+            {recipe.ingredients.map(i => (
+              <div class="ingredient-row">
+                <span class="text-text-muted">{i.name}</span>
+                <span>{i.amount}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="lg:col-span-2">
+          <div class="detail-section mb-8 reveal">
+            <h3 class="detail-section-title">
+              <span class="material-symbols-outlined text-accent">restaurant</span>
+              作り方・手順
+            </h3>
+            {recipe.steps.map((step, idx) => (
+              <div class="recipe-step">
+                <span class="recipe-step-num">{idx + 1}</span>
+                <p>{step}</p>
+              </div>
+            ))}
+          </div>
+
+          <!-- Tips -->
+          <div class="tips-card reveal">
+            <p class="tips-card-title">
+              <span class="material-symbols-outlined">lightbulb</span>
+              美味しく作るコツ
+            </p>
+            <p>{recipe.tips}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Linked Vegetable */}
+      {veg && (
+        <div class="mb-20 reveal">
+          <a
+            href={`/vegetables/${veg.id}/`}
+            class="detail-section flex items-center gap-6 hover:shadow-hover transition-shadow"
+          >
+            <span class="text-5xl">{veg.emoji}</span>
+            <div>
+              <p class="text-sm text-text-muted font-semibold">使用する旬野菜</p>
+              <p class="text-xl font-bold">{veg.name}</p>
+              <p class="text-sm text-text-muted">{veg.nameEn}</p>
+            </div>
+            <span class="material-symbols-outlined ml-auto text-text-muted">arrow_forward</span>
+          </a>
+        </div>
+      )}
+
+      {/* Related Recipes */}
+      {relatedRecipes.length > 0 && (
+        <div class="mb-20">
+          <SectionHeading
+            enTitle="Related"
+            title="この野菜の他のレシピ"
+          />
+          <div class="grid-recipes stagger-children">
+            {relatedRecipes.map(r => (
+              <RecipeCard recipe={r} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

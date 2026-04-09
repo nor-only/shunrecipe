@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  enTitle?: string;
+  align?: 'left' | 'center';
+}
+
+const { title, subtitle, enTitle, align = 'left' } = Astro.props;
+const alignClass = align === 'center' ? 'text-center' : '';
+---
+
+<div class:list={['mb-12', alignClass, 'reveal']}>
+  {enTitle && (
+    <p class="font-outfit text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-3">
+      {enTitle}
+    </p>
+  )}
+  <h2 class="font-heading text-[var(--font-size-h1)] mb-3">{title}</h2>
+  {subtitle && (
+    <p class="text-text-muted text-[var(--font-size-body)]">{subtitle}</p>
+  )}
+</div>

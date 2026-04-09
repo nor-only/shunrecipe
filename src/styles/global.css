@@ -1,0 +1,648 @@
+@import "tailwindcss";
+
+/* =========================================
+   SHUNRECIPE Design System
+   ハイエンド・レシピエクスペリエンス
+   ========================================= */
+
+@theme {
+  /* --- Colors: Emerald & Monochrome --- */
+  --color-primary: #111827;
+  --color-primary-light: #1f2937;
+  --color-accent: #10b981;
+  --color-accent-dark: #059669;
+  --color-accent-glow: #34d399;
+  --color-accent-subtle: #ecfdf5;
+
+  --color-bg: #fafafa;
+  --color-bg-dark: #111827;
+  --color-bg-muted: #f3f4f6;
+
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #f9fafb;
+
+  --color-border: rgba(0, 0, 0, 0.06);
+  --color-border-light: #f3f4f6;
+
+  /* Season Colors */
+  --color-spring: #22c55e;
+  --color-summer: #ef4444;
+  --color-autumn: #d97706;
+  --color-winter: #7c3aed;
+
+  /* --- Typography Scale --- */
+  --font-size-hero: clamp(3rem, 8vw, 6rem);
+  --font-size-display: clamp(2rem, 4vw, 3.5rem);
+  --font-size-h1: clamp(1.75rem, 3vw, 2.5rem);
+  --font-size-h2: clamp(1.5rem, 2.5vw, 2rem);
+  --font-size-h3: clamp(1.125rem, 1.5vw, 1.25rem);
+  --font-size-body: clamp(0.9375rem, 1vw, 1.0625rem);
+  --font-size-small: 0.875rem;
+  --font-size-caption: 0.75rem;
+
+  /* --- Spacing --- */
+  --section-pad-y: clamp(5rem, 12vw, 10rem);
+  --section-pad-x: clamp(1.25rem, 5vw, 6rem);
+  --container-max: 1200px;
+
+  /* --- Animation --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 0.3s;
+  --duration-normal: 0.6s;
+  --duration-slow: 1s;
+  --duration-reveal: 1.2s;
+
+  /* --- Radius --- */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 9999px;
+
+  /* --- Shadows --- */
+  --shadow-subtle: 0 4px 24px -4px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 20px 60px -8px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================
+   Base Styles
+   ========================================= */
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 400;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* =========================================
+   Fonts
+   ========================================= */
+
+@layer base {
+  .font-outfit {
+    font-family: "Outfit", sans-serif;
+  }
+
+  .font-heading {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .font-heading-hero {
+    font-family: "Outfit", sans-serif;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* =========================================
+   Layout Utilities
+   ========================================= */
+
+@layer components {
+  .container-site {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--section-pad-x);
+    padding-right: var(--section-pad-x);
+  }
+
+  .section-padding {
+    padding-top: var(--section-pad-y);
+    padding-bottom: var(--section-pad-y);
+  }
+}
+
+/* =========================================
+   Animation Base Classes (GSAP)
+   ========================================= */
+
+@layer components {
+  .gsap-ready .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    will-change: opacity, transform;
+  }
+
+  .gsap-ready .reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    will-change: opacity, transform;
+  }
+
+  .gsap-ready .reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    will-change: opacity, transform;
+  }
+
+  .gsap-ready .stagger-children > * {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .gsap-ready .clip-reveal {
+    clip-path: inset(100% 0 0 0);
+    will-change: clip-path;
+  }
+
+  .char-reveal .char {
+    display: inline-block;
+    opacity: 0.15;
+    transition: opacity 0.1s ease;
+  }
+  .char-reveal .char.is-active {
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   Header
+   ========================================= */
+
+@layer components {
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: background-color var(--duration-fast) ease,
+                backdrop-filter var(--duration-fast) ease;
+  }
+
+  .header.is-scrolled {
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .header.is-dark {
+    background-color: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .header.is-dark.is-scrolled {
+    background-color: rgba(17, 24, 39, 0.95);
+  }
+}
+
+/* =========================================
+   Navigation Overlay
+   ========================================= */
+
+@layer components {
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background-color: var(--color-primary);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                visibility var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .nav-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-overlay .nav-link {
+    display: block;
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .nav-overlay.is-open .nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   Buttons
+   ========================================= */
+
+@layer components {
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+    color: white;
+    border: none;
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
+  }
+
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-glow));
+    opacity: 0;
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover::before {
+    opacity: 1;
+  }
+
+  .btn-primary span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text);
+    border: 1.5px solid var(--color-border);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================
+   Cards
+   ========================================= */
+
+@layer components {
+  .card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: white;
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .recipe-card-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .recipe-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .card:hover .recipe-card-image img {
+    transform: scale(1.06);
+  }
+
+  .veg-card {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    background: white;
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .veg-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .veg-card-emoji {
+    font-size: 4rem;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    display: block;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
+  }
+}
+
+/* =========================================
+   Pill Tabs
+   ========================================= */
+
+@layer components {
+  .pill-tabs {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .pill-tab {
+    background: white;
+    border: 1px solid var(--color-border);
+    padding: 0.625rem 1.5rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--duration-fast) ease;
+  }
+
+  .pill-tab:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text);
+    transform: translateY(-2px);
+  }
+
+  .pill-tab.is-active {
+    background: var(--color-text);
+    color: white;
+    border-color: var(--color-text);
+    box-shadow: var(--shadow-subtle);
+  }
+}
+
+/* =========================================
+   Page Hero
+   ========================================= */
+
+@layer components {
+  .page-hero {
+    position: relative;
+    padding-top: 10rem;
+    padding-bottom: var(--section-pad-y);
+    overflow: hidden;
+  }
+
+  .page-hero-emerald {
+    background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent), var(--color-accent-glow));
+  }
+
+  .page-hero-dark {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  }
+
+  .page-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .page-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--color-bg), transparent);
+    pointer-events: none;
+  }
+}
+
+/* =========================================
+   Season Badge
+   ========================================= */
+
+@layer components {
+  .season-badge {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    font-weight: 700;
+    padding: 0.25rem 1rem;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.05em;
+  }
+
+  .season-badge-spring {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .season-badge-summer {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .season-badge-autumn {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .season-badge-winter {
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+}
+
+/* =========================================
+   Detail Page
+   ========================================= */
+
+@layer components {
+  .detail-section {
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border-radius: var(--radius-lg);
+    background: white;
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-card);
+  }
+
+  .detail-section-title {
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .ingredient-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-body);
+    line-height: 1.8;
+  }
+
+  .ingredient-row:last-child {
+    border-bottom: none;
+  }
+
+  .ingredient-row span:last-child {
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .recipe-step {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    font-size: var(--font-size-body);
+    line-height: 1.8;
+  }
+
+  .recipe-step-num {
+    background: var(--color-accent);
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: var(--font-size-small);
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .tips-card {
+    padding: 2rem 2.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-accent-subtle);
+    border: 1px solid #bbf7d0;
+  }
+
+  .tips-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: #166534;
+    margin-bottom: 0.75rem;
+  }
+
+  .tips-card p {
+    color: #166534;
+    line-height: 1.8;
+  }
+}
+
+/* =========================================
+   Scroll Indicator
+   ========================================= */
+
+@layer components {
+  .scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+
+  .scroll-indicator-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, currentColor, transparent);
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+}
+
+/* =========================================
+   Grid System
+   ========================================= */
+
+@layer components {
+  .grid-recipes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .grid-vegetables {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .grid-recipes {
+      grid-template-columns: 1fr;
+    }
+    .grid-vegetables {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/sections/Hero.astro';
+import SeasonalShowcase from '@components/sections/SeasonalShowcase.astro';
+import FeaturedRecipes from '@components/sections/FeaturedRecipes.astro';
+import SeasonOverview from '@components/sections/SeasonOverview.astro';
+import CTA from '@components/sections/CTA.astro';
+---
+
+<BaseLayout title="SHUNRECIPE — 旬野菜のプレミアムレシピ" darkHero={true}>
+  <Hero />
+  <SeasonalShowcase />
+  <FeaturedRecipes />
+  <SeasonOverview />
+  <CTA />
+</BaseLayout>

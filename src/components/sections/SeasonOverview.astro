@@ -1,0 +1,42 @@
+---
+import { seasonNames, getVegetablesBySeason } from '@data/vegetables';
+import SectionHeading from '@components/ui/SectionHeading.astro';
+
+const seasons = Object.entries(seasonNames) as [string, { jp: string; en: string; months: string; color: string }][];
+---
+
+<section class="section-padding">
+  <div class="container-site">
+    <SectionHeading
+      enTitle="Four Seasons"
+      title="四季の恵みを食卓に"
+      subtitle="日本の美しい季節が育む、旬の野菜をカテゴリーごとにご紹介します。"
+      align="center"
+    />
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+      {seasons.map(([key, info]) => {
+        const vegs = getVegetablesBySeason(key as any);
+        return (
+          <a
+            href={`/seasonal/?season=${key}`}
+            class="card block p-8 text-center group hover:border-transparent"
+            style={`--accent: ${info.color}`}
+          >
+            <div class="text-5xl mb-4">
+              {key === 'spring' ? '\u{1F338}' : key === 'summer' ? '\u{2600}\u{FE0F}' : key === 'autumn' ? '\u{1F341}' : '\u{2744}\u{FE0F}'}
+            </div>
+            <h3 class="font-outfit text-lg font-bold tracking-wider mb-1" style={`color: ${info.color}`}>
+              {info.en}
+            </h3>
+            <p class="text-2xl font-bold mb-2">{info.jp}</p>
+            <p class="text-sm text-text-muted mb-4">{info.months}</p>
+            <p class="text-xs text-text-muted">
+              {vegs.length}種類の旬野菜
+            </p>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>

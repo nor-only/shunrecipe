@@ -1,0 +1,25 @@
+---
+import type { Vegetable } from '@data/vegetables';
+import { seasonNames } from '@data/vegetables';
+
+interface Props {
+  vegetable: Vegetable;
+  showMonths?: boolean;
+}
+
+const { vegetable, showMonths = false } = Astro.props;
+const seasonInfo = seasonNames[vegetable.season];
+const label = showMonths
+  ? vegetable.months.map(m => `${m}月`).join('・')
+  : seasonInfo.jp;
+---
+
+<a href={`/vegetables/${vegetable.id}/`} class="veg-card block group">
+  <span class="veg-card-emoji">{vegetable.emoji}</span>
+  <span class="block font-bold text-lg mb-3 group-hover:text-accent transition-colors">
+    {vegetable.name}
+  </span>
+  <span class:list={['season-badge', `season-badge-${vegetable.season}`]}>
+    {label}
+  </span>
+</a>

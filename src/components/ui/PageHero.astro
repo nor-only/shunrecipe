@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  variant?: 'emerald' | 'dark';
+  enTitle?: string;
+}
+
+const { title, subtitle, variant = 'emerald', enTitle } = Astro.props;
+---
+
+<section class:list={['page-hero', `page-hero-${variant}`]}>
+  <div class="container-site relative z-10">
+    {enTitle && (
+      <p class="font-outfit text-sm font-semibold tracking-[0.3em] uppercase text-white/50 mb-4 reveal">
+        {enTitle}
+      </p>
+    )}
+    <h1 class="font-heading text-[var(--font-size-display)] text-white mb-4 reveal">
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="text-lg text-white/70 max-w-xl reveal">{subtitle}</p>
+    )}
+  </div>
+</section>
