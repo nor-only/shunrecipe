@@ -21,7 +21,7 @@ const related = allRecipes.filter((r) =>
 <BaseLayout
   title={`${d.name_ja} — ${d.name_en} — SHUNRECIPE`}
   description={story.slice(0, 120) || `${d.name_ja}の旬・産地・在来種・関連レシピ。`}
-  ogImage={d.image}
+  ogImage={`/og/veg-${d.slug}.png`}
 >
   <article>
     <div class="container-site">
