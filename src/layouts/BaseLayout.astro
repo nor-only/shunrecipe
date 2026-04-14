@@ -167,6 +167,15 @@ const ldArray = Array.isArray(jsonLd)
       }
       (window as any).__shunrecipe = { getFavs, toggleFav, toast };
 
+      function initWafuDate() {
+        const months = ['睦月','如月','弥生','卯月','皐月','水無月','文月','葉月','長月','神無月','霜月','師走'];
+        const now = new Date();
+        const label = `${now.getFullYear()}年\u3000${months[now.getMonth()]}`;
+        document.querySelectorAll<HTMLElement>('[data-wafu-date]').forEach((el) => {
+          el.textContent = label;
+        });
+      }
+
       function initFavs() {
         const favs = new Set(getFavs());
         document.querySelectorAll<HTMLElement>('[data-fav-id]').forEach((btn) => {
@@ -187,6 +196,7 @@ const ldArray = Array.isArray(jsonLd)
         initHeader();
         initNav();
         initFavs();
+        initWafuDate();
       }
 
       if (document.readyState === 'loading') {
