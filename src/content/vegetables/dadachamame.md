@@ -13,6 +13,7 @@ nutrition: ["植物性タンパク", "メチオニン", "葉酸"]
 pairings: ["塩", "冷酒"]
 storage: "購入後すぐ塩茹で。香りが命。"
 related_recipes: ["r_edamame_rice"]
+image: "/assets/images/dadachamame.png"
 ---
 
 さやを開けた瞬間に、とうもろこしに似た甘香が立つ。鶴岡の土でしか作れないという。
