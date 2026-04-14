@@ -1,61 +1,28 @@
 ---
-import type { Recipe } from '@data/recipes';
-import { seasonNames } from '@data/vegetables';
+import { regionName } from '@data/regions';
 
 interface Props {
-  recipe: Recipe;
-  showFavorite?: boolean;
+  id: string;
+  title: string;
+  season: 'spring'|'summer'|'autumn'|'winter';
+  region?: string;
+  genre?: string;
+  time_min: number;
+  hero_image: string;
+  wide?: boolean;
 }
-
-const { recipe, showFavorite = true } = Astro.props;
-const seasonInfo = seasonNames[recipe.season];
+const { id, title, season, region, genre = '和', time_min, hero_image, wide = false } = Astro.props;
+const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }[season];
 ---
-
-<a href={`/recipes/${recipe.id}/`} class="card block group relative">
-  {showFavorite && (
-    <button
-      type="button"
-      class="fav-toggle fav-card-button"
-      data-fav-id={recipe.id}
-      aria-label="お気に入りに追加"
-    >
-      <span class="material-symbols-outlined text-lg">favorite</span>
-    </button>
-  )}
-
-  <div class="recipe-card-image">
-    <img
-      src={recipe.image}
-      alt={recipe.title}
-      loading="lazy"
-      decoding="async"
-    />
-    <div class="recipe-card-overlay">
-      <span class:list={['season-badge', `season-badge-${recipe.season}`]}>
-        {seasonInfo.jp}
-      </span>
-    </div>
+<a href={`/recipes/${id}/`} class={`ed-card ${wide ? 'ed-card-wide' : ''}`} data-recipe={id}>
+  <div class="media">
+    <img src={hero_image} alt={title} loading="lazy" decoding="async" />
   </div>
-
-  <div class="p-6">
-    <h3 class="font-heading text-[1.0625rem] mb-2 leading-snug group-hover:text-accent transition-colors line-clamp-2">
-      {recipe.title}
-    </h3>
-    <p class="text-[0.8125rem] text-text-muted mb-5 line-clamp-2 leading-relaxed">{recipe.subtitle}</p>
-
-    <div class="flex items-center gap-4 text-[0.6875rem] font-semibold text-text-muted uppercase tracking-wider font-mono-num">
-      <span class="flex items-center gap-1">
-        <span class="material-symbols-outlined" style="font-size:14px">schedule</span>
-        {recipe.time}min
-      </span>
-      <span class="flex items-center gap-1">
-        <span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span>
-        {recipe.calories}kcal
-      </span>
-      <span class="flex items-center gap-1">
-        <span class="material-symbols-outlined" style="font-size:14px">restaurant</span>
-        {recipe.servings}人
-      </span>
-    </div>
+  <div class="rule"></div>
+  <div class="meta">
+    <span class="genre">{genre} · {time_min}min</span>
+    <span class={`genre accent-${season}`}><span class="season-dot"></span>{seasonJp}</span>
   </div>
+  <h3 class="title">{title}</h3>
+  {region && <p style="font-family: var(--font-serif-jp); font-size: 0.8125rem; color: var(--color-ink-3); letter-spacing: 0.04em;">{regionName(region)}</p>}
 </a>

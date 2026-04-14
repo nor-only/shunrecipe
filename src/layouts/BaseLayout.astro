@@ -1,22 +1,43 @@
 ---
-import '@/styles/global.css';
+import '@/styles/editorial.css';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
-import Navigation from '@components/global/Navigation.astro';
 
 interface Props {
   title: string;
   description?: string;
   darkHero?: boolean;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
-  description = '旬の野菜とプレミアムレシピで、毎日の食卓を特別に。SHUNRECIPE',
+  description = '日本の四季と地域が育む旬の野菜と、その魅力を最大限に引き出すレシピ。',
   darkHero = false,
+  ogImage,
+  jsonLd,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = ogImage
+  ? new URL(ogImage, Astro.site).href
+  : new URL('/og/default.png', Astro.site).href;
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'SHUNRECIPE',
+  url: canonicalURL.origin,
+  description: '日本の四季と地域の旬野菜・プレミアムレシピの編纂誌。',
+  inLanguage: 'ja-JP',
+};
+
+const ldArray = Array.isArray(jsonLd)
+  ? [websiteLd, ...jsonLd]
+  : jsonLd
+    ? [websiteLd, jsonLd]
+    : [websiteLd];
 ---
 
 <!doctype html>
@@ -27,49 +48,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL.href} />
 
-    <!-- OGP -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:site_name" content="SHUNRECIPE" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-    />
-
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
 
-    <!-- JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "SHUNRECIPE",
-      "url": canonicalURL.origin,
-      "description": "旬の野菜とプレミアムレシピで、毎日の食卓を特別に。"
-    })} />
+    {ldArray.map((ld) => (
+      <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    ))}
 
     <title>{title}</title>
-
-    <style>
-      .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-      }
-    </style>
   </head>
   <body>
     <Header darkHero={darkHero} />
-    <Navigation />
 
     <main>
       <slot />
@@ -77,289 +75,155 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <Footer />
 
-    <!-- Global Toast -->
-    <div id="globalToast" class="toast" role="status" aria-live="polite"></div>
+    <div id="globalToast" role="status" aria-live="polite" class="ed-toast"></div>
 
-    <!-- Global Scripts: Lenis + GSAP base -->
     <script>
       import Lenis from 'lenis';
-      import { gsap } from 'gsap';
-      import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-      gsap.registerPlugin(ScrollTrigger);
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        gestureOrientation: 'vertical' as const,
-        smoothWheel: true,
-      });
-
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time: number) => {
-        lenis.raf(time * 1000);
-      });
-      gsap.ticker.lagSmoothing(0);
-
-      function splitChars(el: HTMLElement): HTMLSpanElement[] {
-        if (el.dataset.charSplit === 'done') {
-          return Array.from(el.querySelectorAll<HTMLSpanElement>('.char'));
-        }
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        const textNodes: Text[] = [];
-        let node: Node | null;
-        while ((node = walker.nextNode())) textNodes.push(node as Text);
-        const chars: HTMLSpanElement[] = [];
-        textNodes.forEach((tn) => {
-          const text = tn.textContent || '';
-          if (!text.trim()) return;
-          const frag = document.createDocumentFragment();
-          for (const ch of text) {
-            const span = document.createElement('span');
-            span.className = 'char';
-            span.textContent = ch;
-            if (ch === ' ') span.style.whiteSpace = 'pre';
-            frag.appendChild(span);
-            chars.push(span);
-          }
-          tn.parentNode?.replaceChild(frag, tn);
+      if (!prefersReduced) {
+        const lenis = new Lenis({
+          duration: 1.15,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          gestureOrientation: 'vertical' as const,
+          smoothWheel: true,
         });
-        el.dataset.charSplit = 'done';
-        return chars;
+        function raf(time: number) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+        (window as any).__lenis = lenis;
       }
 
-      function autoTagReveals() {
-        // Auto-apply .reveal to top-level paragraphs / links / buttons inside sections
-        // that don't yet have a reveal-* class.
-        const selectors = [
-          'section > .container-site > *',
-          'section > .container-narrow > *',
-          'article > *',
-        ];
-        const excludeClasses = ['reveal', 'reveal-left', 'reveal-blur', 'reveal-scale', 'clip-reveal', 'char-reveal', 'stagger-children', 'line-reveal', 'hero-section'];
-        selectors.forEach((sel) => {
-          document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
-            if (excludeClasses.some((c) => el.classList.contains(c))) return;
-            if (el.closest('.hero-section')) return;
-            if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-            el.classList.add('reveal');
-          });
-        });
-      }
-
-      function initReveals() {
-        autoTagReveals();
-        gsap.utils.toArray<HTMLElement>('.reveal').forEach((el) => {
-          gsap.to(el, {
-            opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-          });
-        });
-
-        gsap.utils.toArray<HTMLElement>('.reveal-blur').forEach((el) => {
-          gsap.to(el, {
-            opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          });
-        });
-
-        gsap.utils.toArray<HTMLElement>('.stagger-children').forEach((container) => {
-          gsap.to(container.children, {
-            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.09,
-            scrollTrigger: { trigger: container, start: 'top 85%', once: true },
-          });
-        });
-
-        gsap.utils.toArray<HTMLElement>('.clip-reveal').forEach((el) => {
-          gsap.to(el, {
-            clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: 'power3.inOut',
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-          });
-        });
-
-        gsap.utils.toArray<HTMLElement>('.reveal-left').forEach((el) => {
-          gsap.to(el, {
-            opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          });
-        });
-
-        // Character-by-character scroll reveal (scrubbed)
-        gsap.utils.toArray<HTMLElement>('.char-reveal').forEach((el) => {
-          const chars = splitChars(el);
-          const scrub = el.dataset.charScrub !== 'false';
-          if (scrub) {
-            gsap.to(chars, {
-              opacity: 1,
-              ease: 'none',
-              stagger: { each: 0.04, from: 'start' },
-              scrollTrigger: {
-                trigger: el,
-                start: 'top 90%',
-                end: 'top 20%',
-                scrub: 0.8,
-              },
+      function initReveal() {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
             });
-          } else {
-            gsap.to(chars, {
-              opacity: 1,
-              duration: 0.6,
-              ease: 'power2.out',
-              stagger: 0.03,
-              scrollTrigger: {
-                trigger: el,
-                start: 'top 90%',
-                once: true,
-              },
-            });
-          }
-        });
-
-        // Line-by-line reveal
-        gsap.utils.toArray<HTMLElement>('.line-reveal').forEach((el) => {
-          const inners = el.querySelectorAll<HTMLElement>('.line-inner');
-          gsap.to(inners, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            stagger: 0.12,
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          });
-        });
-
-        // Parallax on images
-        gsap.utils.toArray<HTMLElement>('.parallax-img').forEach((img) => {
-          const speed = parseFloat(img.dataset.parallaxSpeed || '0.3');
-          gsap.to(img, {
-            yPercent: -speed * 30,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: img.closest('.parallax-wrap') || img,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          });
-        });
+          },
+          { threshold: 0.08, rootMargin: '0px 0px -8% 0px' },
+        );
+        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
       }
 
       function initHeader() {
-        const header = document.querySelector('.header') as HTMLElement;
+        const header = document.querySelector('.ed-header');
         if (!header) return;
-        ScrollTrigger.create({
-          start: 'top -80',
-          onUpdate: (self) => {
-            if (self.direction === 1 && self.scroll() > 80) {
-              header.classList.add('is-scrolled');
-            } else if (self.scroll() <= 80) {
-              header.classList.remove('is-scrolled');
-            }
-          },
-        });
+        const onScroll = () => {
+          if (window.scrollY > 40) header.classList.add('is-scrolled');
+          else header.classList.remove('is-scrolled');
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
       }
 
-      function initNavigation() {
+      function initNav() {
         const toggle = document.querySelector('[data-nav-toggle]');
-        const overlay = document.querySelector('.nav-overlay');
-        const links = document.querySelectorAll('.nav-overlay .nav-link');
+        const overlay = document.querySelector('.ed-overlay');
         if (!toggle || !overlay) return;
-
         toggle.addEventListener('click', () => {
-          const isOpen = overlay.classList.contains('is-open');
-          overlay.classList.toggle('is-open');
-          toggle.setAttribute('aria-expanded', String(!isOpen));
-          document.body.style.overflow = isOpen ? '' : 'hidden';
+          const open = overlay.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(open));
+          document.body.classList.toggle('no-scroll', open);
         });
-
-        links.forEach((link) => {
-          link.addEventListener('click', () => {
+        overlay.querySelectorAll('a').forEach((a) => {
+          a.addEventListener('click', () => {
             overlay.classList.remove('is-open');
             toggle.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
+            document.body.classList.remove('no-scroll');
           });
         });
       }
 
-      // ---------- Global Store: Region & Favorites ----------
-      const REGION_KEY = 'shunrecipe.region';
-      const FAVORITES_KEY = 'shunrecipe.favorites';
-
-      function getRegion(): string {
-        return localStorage.getItem(REGION_KEY) || 'all';
+      // --- Favorites store ---
+      const FAV_KEY = 'shunrecipe.favorites';
+      function getFavs(): string[] {
+        try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
       }
-
-      function setRegion(value: string) {
-        if (value === 'all') localStorage.removeItem(REGION_KEY);
-        else localStorage.setItem(REGION_KEY, value);
-        document.dispatchEvent(new CustomEvent('region:change', { detail: value }));
+      function setFavs(ids: string[]) {
+        localStorage.setItem(FAV_KEY, JSON.stringify(ids));
+        document.dispatchEvent(new CustomEvent('favorites:change', { detail: ids }));
       }
-
-      function getFavorites(): string[] {
-        try {
-          return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
-        } catch {
-          return [];
-        }
+      function toggleFav(id: string): boolean {
+        const favs = getFavs();
+        const i = favs.indexOf(id);
+        if (i === -1) favs.push(id); else favs.splice(i, 1);
+        setFavs(favs);
+        return i === -1;
       }
-
-      function toggleFavorite(id: string): boolean {
-        const favs = getFavorites();
-        const idx = favs.indexOf(id);
-        if (idx === -1) {
-          favs.push(id);
-        } else {
-          favs.splice(idx, 1);
-        }
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
-        document.dispatchEvent(new CustomEvent('favorites:change', { detail: favs }));
-        return idx === -1;
-      }
-
-      function showToast(message: string) {
+      function toast(msg: string) {
         const el = document.getElementById('globalToast');
         if (!el) return;
-        el.textContent = message;
+        el.textContent = msg;
         el.classList.add('is-visible');
-        window.setTimeout(() => el.classList.remove('is-visible'), 2200);
+        setTimeout(() => el.classList.remove('is-visible'), 2000);
       }
+      (window as any).__shunrecipe = { getFavs, toggleFav, toast };
 
-      (window as any).__shunrecipe = {
-        getRegion, setRegion, getFavorites, toggleFavorite, showToast,
-      };
-
-      function initFavoriteButtons() {
-        const favs = new Set(getFavorites());
+      function initFavs() {
+        const favs = new Set(getFavs());
         document.querySelectorAll<HTMLElement>('[data-fav-id]').forEach((btn) => {
           const id = btn.dataset.favId!;
           if (favs.has(id)) btn.classList.add('is-active');
-          btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isAdded = toggleFavorite(id);
-            btn.classList.toggle('is-active', isAdded);
-            showToast(isAdded ? 'お気に入りに追加しました' : 'お気に入りから外しました');
+          btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const on = toggleFav(id);
+            btn.classList.toggle('is-active', on);
+            toast(on ? 'お気に入りに追加しました' : 'お気に入りから外しました');
           });
         });
       }
 
-      function initAll() {
-        document.documentElement.classList.add('gsap-ready');
-        initReveals();
+      function init() {
+        initReveal();
         initHeader();
-        initNavigation();
-        initFavoriteButtons();
+        initNav();
+        initFavs();
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAll);
+        document.addEventListener('DOMContentLoaded', init);
       } else {
-        initAll();
+        init();
       }
-
-      (window as any).__lenis = lenis;
-      (window as any).__gsap = gsap;
-      (window as any).__ScrollTrigger = ScrollTrigger;
     </script>
+
+    <style is:global>
+      .ed-toast {
+        position: fixed;
+        bottom: 2rem; left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        padding: 0.75rem 1.4rem;
+        background: var(--color-ink);
+        color: var(--color-bg);
+        font-family: var(--font-serif-jp);
+        font-size: 0.875rem;
+        letter-spacing: 0.06em;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 260ms, transform 260ms;
+        z-index: 100;
+      }
+      .ed-toast.is-visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      [data-fav-id] {
+        width: 36px; height: 36px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border: 1px solid var(--color-line);
+        background: transparent;
+        cursor: pointer;
+        transition: background 220ms, border-color 220ms;
+      }
+      [data-fav-id] svg { width: 14px; height: 14px; stroke: var(--color-ink-2); fill: transparent; stroke-width: 1px; }
+      [data-fav-id]:hover { border-color: var(--color-ink); }
+      [data-fav-id].is-active { background: var(--color-ink); border-color: var(--color-ink); }
+      [data-fav-id].is-active svg { stroke: var(--color-bg); fill: var(--color-bg); }
+    </style>
   </body>
 </html>

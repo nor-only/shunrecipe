@@ -1,0 +1,86 @@
+---
+import { regions } from '@data/regions';
+
+interface Props {
+  mode: 'recipes' | 'vegetables';
+  placeholder?: string;
+}
+const { mode, placeholder = '野菜名・レシピ名・産地・タグで検索' } = Astro.props;
+
+const seasons = [
+  { id: 'all', label: 'すべて' },
+  { id: 'spring', label: '春' },
+  { id: 'summer', label: '夏' },
+  { id: 'autumn', label: '秋' },
+  { id: 'winter', label: '冬' },
+];
+
+const regionList = [
+  { id: 'all', label: '全国' },
+  ...regions.map((r) => ({ id: r.id, label: r.name })),
+];
+
+const genres = ['和', '洋', '中', 'エスニック', '創作'];
+const times = [
+  { id: 'all', label: 'Any' },
+  { id: '15', label: '〜15min' },
+  { id: '30', label: '〜30min' },
+  { id: '60', label: '〜60min' },
+  { id: '60+', label: '60min〜' },
+];
+---
+<section class="filter-bar" role="search" data-filter-bar data-mode={mode} aria-label="絞り込み検索">
+  <div class="search-shell">
+    <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+    </svg>
+    <input
+      type="search"
+      data-filter-q
+      placeholder={placeholder}
+      aria-label="キーワード検索"
+    />
+    <span class="filter-count" data-filter-count aria-live="polite"></span>
+  </div>
+
+  <div class="row">
+    <span class="label">Season</span>
+    <div class="pill-group" data-filter-group="season">
+      {seasons.map((s) => (
+        <button type="button" class={`pill ${s.id === 'all' ? 'is-active' : ''}`} data-value={s.id} aria-pressed={s.id === 'all'}>{s.label}</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="row">
+    <span class="label">Region</span>
+    <div class="pill-group" data-filter-group="region">
+      {regionList.map((r) => (
+        <button type="button" class={`pill ${r.id === 'all' ? 'is-active' : ''}`} data-value={r.id} aria-pressed={r.id === 'all'}>{r.label}</button>
+      ))}
+    </div>
+  </div>
+
+  {mode === 'recipes' && (
+    <div class="row">
+      <span class="label">Genre</span>
+      <div class="pill-group" data-filter-group="genre" data-multi>
+        {genres.map((g) => (
+          <button type="button" class="pill" data-value={g} aria-pressed="false">{g}</button>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {mode === 'recipes' && (
+    <div class="row">
+      <span class="label">Time</span>
+      <div class="seg-group" data-filter-group="time">
+        {times.map((t) => (
+          <button type="button" class={`seg ${t.id === 'all' ? 'is-active' : ''}`} data-value={t.id}>{t.label}</button>
+        ))}
+      </div>
+    </div>
+  )}
+</section>

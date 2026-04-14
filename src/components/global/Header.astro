@@ -1,139 +1,36 @@
 ---
-import { regions } from '@data/regions';
-
 interface Props {
   darkHero?: boolean;
 }
 const { darkHero = false } = Astro.props;
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/seasonal/', label: '四季の図鑑' },
+  { href: '/recipes/', label: 'レシピ' },
+  { href: '/favorites/', label: 'お気に入り' },
+];
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header class:list={['header', { 'is-dark': darkHero }]}>
-  <div class="container-site">
-    <div class="flex items-center justify-between gap-4 py-4 sm:py-5">
-      <!-- Logo -->
-      <a href="/" class="brand-mark group shrink-0">
-        <span class="brand-mark-icon">SR</span>
-        <span class="brand-mark-text">SHUNRECIPE</span>
-      </a>
-
-      <!-- Desktop Nav -->
-      <nav class="hidden lg:flex items-center gap-8 xl:gap-9">
-        {[
-          { href: '/', label: 'ホーム' },
-          { href: '/seasonal/', label: '四季の図鑑' },
-          { href: '/recipes/', label: 'レシピ' },
-          { href: '/favorites/', label: 'お気に入り' },
-        ].map(link => (
-          <a
-            href={link.href}
-            class:list={[
-              'text-[0.8125rem] font-semibold tracking-wider transition-colors duration-300 whitespace-nowrap',
-              darkHero
-                ? 'text-white/75 hover:text-white'
-                : 'text-text-muted hover:text-text'
-            ]}
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-        <!-- Region Selector -->
-        <div class="region-selector hidden lg:block" id="regionSelector">
-          <button type="button" class="region-selector-trigger" data-region-trigger>
-            <span class="material-symbols-outlined" style="font-size:18px">location_on</span>
-            <span data-region-label>全国</span>
-            <span class="material-symbols-outlined" style="font-size:16px">expand_more</span>
-          </button>
-          <div class="region-selector-panel">
-            <p class="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-text-subtle mb-1">Region</p>
-            <p class="text-[0.8125rem] text-text-muted">あなたの地域に関連する旬野菜を表示します</p>
-            <div class="region-selector-grid">
-              <button type="button" class="region-option" data-region-value="all">全国</button>
-              {regions.map(r => (
-                <button type="button" class="region-option" data-region-value={r.id}>
-                  {r.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile Menu Toggle (morphing hamburger) -->
-        <button
-          data-nav-toggle
-          aria-expanded="false"
-          aria-label="メニューを開く"
-          class:list={[
-            'hamburger lg:hidden',
-            { 'is-dark': darkHero }
-          ]}
-        >
-          <span class="hamburger-box">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-          </span>
-        </button>
-      </div>
-    </div>
+<header class={`ed-header ${darkHero ? 'on-dark' : ''}`}>
+  <div class="container-wide bar">
+    <a href="/" class="brand">
+      SHUNRECIPE<span class="en">shun · recipe</span>
+    </a>
+    <nav aria-label="Primary" class="ed-nav-links">
+      {links.slice(1).map((l) => (
+        <a href={l.href} class={isActive(l.href) ? 'is-active' : ''}>{l.label}</a>
+      ))}
+    </nav>
+    <button type="button" class="ed-hamburger" aria-label="メニューを開く" aria-expanded="false" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
-<script>
-  import { regions } from '@data/regions';
-
-  function regionLabel(id: string): string {
-    if (id === 'all') return '全国';
-    const r = regions.find((x) => x.id === id);
-    return r ? r.name : '全国';
-  }
-
-  function initRegionSelector() {
-    const selector = document.getElementById('regionSelector');
-    if (!selector) return;
-    const trigger = selector.querySelector<HTMLElement>('[data-region-trigger]');
-    const labelEl = selector.querySelector<HTMLElement>('[data-region-label]');
-    const options = selector.querySelectorAll<HTMLElement>('[data-region-value]');
-
-    const store = (window as any).__shunrecipe;
-    const current = store?.getRegion?.() || 'all';
-    if (labelEl) labelEl.textContent = regionLabel(current);
-    options.forEach((o) => {
-      o.classList.toggle('is-active', o.dataset.regionValue === current);
-    });
-
-    trigger?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      selector.classList.toggle('is-open');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!selector.contains(e.target as Node)) {
-        selector.classList.remove('is-open');
-      }
-    });
-
-    options.forEach((opt) => {
-      opt.addEventListener('click', () => {
-        const value = opt.dataset.regionValue || 'all';
-        store?.setRegion?.(value);
-        if (labelEl) labelEl.textContent = regionLabel(value);
-        options.forEach((o) =>
-          o.classList.toggle('is-active', o.dataset.regionValue === value),
-        );
-        selector.classList.remove('is-open');
-        store?.showToast?.(
-          value === 'all' ? '全国の旬を表示します' : `${regionLabel(value)}の旬を表示します`,
-        );
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRegionSelector);
-  } else {
-    initRegionSelector();
-  }
-</script>
+<div class="ed-overlay" role="dialog" aria-modal="true" aria-label="ナビゲーション">
+  <ul>
+    {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+  </ul>
+</div>

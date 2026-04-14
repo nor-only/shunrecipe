@@ -1,26 +1,31 @@
 ---
-import type { Vegetable } from '@data/vegetables';
-import { seasonNames } from '@data/vegetables';
-
 interface Props {
-  vegetable: Vegetable;
-  showMonths?: boolean;
+  slug: string;
+  name_ja: string;
+  name_en: string;
+  seasons: Array<'spring'|'summer'|'autumn'|'winter'>;
+  image?: string;
+  region?: string;
 }
-
-const { vegetable, showMonths = false } = Astro.props;
-const seasonInfo = seasonNames[vegetable.season];
-const label = showMonths
-  ? vegetable.months.map(m => `${m}月`).join('・')
-  : seasonInfo.jp;
+const { slug, name_ja, name_en, seasons, image, region } = Astro.props;
+const primary = seasons[0];
+const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }[primary];
 ---
-
-<a href={`/vegetables/${vegetable.id}/`} class="veg-card block group">
-  <span class="veg-card-mark">{vegetable.emoji}</span>
-  <span class="veg-card-name-en">{vegetable.nameEn}</span>
-  <span class="block font-heading text-[1.0625rem] mb-3 group-hover:text-accent transition-colors">
-    {vegetable.name}
-  </span>
-  <span class:list={['season-badge', `season-badge-${vegetable.season}`]}>
-    {label}
-  </span>
+<a href={`/vegetables/${slug}/`} class="ed-card">
+  {image ? (
+    <div class="media">
+      <img src={image} alt={name_ja} loading="lazy" decoding="async" />
+    </div>
+  ) : (
+    <div class="media" style="display:flex; align-items:center; justify-content:center;">
+      <span style="font-family: var(--font-serif-jp); font-size: clamp(1.75rem, 4vw, 2.5rem); color: var(--color-ink-2); letter-spacing: 0.12em;">{name_ja}</span>
+    </div>
+  )}
+  <div class="rule"></div>
+  <div class="meta">
+    <span class="genre" style={`color: var(--color-${primary});`}><span class="season-dot"></span>{seasonJp}</span>
+    {region && <span class="genre">{region}</span>}
+  </div>
+  <h3 class="title">{name_ja}</h3>
+  <p class="caption-en" style="font-size: 0.75rem;">{name_en}</p>
 </a>

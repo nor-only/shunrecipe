@@ -1,123 +1,29 @@
 ---
-const currentYear = new Date().getFullYear();
+const year = new Date().getFullYear();
+const month = String(new Date().getMonth() + 1).padStart(2, '0');
 ---
-
-<footer class="bg-primary text-white">
-  <div class="container-site py-14 sm:py-20 md:py-24">
-    <!-- Brand Block -->
-    <section class="footer-group max-w-md mb-12 md:mb-14">
-      <a href="/" class="brand-mark mb-5">
-        <span class="brand-mark-icon">SR</span>
-        <span class="brand-mark-text">SHUNRECIPE</span>
-      </a>
-      <p class="font-heading text-[1.25rem] sm:text-[1.375rem] leading-relaxed mb-3">
-        旬の力を、毎日の食卓へ。
-      </p>
-      <p class="text-[0.8125rem] text-white/55 leading-[1.9]">
-        日本の四季と地域が育む旬野菜と、その魅力を最大限に引き出すレシピを編集者の目線でお届けします。
-      </p>
-    </section>
-
-    <!-- Link Groups — mobile: stacked with dividers / desktop: 3-col grid -->
-    <div class="footer-groups pt-10 md:pt-12 border-t border-white/10 grid md:grid-cols-12 gap-x-8">
-      <!-- Navigation -->
-      <section class="footer-group md:col-span-4">
-        <h4 class="footer-heading">Navigation</h4>
-        <ul class="footer-list">
-          <li><a href="/" class="footer-link">ホーム</a></li>
-          <li><a href="/seasonal/" class="footer-link">四季の図鑑</a></li>
-          <li><a href="/recipes/" class="footer-link">レシピ</a></li>
-          <li><a href="/favorites/" class="footer-link">お気に入り</a></li>
-        </ul>
-      </section>
-
-      <!-- Seasons -->
-      <section class="footer-group md:col-span-4">
-        <h4 class="footer-heading">Four Seasons</h4>
-        <ul class="footer-list grid grid-cols-2 gap-x-4">
-          <li><a href="/seasonal/?season=spring" class="footer-link hover:text-spring">春の野菜</a></li>
-          <li><a href="/seasonal/?season=summer" class="footer-link hover:text-summer">夏の野菜</a></li>
-          <li><a href="/seasonal/?season=autumn" class="footer-link hover:text-autumn">秋の野菜</a></li>
-          <li><a href="/seasonal/?season=winter" class="footer-link hover:text-winter">冬の野菜</a></li>
-        </ul>
-      </section>
-
-      <!-- Project -->
-      <section class="footer-group md:col-span-4">
-        <h4 class="footer-heading">Project</h4>
-        <p class="text-[0.8125rem] text-white/60 leading-[1.9]">
-          AIさんいんプロジェクトが山陰地方の食と農業に向き合い、<br class="hidden md:block" />
-          旬と地域の力を届けるために運営しています。
+<footer class="ed-footer">
+  <div class="container-site">
+    <hr class="rule-hair" />
+    <div style="display:grid; gap:2rem; padding-top:2.5rem;" class="footer-grid">
+      <div>
+        <p class="edition">Edition · {year} / {month} — No. 002</p>
+        <p style="font-family: var(--font-serif-jp); font-size: 1.125rem; letter-spacing: 0.12em; margin-top:0.4rem;">
+          SHUNRECIPE <span class="caption-en">— a seasonal recipe journal</span>
         </p>
-      </section>
-    </div>
-
-    <!-- Bottom Strip -->
-    <div class="border-t border-white/10 mt-12 md:mt-16 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-      <p class="text-[0.6875rem] text-white/30 font-outfit tracking-[0.1em]">
-        © {currentYear} SHUNRECIPE — All rights reserved.
-      </p>
-      <p class="text-[0.6875rem] text-white/30 tracking-wide">
-        Curated by AIさんいんプロジェクト
+      </div>
+      <nav aria-label="Footer">
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:1.25rem;">
+          <li><a href="/" class="small" style="color: var(--color-ink); text-decoration:none;">Home</a></li>
+          <li><a href="/seasonal/" class="small" style="color: var(--color-ink); text-decoration:none;">四季の図鑑</a></li>
+          <li><a href="/recipes/" class="small" style="color: var(--color-ink); text-decoration:none;">レシピ</a></li>
+          <li><a href="/favorites/" class="small" style="color: var(--color-ink); text-decoration:none;">お気に入り</a></li>
+        </ul>
+      </nav>
+      <p class="small" style="color: var(--color-ink-3);">
+        © {year} AIさんいんプロジェクト / フューチャーテック株式会社.
+        掲載内容は季節・産地によって変動します。
       </p>
     </div>
   </div>
 </footer>
-
-<style>
-  .footer-heading {
-    font-family: "Outfit", sans-serif;
-    font-size: 0.625rem;
-    letter-spacing: 0.24em;
-    color: rgba(255, 255, 255, 0.4);
-    margin-bottom: 1.25rem;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .footer-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-link {
-    display: inline-block;
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.72);
-    transition: color 0.25s ease, transform 0.25s ease;
-  }
-
-  .footer-link:hover {
-    color: rgb(111, 179, 138);
-    transform: translateX(2px);
-  }
-
-  /* Mobile — stacked with clearer separation between each group */
-  @media (max-width: 767px) {
-    .footer-groups {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .footer-groups .footer-group {
-      padding: 1.75rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .footer-groups .footer-group:first-child {
-      padding-top: 0;
-    }
-    .footer-groups .footer-group:last-child {
-      border-bottom: none;
-    }
-    .footer-heading {
-      margin-bottom: 1rem;
-    }
-    .footer-list {
-      gap: 1rem;
-    }
-  }
-</style>
