@@ -128,11 +128,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         return chars;
       }
 
+      function autoTagReveals() {
+        // Auto-apply .reveal to top-level paragraphs / links / buttons inside sections
+        // that don't yet have a reveal-* class.
+        const selectors = [
+          'section > .container-site > *',
+          'section > .container-narrow > *',
+          'article > *',
+        ];
+        const excludeClasses = ['reveal', 'reveal-left', 'reveal-blur', 'reveal-scale', 'clip-reveal', 'char-reveal', 'stagger-children', 'line-reveal', 'hero-section'];
+        selectors.forEach((sel) => {
+          document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+            if (excludeClasses.some((c) => el.classList.contains(c))) return;
+            if (el.closest('.hero-section')) return;
+            if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+            el.classList.add('reveal');
+          });
+        });
+      }
+
       function initReveals() {
+        autoTagReveals();
         gsap.utils.toArray<HTMLElement>('.reveal').forEach((el) => {
           gsap.to(el, {
             opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 90%', once: true },
           });
         });
 
