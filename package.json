@@ -11,7 +11,9 @@
     "gen:og": "node scripts/gen-og.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.88.0",
     "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/vercel": "^10.0.4",
     "@fontsource/fraunces": "^5.2.9",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/noto-serif-jp": "^5.2.8",

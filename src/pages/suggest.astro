@@ -1,0 +1,291 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ChapterHeading from '@components/ui/ChapterHeading.astro';
+import { regions } from '@data/regions';
+
+export const prerender = true;
+---
+<BaseLayout
+  title="冷蔵庫から、旬の一皿を — SHUNRECIPE"
+  description="冷蔵庫にある食材と、あなたの地域の旬を組み合わせて、編集部がレシピを3件ご提案します。"
+  ogImage="/og/default.png"
+>
+  <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">
+    <div class="container-site">
+      <ChapterHeading
+        num="Volume IV — 冷蔵庫と旬"
+        title="冷蔵庫から、旬の一皿を。"
+        caption="Pantry, season, and you"
+        lede="冷蔵庫にあるものと、お住まいの地域の旬を組み合わせて、編集部が3件の献立をお届けします。追加で買うべき旬の素材も併せてご案内します。"
+      />
+    </div>
+  </header>
+
+  <section class="container-narrow">
+    <form id="suggest-form" class="suggest-form" aria-label="レシピ提案フォーム">
+      <div class="suggest-row">
+        <label for="ingredients" class="suggest-label">冷蔵庫の食材（自由記述）</label>
+        <textarea
+          id="ingredients"
+          name="ingredients"
+          rows="4"
+          required
+          placeholder="例: 豚ばら、卵、ごま油、白菜の残り、豆腐、生姜"
+        ></textarea>
+      </div>
+
+      <div class="suggest-grid">
+        <div class="suggest-row">
+          <label for="region" class="suggest-label">地域（任意）</label>
+          <select id="region" name="region">
+            <option value="">未登録</option>
+            {regions.map((r) => <option value={r.id}>{r.name}</option>)}
+          </select>
+        </div>
+        <div class="suggest-row">
+          <label for="season" class="suggest-label">季節（任意）</label>
+          <select id="season" name="season">
+            <option value="">本日の季節に合わせる</option>
+            <option value="spring">春</option>
+            <option value="summer">夏</option>
+            <option value="autumn">秋</option>
+            <option value="winter">冬</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="suggest-actions">
+        <button type="submit" class="ed-btn" id="suggest-submit">編集部に相談する</button>
+        <span class="suggest-note" id="suggest-status" aria-live="polite"></span>
+      </div>
+    </form>
+
+    <div id="suggest-result" class="suggest-result" hidden></div>
+  </section>
+
+  <style>
+    .suggest-form {
+      display: grid; gap: 1.5rem;
+      padding-block: 2.5rem;
+    }
+    .suggest-label {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .suggest-form textarea,
+    .suggest-form select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--color-line);
+      background: #fff;
+      font-family: var(--font-serif-jp);
+      font-size: 1rem;
+      color: var(--color-ink);
+      letter-spacing: 0.04em;
+      resize: vertical;
+    }
+    .suggest-form textarea:focus,
+    .suggest-form select:focus {
+      outline: 0;
+      border-color: var(--color-ink);
+    }
+    .suggest-grid {
+      display: grid; gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .suggest-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .suggest-actions {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .suggest-note {
+      font-family: var(--font-serif-jp);
+      font-size: 0.875rem;
+      color: var(--color-ink-2);
+    }
+    .suggest-result {
+      padding-block: clamp(2rem, 5vw, 4rem);
+      display: grid; gap: 2.5rem;
+    }
+    .suggest-card {
+      display: grid; gap: 0.85rem;
+      padding-bottom: 2rem;
+      border-bottom: 0.5px solid var(--color-line);
+    }
+    .suggest-card:last-child { border-bottom: 0; }
+    .suggest-card .meta {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .suggest-card .title {
+      font-family: var(--font-serif-jp);
+      font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+      line-height: 1.4;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .suggest-card .subtitle {
+      font-family: var(--font-serif-en);
+      font-style: italic;
+      font-size: 0.9375rem;
+      color: var(--color-ink-2);
+    }
+    .suggest-card .story {
+      font-family: var(--font-serif-jp);
+      font-size: 0.9375rem;
+      line-height: 1.95;
+      color: var(--color-ink-2);
+      max-width: 56ch;
+    }
+    .suggest-card ol {
+      counter-reset: ss;
+      list-style: none; padding: 0; margin: 0;
+      display: grid; gap: 0.85rem;
+    }
+    .suggest-card ol li {
+      counter-increment: ss;
+      display: grid; grid-template-columns: auto 1fr; gap: 1rem;
+      font-family: var(--font-serif-jp);
+      font-size: 0.9375rem; line-height: 1.9;
+    }
+    .suggest-card ol li::before {
+      content: counter(ss, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.16em;
+      color: var(--color-ink-3);
+      padding-top: 0.3rem;
+    }
+    .suggest-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--color-line);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      color: var(--color-ink-2);
+      text-transform: uppercase;
+    }
+  </style>
+
+  <script>
+    const REGION_KEY = 'shunrecipe.region';
+    const regionSelect = document.getElementById('region') as HTMLSelectElement | null;
+    if (regionSelect) {
+      try {
+        const saved = localStorage.getItem(REGION_KEY);
+        if (saved) regionSelect.value = saved;
+      } catch {}
+    }
+
+    const form = document.getElementById('suggest-form') as HTMLFormElement | null;
+    const submit = document.getElementById('suggest-submit') as HTMLButtonElement | null;
+    const status = document.getElementById('suggest-status') as HTMLElement | null;
+    const result = document.getElementById('suggest-result') as HTMLElement | null;
+
+    const regionLabels: Record<string, string> = {
+      hokkaido: '北海道', tohoku: '東北', kanto: '関東', chubu: '中部',
+      kinki: '近畿', chugoku: '中国', shikoku: '四国', kyushu_okinawa: '九州・沖縄',
+    };
+    const seasonLabels: Record<string, string> = {
+      spring: '春', summer: '夏', autumn: '秋', winter: '冬',
+    };
+    const genreClass = (g: string) => {
+      if (g === '洋') return 'suggest-tag';
+      return 'suggest-tag';
+    };
+
+    function esc(s: string) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      }[c]!));
+    }
+
+    function renderSuggestion(s: any, idx: number) {
+      const tags = [
+        s.genre && `<span class="${genreClass(s.genre)}">${esc(s.genre)}</span>`,
+        s.time_min && `<span class="suggest-tag">${esc(String(s.time_min))}MIN</span>`,
+        s.difficulty && `<span class="suggest-tag">LV.${esc(String(s.difficulty))}</span>`,
+        ...(s.featured_vegetables || []).slice(0, 3).map((v: string) =>
+          `<a class="suggest-tag" style="text-decoration:none;" href="/vegetables/${esc(v)}/">${esc(v)}</a>`,
+        ),
+      ].filter(Boolean).join('');
+
+      const steps = (s.steps || []).map((st: string) => `<li><p>${esc(st)}</p></li>`).join('');
+      const missing = (s.missing_ingredients || []).length
+        ? `<p class="caption-en" style="font-style:normal; font-variant:normal; margin-top:0.5rem;">買い足したい: ${esc((s.missing_ingredients || []).join(', '))}</p>`
+        : '';
+      const link = s.existing_recipe_id
+        ? `<a class="ed-link" href="/recipes/${esc(s.existing_recipe_id)}/">既存レシピの詳細<span class="arrow">——→</span></a>`
+        : '';
+
+      return `
+        <article class="suggest-card">
+          <p class="chapter-num">Suggestion ${String(idx + 1).padStart(2, '0')}</p>
+          <hr class="rule-accent" style="width:36px; height:1px; background: var(--color-ink); border:0;" />
+          <h3 class="title">${esc(s.title || '')}</h3>
+          ${s.subtitle ? `<p class="subtitle">${esc(s.subtitle)}</p>` : ''}
+          <div class="meta">${tags}</div>
+          ${s.story ? `<p class="story">${esc(s.story)}</p>` : ''}
+          ${missing}
+          ${steps ? `<ol style="margin-top:1rem;">${steps}</ol>` : ''}
+          ${link}
+        </article>
+      `;
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form || !submit || !status || !result) return;
+      const fd = new FormData(form);
+      const payload = {
+        ingredients: String(fd.get('ingredients') || '').trim(),
+        region: String(fd.get('region') || ''),
+        season: String(fd.get('season') || ''),
+      };
+      if (!payload.ingredients) {
+        status.textContent = '冷蔵庫の食材を入力してください。';
+        return;
+      }
+
+      submit.disabled = true;
+      status.textContent = '編集部が献立を編纂中…（最大30秒）';
+      result.hidden = true;
+      result.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          status.textContent = `エラー: ${data.error || res.statusText}`;
+          return;
+        }
+        const r = data.result;
+        if (!r || !Array.isArray(r.suggestions)) {
+          status.textContent = '応答が不正でした。再度お試しください。';
+          return;
+        }
+        const ctx = `${r.season ? seasonLabels[r.season] + 'の' : ''}${r.region ? regionLabels[r.region] + '・' : ''}編纂より`;
+        const cache = data.usage?.cache_read_input_tokens
+          ? `（キャッシュ: ${data.usage.cache_read_input_tokens.toLocaleString()} tokens 再利用）`
+          : '';
+        status.textContent = `${ctx} ${cache}`;
+
+        result.innerHTML = r.suggestions.map((s: any, i: number) => renderSuggestion(s, i)).join('');
+        result.hidden = false;
+      } catch (err) {
+        status.textContent = 'ネットワークエラー。再度お試しください。';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  </script>
+</BaseLayout>
