@@ -1,0 +1,159 @@
+---
+export const prerender = true;
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ChapterHeading from '@components/ui/ChapterHeading.astro';
+---
+<BaseLayout
+  title="コミュニティ — SHUNRECIPE"
+  description="読者どうしで旬の一皿を贈り合う、近日開設予定のコミュニティ。"
+  ogImage="/og/default.png"
+>
+  <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">
+    <div class="container-site">
+      <div style="display:flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+        <span class="soon-badge">Coming soon</span>
+        <span class="caption-en">2026 — forthcoming</span>
+      </div>
+      <ChapterHeading
+        num="Volume VI — 読者の厨房"
+        title="あなたの旬を、ほかの読者に手渡す場所。"
+        caption="A community of cooks"
+        lede="料理の投稿、作ってみた報告、季節の食卓の共有。一冊の雑誌を超えて、読者どうしが手を取り合える場所として近日開設します。"
+      />
+    </div>
+  </header>
+
+  <section class="section-pad-sm">
+    <div class="container-site">
+      <p class="chapter-num">Chapter 01 — フィード</p>
+      <hr class="rule-accent" style="margin: 0.75rem 0 2rem;" />
+      <h2 class="h-section" style="margin-bottom: 2rem;">読者の投稿</h2>
+
+      <div class="ed-grid ed-grid-asym soon-disabled">
+        <article class="soon-card ed-card ed-card-wide">
+          <div class="soon-mask"></div>
+          <div class="media" style="aspect-ratio: 3/2; background: var(--color-bg-warm); display:flex; align-items:center; justify-content:center;">
+            <span class="chapter-num">Reader's photograph</span>
+          </div>
+          <div class="rule"></div>
+          <div class="meta">
+            <span class="genre">和 · 30MIN</span>
+            <span class="genre accent-spring"><span class="season-dot"></span>春</span>
+          </div>
+          <h3 class="title">たけのこと蕗の土佐煮、母の味を真似て</h3>
+          <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85;">
+            四月の日曜、実家から届いた筍を茹でて、出汁と薄口で炊きました。木の芽を叩いて…
+          </p>
+          <p class="caption-en" style="font-size: 0.8125rem;">@reader_sakiko · 2026.04.12</p>
+        </article>
+
+        {[
+          { t: '丹波黒枝豆、塩茹での黄金比を探す', u: '@kuro_hyogo', d: '2026.10.08', season: 'autumn', label: '秋' },
+          { t: 'ゴーヤーチャンプルーに豆腐を使う派の記録', u: '@okinawa_daily', d: '2026.07.22', season: 'summer', label: '夏' },
+          { t: '聖護院大根の皮できんぴら、翌朝の定番', u: '@kyo_kitchen', d: '2026.01.18', season: 'winter', label: '冬' },
+        ].map((m) => (
+          <article class="soon-card ed-card">
+            <div class="soon-mask"></div>
+            <div class="media" style="display:flex; align-items:center; justify-content:center;">
+              <span class="chapter-num">Reader's photograph</span>
+            </div>
+            <div class="rule"></div>
+            <div class="meta">
+              <span class="genre">和 · 20MIN</span>
+              <span class={`genre accent-${m.season}`}><span class="season-dot"></span>{m.label}</span>
+            </div>
+            <h3 class="title">{m.t}</h3>
+            <p class="caption-en" style="font-size: 0.8125rem;">{m.u} · {m.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad-sm" style="background: var(--color-bg-warm);">
+    <div class="container-narrow">
+      <p class="chapter-num">Chapter 02 — 予定されている機能</p>
+      <hr class="rule-accent" style="margin: 0.75rem 0 2rem;" />
+      <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 1.5rem;">
+        <li style="display: grid; grid-template-columns: 64px 1fr; gap: 1.25rem;">
+          <span class="chapter-num">01</span>
+          <div>
+            <p style="font-family: var(--font-serif-jp); font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.4rem;">メール登録と認証</p>
+            <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85;">
+              シンプルな ID とパスワード。書き手と読み手の境界を、ゆるやかに。
+            </p>
+          </div>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px 1fr; gap: 1.25rem;">
+          <span class="chapter-num">02</span>
+          <div>
+            <p style="font-family: var(--font-serif-jp); font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.4rem;">投稿・写真・既存レシピ紐付け</p>
+            <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85;">
+              本誌のレシピIDに沿って作品を登録。写真と短文で、ご自身の一皿を残せます。
+            </p>
+          </div>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px 1fr; gap: 1.25rem;">
+          <span class="chapter-num">03</span>
+          <div>
+            <p style="font-family: var(--font-serif-jp); font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.4rem;">コメント・いいね・フォロー</p>
+            <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85;">
+              気に入った書き手を追いかける、静かな交流の仕組み。
+            </p>
+          </div>
+        </li>
+        <li style="display: grid; grid-template-columns: 64px 1fr; gap: 1.25rem;">
+          <span class="chapter-num">04</span>
+          <div>
+            <p style="font-family: var(--font-serif-jp); font-size: 1.0625rem; font-weight: 500; margin-bottom: 0.4rem;">地域別の読者フィード</p>
+            <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85;">
+              郵便番号から推定した地域をもとに、お近くの読者の投稿を優先してお届けします。
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--color-line);">
+        <p class="chapter-num" style="margin-bottom: 0.75rem;">Notify me</p>
+        <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85; max-width: 52ch;">
+          開設のお知らせをご希望の場合は、メールアドレスをご登録ください。記録は端末内にのみ保持し、サーバーへは送信されません（正式公開時に、登録いただいたアドレスへのご案内ページをご用意します）。
+        </p>
+        <form id="notify-form" style="display:flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem;">
+          <input
+            type="email"
+            required
+            id="notify-email"
+            placeholder="you@example.com"
+            style="flex:1; min-width: 240px; padding: 0.75rem 1rem; border: 1px solid var(--color-line); background: #fff; font-family: var(--font-mono); font-size: 0.9375rem; letter-spacing: 0.04em;"
+          />
+          <button type="submit" class="ed-btn">登録</button>
+        </form>
+        <p id="notify-status" aria-live="polite" style="font-family: var(--font-serif-jp); font-size: 0.875rem; color: var(--color-ink-2); margin-top: 0.75rem; min-height: 1.5em;"></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('notify-form') as HTMLFormElement | null;
+    const status = document.getElementById('notify-status');
+    const email = document.getElementById('notify-email') as HTMLInputElement | null;
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!email?.value || !status) return;
+      try {
+        localStorage.setItem('shunrecipe.community_notify', email.value);
+        status.textContent = `ご登録ありがとうございます。${email.value} に開設のお知らせをお届けします。`;
+      } catch {
+        status.textContent = 'ブラウザの設定で localStorage が無効の可能性があります。';
+      }
+    });
+
+    try {
+      const saved = localStorage.getItem('shunrecipe.community_notify');
+      if (saved && email && status) {
+        email.value = saved;
+        status.textContent = `すでにご登録済みです: ${saved}`;
+      }
+    } catch {}
+  </script>
+</BaseLayout>
