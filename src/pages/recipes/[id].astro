@@ -42,7 +42,7 @@ const recipeLd = {
 <BaseLayout
   title={`${d.title} — SHUNRECIPE`}
   description={d.subtitle || d.story.slice(0, 120)}
-  ogImage={d.hero_image}
+  ogImage={`/og/recipe-${d.id}.png`}
   jsonLd={recipeLd}
 >
   <article>

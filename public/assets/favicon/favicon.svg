@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#2f6f4e"/>
-  <text x="16" y="22" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="14" fill="#fff">SR</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#1C1A17"/>
+  <rect x="4" y="4" width="56" height="56" rx="5" fill="none" stroke="#D9D3C3" stroke-width="0.5" stroke-opacity="0.35"/>
+  <text x="32" y="47" text-anchor="middle"
+        font-family='"Shippori Mincho B1","Noto Serif JP","YuMincho","Hiragino Mincho ProN","MS PMincho","SimSun",serif'
+        font-weight="500" font-size="44" fill="#FAF8F3">旬</text>
 </svg>

@@ -1,0 +1,176 @@
+---
+import { regions } from '@data/regions';
+---
+
+<aside class="region-picker" aria-label="地域登録" data-region-picker>
+  <div class="container-site region-inner">
+    <div class="region-intro">
+      <p class="chapter-num">Local Edition</p>
+      <p class="region-title">お住まいの地域から、旬をご案内します。</p>
+    </div>
+
+    <form class="region-form" data-region-form>
+      <label for="postal" class="region-label">郵便番号（上3桁でも可）</label>
+      <div class="region-input-row">
+        <input
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9\-]{3,8}"
+          id="postal"
+          placeholder="例: 100-0001 / 830"
+          maxlength="8"
+          data-region-input
+        />
+        <button type="submit" class="ed-btn" data-region-submit>登録</button>
+      </div>
+      <p class="region-status" data-region-status aria-live="polite"></p>
+    </form>
+
+    <details class="region-manual">
+      <summary>地域から選択</summary>
+      <div class="region-manual-grid" data-region-manual>
+        {regions.map((r) => (
+          <button type="button" class="pill" data-region-pick={r.id}>{r.name}</button>
+        ))}
+      </div>
+    </details>
+  </div>
+</aside>
+
+<style>
+  .region-picker {
+    border-block: 0.5px solid var(--color-line);
+    background: var(--color-bg-warm);
+    padding-block: clamp(2rem, 4vw, 3rem);
+  }
+  .region-inner {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 900px) {
+    .region-inner {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+  }
+  .region-title {
+    font-family: var(--font-serif-jp);
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 500;
+    color: var(--color-ink);
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    margin-top: 0.75rem;
+  }
+  .region-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    margin-bottom: 0.75rem;
+  }
+  .region-input-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+  .region-input-row input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink);
+  }
+  .region-input-row input:focus {
+    outline: 0;
+    border-color: var(--color-ink);
+  }
+  .region-status {
+    margin-top: 0.75rem;
+    font-family: var(--font-serif-jp);
+    font-size: 0.875rem;
+    color: var(--color-ink-2);
+    min-height: 1.5em;
+  }
+  .region-manual {
+    margin-top: 0.5rem;
+  }
+  .region-manual summary {
+    cursor: pointer;
+    font-family: var(--font-serif-jp);
+    font-size: 0.875rem;
+    color: var(--color-ink-2);
+    letter-spacing: 0.04em;
+  }
+  .region-manual-grid {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+</style>
+
+<script>
+  import { postalToRegion } from '@data/postal';
+  const REGION_KEY = 'shunrecipe.region';
+
+  const regionLabels: Record<string, string> = {
+    hokkaido: '北海道', tohoku: '東北', kanto: '関東', chubu: '中部',
+    kinki: '近畿', chugoku: '中国', shikoku: '四国', kyushu_okinawa: '九州・沖縄',
+  };
+
+  function setRegion(id: string, viaPostal?: string) {
+    localStorage.setItem(REGION_KEY, id);
+    if (viaPostal) localStorage.setItem('shunrecipe.postal', viaPostal);
+    document.dispatchEvent(new CustomEvent('region:change', { detail: id }));
+    renderStatus(id, viaPostal);
+  }
+
+  function renderStatus(id: string, postal?: string) {
+    const el = document.querySelector<HTMLElement>('[data-region-status]');
+    if (!el) return;
+    const label = regionLabels[id] || id;
+    const prefix = postal ? `登録しました: ${postal} — ${label}` : `登録しました: ${label}`;
+    el.innerHTML = `${prefix}　<a class="ed-link" href="/seasonal/?region=${id}">${label}の旬を見る<span class="arrow">——→</span></a>　<a class="ed-link" href="/recipes/?region=${id}">${label}のレシピ<span class="arrow">——→</span></a>`;
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-region-form]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = form.querySelector<HTMLInputElement>('[data-region-input]');
+      const status = form.querySelector<HTMLElement>('[data-region-status]');
+      if (!input || !status) return;
+      const v = input.value.trim();
+      if (!v) return;
+      const region = postalToRegion(v);
+      if (!region) {
+        status.textContent = '郵便番号から地域を特定できませんでした。上3桁をご確認ください。';
+        return;
+      }
+      setRegion(region, v);
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-region-pick]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.regionPick!;
+      setRegion(id);
+    });
+  });
+
+  // On load: hydrate saved state
+  try {
+    const saved = localStorage.getItem(REGION_KEY);
+    const postal = localStorage.getItem('shunrecipe.postal') || undefined;
+    if (saved) renderStatus(saved, postal);
+  } catch {}
+
+  // Expose for other components
+  (window as any).__shunrecipe = {
+    ...((window as any).__shunrecipe || {}),
+    getRegion: () => localStorage.getItem(REGION_KEY),
+    setRegion,
+  };
+</script>
