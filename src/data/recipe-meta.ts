@@ -158,6 +158,196 @@ const overrides: Record<string, Partial<RecipeMeta>> = {
     story: '房をほどいて、さっと塩茹でに。ドレッシングを控えめにして、冬の緑を楽しむ。',
     tags: ['副菜', '冬'],
   },
+
+  // ── 追加story: 旧レシピの editorial 加筆 ──
+  r_asparagus_bacon: {
+    region: 'hokkaido',
+    story: 'アスパラを豚ばらで巻いて、焦げ目がつくまで。北の畑の太さを生かす、最小限の仕立て。',
+    tags: ['主菜', '初夏'],
+  },
+  r_asparagus_soup: {
+    region: 'hokkaido',
+    story: 'アスパラの薄切りをバターで炒め、ミキサーへ。冷やして出せば、ホテルの朝食の一杯。',
+    tags: ['冷製', '前菜'],
+    pairing_wine: ['Chardonnay'],
+  },
+  r_cabbage_roll: {
+    region: 'kanto',
+    story: '葉を破らず広げる手の動きが、最初の関門。煮込む鍋は、隙間なく並べて蓋をするだけ。',
+    tags: ['煮込み', '作り置き'],
+  },
+  r_cabbage_peperoncino: {
+    region: 'kanto',
+    story: '茹で汁と油を乳化させる一瞬に、春のキャベツの甘みを閉じ込める。桜えびで海の香りを足す。',
+    tags: ['パスタ', '時短'],
+    pairing_wine: ['Pinot Grigio'],
+  },
+  r_tomato: {
+    region: 'kanto',
+    story: '湯むきしたミニトマトを、オリーブオイルとバジルで漬ける。冷蔵庫で半日置くと、味が丸くなる。',
+    tags: ['常備菜', '夏'],
+  },
+  r_cucumber_salad: {
+    region: 'kanto',
+    story: '叩いて割ったきゅうりに、ごま油と塩。切るより割るほうが、味の入り方が深い。',
+    tags: ['副菜', '夏'],
+  },
+  r_cucumber_sunomono: {
+    region: 'kanto',
+    story: '輪切りを塩で揉み、甘酢に浸す。わかめとの相性は、理屈ではなく体が覚えている。',
+    tags: ['小鉢', '和食'],
+  },
+  r_cucumber_pork_fry: {
+    region: 'kanto',
+    story: 'きゅうりを炒めると、シャキッとした歯触りが残る。豚薄切りと醤油だけで、白飯が走る。',
+    tags: ['主菜', '夏'],
+  },
+  r_corn_soup: {
+    region: 'hokkaido',
+    story: '北の甘いとうもろこしを、芯ごと煮出してミキサーへ。裏ごしの手間の分、舌触りが応える。',
+    tags: ['スープ', '夏'],
+  },
+  r_corn_kakiage: {
+    region: 'hokkaido',
+    story: '実を削いで薄衣でまとめる、夏の天ぷら。塩だけで食べたい、甘味そのものの一皿。',
+    tags: ['揚げ物', '夏'],
+  },
+  r_edamame_garlic: {
+    region: 'tohoku',
+    story: 'さやの両端を切り落とし、ガーリックバターで炒る。塩は仕上げに粗塩で、指で食べる。',
+    tags: ['肴', 'ビール'],
+    pairing_wine: ['ピルスナー', 'ドライシェリー'],
+  },
+  r_edamame_salad: {
+    region: 'tohoku',
+    story: 'むき豆、コーン、トマト。夏野菜を角切りで揃え、オリーブオイルで和える。色だけで食欲が立つ。',
+    tags: ['サラダ', '作り置き'],
+  },
+  r_nanohana_pasta: {
+    region: 'kanto',
+    story: 'アンチョビと菜の花を、茹で汁で乳化。ほろ苦さと塩気が、春のパスタを引き締める。',
+    tags: ['パスタ', '春'],
+    pairing_wine: ['Verdicchio'],
+  },
+  r_nanohana_tamagotoji: {
+    region: 'kanto',
+    story: '出汁で菜の花をさっと煮て、溶き卵で閉じる。蓋をして半熟で火を止めるのが肝。',
+    tags: ['丼物', '和食の基本'],
+  },
+  r_shin_tamanegi_salad: {
+    region: 'shikoku',
+    story: '水にさらしすぎると、新玉の甘さが逃げる。鰹節と醤油、それだけで食卓の主役に。',
+    tags: ['サラダ', '春'],
+  },
+  r_shin_tamanegi_sukiyaki: {
+    region: 'shikoku',
+    story: '新玉をくし切りに、割り下で煮含める。肉の甘みと新玉の甘みが、春の鍋で出会う。',
+    tags: ['鍋', '春'],
+  },
+  r_pumpkin: {
+    region: 'hokkaido',
+    story: '皮ごと蒸して、バターと一緒に潰す。牛乳で伸ばして、器に盛る。秋のもっとも単純な一杯。',
+    tags: ['スープ', '秋'],
+  },
+  r_kabocha_pudding: {
+    region: 'hokkaido',
+    story: '蒸したかぼちゃに、卵と砂糖、牛乳を合わせる。秋の野菜をデザートに昇華する、静かな技。',
+    tags: ['デザート', '秋'],
+  },
+  r_renkon_chikuwa: {
+    region: 'chubu',
+    story: 'れんこんの穴にちくわを詰め、輪切りに。切り口の白と黒のリズムが、弁当箱を整える。',
+    tags: ['お弁当', '副菜'],
+  },
+  r_renkon_salad: {
+    region: 'chubu',
+    story: '薄切りを甘酢に浸してから、マヨネーズで和える。二つの酸味が、れんこんの甘さを立たせる。',
+    tags: ['サラダ', '作り置き'],
+  },
+  r_satoimo_soboro: {
+    region: 'tohoku',
+    story: '里芋を下茹でしてから、鶏そぼろあんをかける。柚子の皮をひとつまみ、冬の入口に。',
+    tags: ['和食', '煮物'],
+  },
+  r_satoimo_croquette: {
+    region: 'tohoku',
+    story: '蒸した里芋を潰して、パン粉で揚げる。ねっとりと、ほくほくの境界を楽しむコロッケ。',
+    tags: ['揚げ物', '主菜'],
+  },
+  r_satoimo_gratin: {
+    region: 'tohoku',
+    story: '里芋のとろみに、ベシャメル。和と洋が、オーブンの中で和解する秋の皿。',
+    tags: ['オーブン', '主菜'],
+  },
+  r_satsumaimo_gratin: {
+    region: 'kyushu_okinawa',
+    story: '輪切りを蒸して、生クリームとチーズで焼く。鹿児島の芋の甘さが、乳脂と出会う。',
+    tags: ['オーブン', '秋冬'],
+    pairing_wine: ['甘口白'],
+  },
+  r_daikon: {
+    region: 'kinki',
+    story: '厚切りを昆布出汁でくたくたに。柚子味噌を一点、大根の真ん中に置いて供する。',
+    tags: ['煮物', '冬'],
+  },
+  r_daikon_pork: {
+    region: 'kanto',
+    story: '大根と豚ばらを、砂糖と醤油でじっくり煮含める。一晩寝かせた翌日が、本当の完成。',
+    tags: ['煮込み', '冬'],
+  },
+  r_daikon_scallop_salad: {
+    region: 'hokkaido',
+    story: '大根の千切りに、焼いた帆立を乗せる。柚子の皮を散らせば、冬の海と畑が一皿で出会う。',
+    tags: ['前菜', '冬'],
+  },
+  r_hakusai_mapo: {
+    region: 'kinki',
+    story: '白菜を麻婆の具に。トロトロの葉と、ピリ辛の餡。冬の白飯に、一杯では足りない。',
+    tags: ['中華', '主菜'],
+  },
+  r_hourensou_bacon: {
+    region: 'kanto',
+    story: 'ベーコンの脂でほうれん草を炒める。最後に黒胡椒を挽いて、朝食の一皿に。',
+    tags: ['副菜', '朝食'],
+  },
+  r_hourensou_quiche: {
+    region: 'kanto',
+    story: 'ほうれん草と卵と生クリームを、パイ皮で包んでオーブンへ。冬の日曜のブランチ。',
+    tags: ['ブランチ', 'オーブン'],
+    pairing_wine: ['Chablis'],
+  },
+  r_broccoli_meat_fry: {
+    region: 'hokkaido',
+    story: 'ブロッコリーと牛肉を、オイスターソースで炒める。茎まで使い切る、中華の定番。',
+    tags: ['中華', '主菜'],
+  },
+  r_broccoli_shrimp: {
+    region: 'hokkaido',
+    story: 'ブロッコリーと海老を、にんにくオイルで。素材二つだけで、皿は華やぐ。',
+    tags: ['前菜', 'オイル'],
+    pairing_wine: ['Sauvignon Blanc'],
+  },
+  r_negi_ahijo: {
+    region: 'kanto',
+    story: '長ねぎを四等分に、ガーリックオイルで煮る。とろけるねぎの甘みを、バゲットに預ける。',
+    tags: ['バル', '冬'],
+    pairing_wine: ['Tempranillo'],
+  },
+  r_negi_pork: {
+    region: 'kanto',
+    story: 'ねぎと豚を、甘辛ダレで絡める。ご飯の上にたっぷり。冬の仕事終わりの、一杯丼。',
+    tags: ['丼物', '主菜'],
+  },
+  r_kinoko_gratin: {
+    region: 'chubu',
+    story: '数種のきのこを、ベシャメルで包んで焼く。秋の森の記憶を、オーブンで温める。',
+    tags: ['オーブン', '秋'],
+  },
+  r_mushroom_pasta_v1: { // avoid collision with existing mushroom_pasta
+    region: 'chubu',
+    story: 'きのこを重ねて炒める。層になった旨味が、パスタに絡む秋の終わり。',
+    tags: ['パスタ', '秋'],
+  },
 };
 
 const seasonByRecipe: Partial<Record<string, Season>> = {};
