@@ -1,179 +1,169 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import RecipeCard from '@components/ui/RecipeCard.astro';
-import SectionHeading from '@components/ui/SectionHeading.astro';
-import { recipes, getRecipeById, getRecipesForVegetable } from '@data/recipes';
-import { seasonNames, getVegetableById } from '@data/vegetables';
-import { getRegionName } from '@data/regions';
+import { getCollection } from 'astro:content';
+import { regionName } from '@data/regions';
 
-export function getStaticPaths() {
-  return recipes.map(r => ({
-    params: { id: r.id },
-  }));
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map((r) => ({ params: { id: r.data.id }, props: { recipe: r } }));
 }
 
-const { id } = Astro.params;
-const recipe = getRecipeById(id!);
+const { recipe } = Astro.props;
+const d = recipe.data;
+const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }[d.season];
+const diffLabel = ({ 1: 'かんたん', 2: 'ふつう', 3: 'むずかしい' } as const)[d.difficulty as 1|2|3];
 
-if (!recipe) {
-  return Astro.redirect('/recipes/');
-}
+const all = await getCollection('recipes');
+const related = all
+  .filter((r) => r.data.id !== d.id && (r.data.season === d.season || r.data.region === d.region))
+  .slice(0, 4);
 
-const seasonInfo = seasonNames[recipe.season];
-const veg = getVegetableById(recipe.mainVegetable);
-const relatedRecipes = getRecipesForVegetable(recipe.mainVegetable)
-  .filter(r => r.id !== recipe.id)
-  .slice(0, 3);
+const recipeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  name: d.title,
+  description: d.story || d.subtitle,
+  image: [new URL(d.hero_image, Astro.site).href],
+  recipeCategory: d.genre,
+  recipeCuisine: d.genre === '和' ? 'Japanese' : d.genre,
+  totalTime: `PT${d.time_min}M`,
+  recipeYield: `${d.servings}人前`,
+  keywords: d.tags?.join(', '),
+  recipeIngredient: d.ingredients.map((i) => `${i.name} ${i.amount}`),
+  recipeInstructions: d.steps.map((s, idx) => ({
+    '@type': 'HowToStep',
+    position: idx + 1,
+    text: s,
+  })),
+  nutrition: d.calories ? { '@type': 'NutritionInformation', calories: `${d.calories} kcal` } : undefined,
+};
 ---
+<BaseLayout
+  title={`${d.title} — SHUNRECIPE`}
+  description={d.subtitle || d.story.slice(0, 120)}
+  ogImage={d.hero_image}
+  jsonLd={recipeLd}
+>
+  <article>
+    <div class="container-site">
+      <nav style="padding-top: clamp(6rem, 12vw, 9rem); display: flex; gap: 1.5rem; align-items: baseline;">
+        <a href="/recipes/" class="ed-link" style="font-size: 0.8125rem;"><span class="arrow">←——</span> レシピ総覧</a>
+        <span class="meta-inline">{d.genre} · {seasonJp} · {d.region ? regionName(d.region) : '日本各地'}</span>
+      </nav>
 
-<BaseLayout title={`${recipe.title} | SHUNRECIPE`} darkHero={true}>
-  <article class="pt-32 pb-20">
-    <div class="container-narrow">
-      <!-- Back link -->
-      <a
-        href="/recipes/"
-        class="inline-flex items-center gap-2 text-[0.75rem] font-semibold text-text-muted hover:text-text transition-colors mb-10 tracking-wider uppercase font-outfit"
-      >
-        <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span>
-        Back to recipes
-      </a>
-
-      <!-- Header -->
-      <header class="mb-12 max-w-3xl">
-        <div class="flex items-center gap-4 mb-6 reveal">
-          <span class:list={['season-badge', `season-badge-${recipe.season}`]}>
-            {seasonInfo.jp}
-          </span>
-          {veg && (
-            <a href={`/vegetables/${veg.id}/`} class="text-[0.75rem] tracking-wider uppercase font-outfit text-text-muted hover:text-accent transition-colors">
-              主役: {veg.name}
-            </a>
+      <header class="recipe-hero">
+        <div>
+          <p class="chapter-num">Recipe · No. {d.id.replace(/^r_/, '').toUpperCase()}</p>
+          <hr class="rule-accent" style="margin: 1rem 0;" />
+          <h1 class="display-2" style="margin-bottom: 1rem;">{d.title}</h1>
+          {d.subtitle && <p class="caption-en" style="font-size: 1rem; font-variant: normal; font-style: italic;">{d.subtitle}</p>}
+          {d.story && (
+            <p style="margin-top: 1.75rem; font-family: var(--font-serif-jp); line-height: 2; color: var(--color-ink-2); max-width: 52ch;">
+              {d.story}
+            </p>
           )}
         </div>
-        <h1 class="font-heading text-[var(--font-size-display)] mb-4 reveal leading-[1.3]">
-          {recipe.title}
-        </h1>
-        <p class="text-[1.0625rem] text-text-muted reveal leading-relaxed">{recipe.subtitle}</p>
+        <div class="media">
+          <img src={d.hero_image} alt={d.title} />
+        </div>
       </header>
 
-      <!-- Hero Image -->
-      <div class="recipe-hero-image clip-reveal mb-8 relative">
-        <img
-          src={recipe.image}
-          alt={recipe.title}
-        />
-        <button
-          type="button"
-          class="fav-toggle absolute top-5 right-5 z-10"
-          data-fav-id={recipe.id}
-          aria-label="お気に入りに追加"
-        >
-          <span class="material-symbols-outlined">favorite</span>
-        </button>
-      </div>
-
-      <!-- Meta strip -->
-      <div class="flex flex-wrap items-stretch mb-16 reveal">
-        <div class="recipe-meta-item">
-          <span class="recipe-meta-label">Time</span>
-          <span class="recipe-meta-value">{recipe.time}<span class="text-[0.75rem] font-medium text-text-muted ml-1">min</span></span>
-        </div>
-        <div class="recipe-meta-item">
-          <span class="recipe-meta-label">Calories</span>
-          <span class="recipe-meta-value">{recipe.calories}<span class="text-[0.75rem] font-medium text-text-muted ml-1">kcal</span></span>
-        </div>
-        <div class="recipe-meta-item">
-          <span class="recipe-meta-label">Servings</span>
-          <span class="recipe-meta-value">{recipe.servings}<span class="text-[0.75rem] font-medium text-text-muted ml-1">人分</span></span>
-        </div>
-        <div class="recipe-meta-item">
-          <span class="recipe-meta-label">Difficulty</span>
-          <span class="recipe-meta-value text-[0.9375rem]">{recipe.difficulty}</span>
-        </div>
-      </div>
-
-      <!-- Content Grid -->
-      <div class="grid lg:grid-cols-3 gap-8 mb-20">
-        <!-- Ingredients (sidebar) -->
-        <div class="lg:col-span-1">
-          <div class="detail-section sticky top-28 reveal">
-            <h3 class="detail-section-title">
-              <span class="material-symbols-outlined" style="font-size:16px">kitchen</span>
-              Ingredients · 材料
-            </h3>
-            {recipe.ingredients.map(i => (
-              <div class="ingredient-row">
-                <span>{i.name}</span>
-                <span>{i.amount}</span>
-              </div>
-            ))}
-            <p class="mt-5 text-[0.75rem] text-text-subtle font-mono-num">
-              {recipe.servings}人分の分量
-            </p>
-          </div>
-        </div>
-
-        <!-- Steps -->
-        <div class="lg:col-span-2">
-          <div class="detail-section mb-6 reveal">
-            <h3 class="detail-section-title">
-              <span class="material-symbols-outlined" style="font-size:16px">restaurant</span>
-              Method · 作り方
-            </h3>
-            {recipe.steps.map((step, idx) => (
-              <div class="recipe-step">
-                <span class="recipe-step-num">{String(idx + 1).padStart(2, '0')}</span>
-                <p>{step}</p>
-              </div>
-            ))}
-          </div>
-
-          <!-- Tips -->
-          <div class="tips-card reveal">
-            <p class="tips-card-title">
-              <span class="material-symbols-outlined" style="font-size:16px">auto_awesome</span>
-              CHEF'S TIPS · 美味しく作るコツ
-            </p>
-            <p>{recipe.tips}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Linked Vegetable */}
-      {veg && (
-        <a
-          href={`/vegetables/${veg.id}/`}
-          class="detail-section flex items-center gap-6 hover:border-accent hover:shadow-hover transition-all mb-20 reveal"
-        >
-          <span class="text-4xl">{veg.emoji}</span>
-          <div class="flex-1">
-            <p class="text-[0.6875rem] font-outfit tracking-[0.2em] uppercase text-text-subtle font-semibold">Main Ingredient</p>
-            <p class="font-heading text-xl mt-1">{veg.name}</p>
-            <p class="text-[0.75rem] text-text-muted font-outfit tracking-wide">{veg.nameEn}</p>
-            <div class="flex flex-wrap gap-1.5 mt-3">
-              {veg.regions.slice(0, 5).map(r => (
-                <span class="region-pill">{getRegionName(r)}</span>
-              ))}
-            </div>
-          </div>
-          <span class="material-symbols-outlined text-text-subtle">arrow_forward</span>
-        </a>
-      )}
-
-      {/* Related Recipes */}
-      {relatedRecipes.length > 0 && (
+      <section class="spec-list" aria-label="レシピ諸元">
         <div>
-          <SectionHeading
-            enTitle="Related"
-            title="この野菜の他のレシピ"
-          />
-          <div class="grid-recipes stagger-children">
-            {relatedRecipes.map(r => (
-              <RecipeCard recipe={r} />
+          <p class="k">Time</p>
+          <p class="v">{d.time_min}分</p>
+        </div>
+        <div>
+          <p class="k">Serves</p>
+          <p class="v">{d.servings}人前</p>
+        </div>
+        <div>
+          <p class="k">Level</p>
+          <p class="v">{diffLabel}</p>
+        </div>
+        <div>
+          <p class="k">Calories</p>
+          <p class="v">{d.calories ? `${d.calories}kcal` : '—'}</p>
+        </div>
+      </section>
+
+      <section class="ed-body" style="padding-block: clamp(2.5rem, 6vw, 5rem);">
+        <div>
+          <h2 class="h-section" style="margin-bottom: 1.25rem;">手順</h2>
+          <hr class="rule-accent" style="margin-bottom: 1.75rem;" />
+          <ol class="steps-list">
+            {d.steps.map((s) => <li><p>{s}</p></li>)}
+          </ol>
+
+          {d.tips && (
+            <div style="margin-top: 3rem; padding: 1.75rem; border-left: 2px solid var(--color-ink); background: var(--color-bg-warm);">
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Editor's note</p>
+              <p style="font-family: var(--font-serif-jp); line-height: 1.9;">{d.tips}</p>
+            </div>
+          )}
+        </div>
+
+        <aside>
+          <h2 class="h-section" style="margin-bottom: 1.25rem;">材料</h2>
+          <hr class="rule-accent" style="margin-bottom: 1rem;" />
+          <table class="ingredients-table">
+            <tbody>
+              {d.ingredients.map((i) => (
+                <tr>
+                  <td>{i.name}</td>
+                  <td>{i.amount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {d.pairing_wine && d.pairing_wine.length > 0 && (
+            <div style="margin-top: 2.5rem;">
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Pairing</p>
+              <p style="font-family: var(--font-serif-jp); line-height: 1.9;">{d.pairing_wine.join(' / ')}</p>
+            </div>
+          )}
+
+          {d.tags && d.tags.length > 0 && (
+            <div style="margin-top: 2rem;">
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Tags</p>
+              <div style="display:flex; flex-wrap:wrap; gap: 0.5rem;">
+                {d.tags.map((t) => <span class="pill" style="pointer-events:none;">{t}</span>)}
+              </div>
+            </div>
+          )}
+
+          <div style="margin-top: 2.5rem;">
+            <button type="button" data-fav-id={d.id} aria-label="お気に入りに追加">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.65 12 21 12 21z"/></svg>
+            </button>
+          </div>
+        </aside>
+      </section>
+    </div>
+
+    {related.length > 0 && (
+      <section class="section-pad-sm" style="background: var(--color-bg-warm);">
+        <div class="container-site">
+          <p class="chapter-num">Related</p>
+          <hr class="rule-accent" style="margin: 0.75rem 0 2rem;" />
+          <h2 class="h-section" style="margin-bottom: 2rem;">近い季節・地域の献立</h2>
+          <div class="ed-grid">
+            {related.map((r) => (
+              <RecipeCard
+                id={r.data.id}
+                title={r.data.title}
+                season={r.data.season}
+                region={r.data.region}
+                genre={r.data.genre}
+                time_min={r.data.time_min}
+                hero_image={r.data.hero_image}
+              />
             ))}
           </div>
         </div>
-      )}
-    </div>
+      </section>
+    )}
   </article>
 </BaseLayout>
