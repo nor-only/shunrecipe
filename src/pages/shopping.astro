@@ -43,6 +43,30 @@ import ChapterHeading from '@components/ui/ChapterHeading.astro';
       </p>
       <div id="shop-search-links" style="display:flex; flex-wrap: wrap; gap: 0.5rem;"></div>
     </section>
+
+    <section class="shop-search-all" style="margin-top: 3rem; padding-top: 2.5rem; border-top: 0.5px solid var(--color-line);">
+      <div style="display:flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem;">
+        <p class="chapter-num" style="margin: 0;">商品カード連携</p>
+        <span class="soon-badge">Coming soon</span>
+      </div>
+      <hr class="rule-accent" style="margin: 0 0 1.25rem;" />
+      <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; line-height: 1.85; max-width: 60ch; margin-bottom: 1.5rem;">
+        検索リンクではなく、実際の商品の写真・価格・送料をこの画面内でご確認いただけるようになります。楽天市場APIを起点に、後日対応いたします。
+      </p>
+      <div class="ed-grid soon-disabled" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+        {['tomato', 'nasu', 'takenoko', 'kabocha'].map((slug) => (
+          <article class="soon-card">
+            <div class="soon-mask"></div>
+            <div style="aspect-ratio: 1/1; background: var(--color-bg-warm); display:flex; align-items:center; justify-content:center;">
+              <span class="chapter-num">Product image</span>
+            </div>
+            <p style="font-family: var(--font-serif-jp); font-size: 0.9375rem; font-weight: 500; line-height: 1.5; margin-top: 0.5rem;">○○産{slug}</p>
+            <p style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-ink-3); letter-spacing: 0.08em;">¥ ———</p>
+            <p style="font-family: var(--font-serif-en); font-style: italic; font-size: 0.8125rem; color: var(--color-ink-2);">via 楽天市場</p>
+          </article>
+        ))}
+      </div>
+    </section>
   </section>
 
   <style>
