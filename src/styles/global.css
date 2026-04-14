@@ -212,6 +212,48 @@
     clip-path: inset(100% 0 0 0);
     will-change: clip-path;
   }
+
+  /* Character-by-character scroll reveal */
+  .char-reveal {
+    display: inline;
+  }
+
+  .gsap-ready .char-reveal .char {
+    display: inline-block;
+    opacity: 0.18;
+    will-change: opacity, transform;
+    transition: color 0.3s ease;
+  }
+
+  /* Line reveal: a wrapper that reveals by line */
+  .gsap-ready .line-reveal {
+    overflow: hidden;
+  }
+
+  .gsap-ready .line-reveal .line-inner {
+    display: inline-block;
+    transform: translateY(110%);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  /* Parallax wrapper */
+  .parallax-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .parallax-img {
+    will-change: transform;
+  }
+
+  /* Fade+blur reveal */
+  .gsap-ready .reveal-blur {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(20px);
+    will-change: opacity, filter, transform;
+  }
 }
 
 /* =========================================
@@ -256,31 +298,153 @@
     inset: 0;
     z-index: 99;
     background-color: var(--color-primary);
-    opacity: 0;
+    background-image:
+      radial-gradient(ellipse at top right, rgba(47, 111, 78, 0.22), transparent 55%),
+      radial-gradient(ellipse at bottom left, rgba(176, 138, 79, 0.08), transparent 50%);
+    clip-path: inset(0 0 100% 0);
     visibility: hidden;
-    transition: opacity var(--duration-normal) var(--ease-out-expo),
-                visibility var(--duration-normal) var(--ease-out-expo);
+    transition: clip-path 0.7s var(--ease-out-expo),
+                visibility 0s linear 0.7s;
   }
 
   .nav-overlay.is-open {
-    opacity: 1;
+    clip-path: inset(0 0 0% 0);
     visibility: visible;
+    transition: clip-path 0.7s var(--ease-out-expo),
+                visibility 0s linear 0s;
   }
 
   .nav-overlay .nav-link {
     display: block;
-    font-size: clamp(1.25rem, 2.4vw, 1.875rem);
+    font-size: clamp(1.375rem, 3.2vw, 2rem);
     font-weight: 600;
     color: var(--color-text-inverse);
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity var(--duration-normal) var(--ease-out-expo),
-                transform var(--duration-normal) var(--ease-out-expo);
+    transform: translateY(40px);
+    transition: opacity 0.7s var(--ease-out-expo),
+                transform 0.7s var(--ease-out-expo);
+    letter-spacing: 0.01em;
   }
 
   .nav-overlay.is-open .nav-link {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .nav-overlay .nav-link .nav-label {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease, letter-spacing 0.3s ease;
+  }
+
+  .nav-overlay .nav-link:hover .nav-label {
+    color: var(--color-accent-glow);
+    letter-spacing: 0.04em;
+  }
+
+  .nav-overlay .nav-link .nav-arrow {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-6px);
+    margin-left: 0.5em;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    color: var(--color-accent-glow);
+  }
+
+  .nav-overlay .nav-link:hover .nav-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================
+   Hamburger Morphing Icon
+   ========================================= */
+@layer components {
+  .hamburger {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    color: var(--color-primary);
+    transition: background-color 0.3s ease;
+  }
+
+  .hamburger:hover {
+    background: var(--color-bg-muted);
+  }
+
+  .header.is-dark .hamburger,
+  .hamburger.is-dark {
+    color: white;
+  }
+
+  .header.is-dark .hamburger:hover,
+  .hamburger.is-dark:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .hamburger-box {
+    position: relative;
+    width: 22px;
+    height: 14px;
+  }
+
+  .hamburger-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.4s var(--ease-out-expo),
+                opacity 0.3s ease,
+                top 0.3s ease 0.15s,
+                width 0.3s ease;
+  }
+
+  .hamburger-line:nth-child(1) { top: 0; width: 100%; }
+  .hamburger-line:nth-child(2) { top: 50%; transform: translateY(-50%); width: 70%; }
+  .hamburger-line:nth-child(3) { top: 100%; transform: translateY(-100%); width: 100%; }
+
+  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    transition: transform 0.4s var(--ease-out-expo) 0.15s,
+                top 0.3s ease;
+  }
+
+  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+    width: 0;
+  }
+
+  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg);
+    width: 100%;
+    transition: transform 0.4s var(--ease-out-expo) 0.15s,
+                top 0.3s ease,
+                width 0.3s ease;
+  }
+
+  .nav-close-text {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Outfit", sans-serif;
+    font-size: 0.5625rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: currentColor;
+    opacity: 0.5;
+    white-space: nowrap;
+    pointer-events: none;
   }
 }
 
@@ -385,7 +549,7 @@
     border-color: var(--color-border-strong);
   }
 
-  /* Recipe card image: 4:5 portrait crop, anchored to dish center */
+  /* Recipe card image: 4:5 portrait on desktop, 4:3 on mobile so dish isn't cropped */
   .recipe-card-image {
     position: relative;
     overflow: hidden;
@@ -393,11 +557,17 @@
     background: var(--color-bg-warm);
   }
 
+  @media (max-width: 640px) {
+    .recipe-card-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
   .recipe-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 55%;
+    object-position: center center;
     transition: transform 0.8s var(--ease-out-expo);
   }
 
@@ -596,9 +766,37 @@
     background: var(--color-bg-warm);
     color: var(--color-text);
     border: 1px solid var(--color-border);
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .region-pill:hover {
+    border-color: var(--color-accent);
   }
 
   .region-pill.is-active {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+
+  /* On dark overlay / footer — inverted appearance */
+  .nav-overlay .region-pill,
+  footer .region-pill {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .nav-overlay .region-pill:hover,
+  footer .region-pill:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-accent-glow);
+    color: white;
+  }
+
+  .nav-overlay .region-pill.is-active,
+  footer .region-pill.is-active {
     background: var(--color-accent);
     color: white;
     border-color: var(--color-accent);
@@ -792,7 +990,7 @@
     line-height: 1.85;
   }
 
-  /* Recipe detail hero image: cinematic widescreen */
+  /* Recipe detail hero image: cinematic widescreen (full dish always visible) */
   .recipe-hero-image {
     position: relative;
     overflow: hidden;
@@ -803,7 +1001,8 @@
 
   @media (max-width: 768px) {
     .recipe-hero-image {
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-lg);
     }
   }
 
@@ -811,7 +1010,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 55%;
+    object-position: center center;
   }
 
   .recipe-meta-item {

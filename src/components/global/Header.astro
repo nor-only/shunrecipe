@@ -60,19 +60,21 @@ const { darkHero = false } = Astro.props;
           </div>
         </div>
 
-        <!-- Mobile Menu Toggle -->
+        <!-- Mobile Menu Toggle (morphing hamburger) -->
         <button
           data-nav-toggle
           aria-expanded="false"
           aria-label="メニューを開く"
           class:list={[
-            'lg:hidden flex flex-col gap-1.5 w-10 h-10 items-center justify-center rounded-full',
-            darkHero ? 'text-white' : 'text-primary'
+            'hamburger lg:hidden',
+            { 'is-dark': darkHero }
           ]}
         >
-          <span class="block w-5 h-px bg-current transition-all"></span>
-          <span class="block w-5 h-px bg-current transition-all"></span>
-          <span class="block w-5 h-px bg-current transition-all"></span>
+          <span class="hamburger-box">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </span>
         </button>
       </div>
     </div>
