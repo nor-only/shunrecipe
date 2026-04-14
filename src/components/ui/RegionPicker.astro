@@ -19,10 +19,15 @@ import { regions } from '@data/regions';
           id="postal"
           placeholder="例: 100-0001 / 830"
           maxlength="8"
+          autocomplete="off"
           data-region-input
         />
-        <button type="submit" class="ed-btn" data-region-submit>登録</button>
+        <button type="submit" class="ed-btn" data-region-submit>判定</button>
+        <button type="button" class="ed-btn" data-region-reset>リセット</button>
       </div>
+      <p class="region-note" style="font-family: var(--font-serif-jp); font-size: 0.8125rem; color: var(--color-ink-3); margin-top: 0.5rem;">
+        プライバシー保護のため、入力された郵便番号は端末にもサーバーにも保存されません。地域もページを再読み込みするとリセットされます。
+      </p>
       <p class="region-status" data-region-status aria-live="polite"></p>
     </form>
 
@@ -114,26 +119,43 @@ import { regions } from '@data/regions';
 
 <script>
   import { postalToRegion } from '@data/postal';
-  const REGION_KEY = 'shunrecipe.region';
+
+  // ===== プライバシー方針 =====
+  // 郵便番号: 入力後すぐに地域へ変換し、その後は破棄。永続化しない。
+  // 地域: in-memory のみ。ページリロードでクリア。localStorage / sessionStorage 不使用。
+  // 旧バージョンが localStorage に残した値は念のため削除する（マイグレーション）。
+  try {
+    localStorage.removeItem('shunrecipe.region');
+    localStorage.removeItem('shunrecipe.postal');
+  } catch {}
+
+  let memRegion: string | null = null;
 
   const regionLabels: Record<string, string> = {
     hokkaido: '北海道', tohoku: '東北', kanto: '関東', chubu: '中部',
     kinki: '近畿', chugoku: '中国', shikoku: '四国', kyushu_okinawa: '九州・沖縄',
   };
 
-  function setRegion(id: string, viaPostal?: string) {
-    localStorage.setItem(REGION_KEY, id);
-    if (viaPostal) localStorage.setItem('shunrecipe.postal', viaPostal);
+  function setRegion(id: string) {
+    memRegion = id;
     document.dispatchEvent(new CustomEvent('region:change', { detail: id }));
-    renderStatus(id, viaPostal);
+    renderStatus(id);
   }
 
-  function renderStatus(id: string, postal?: string) {
+  function clearRegion() {
+    memRegion = null;
+    const input = document.querySelector<HTMLInputElement>('[data-region-input]');
+    const el = document.querySelector<HTMLElement>('[data-region-status]');
+    if (input) input.value = '';
+    if (el) el.textContent = '';
+    document.dispatchEvent(new CustomEvent('region:change', { detail: null }));
+  }
+
+  function renderStatus(id: string) {
     const el = document.querySelector<HTMLElement>('[data-region-status]');
     if (!el) return;
     const label = regionLabels[id] || id;
-    const prefix = postal ? `登録しました: ${postal} — ${label}` : `登録しました: ${label}`;
-    el.innerHTML = `${prefix}　<a class="ed-link" href="/seasonal/?region=${id}">${label}の旬を見る<span class="arrow">——→</span></a>　<a class="ed-link" href="/recipes/?region=${id}">${label}のレシピ<span class="arrow">——→</span></a>`;
+    el.innerHTML = `判定: ${label}　<a class="ed-link" href="/seasonal/?region=${id}">${label}の旬を見る<span class="arrow">——→</span></a>　<a class="ed-link" href="/recipes/?region=${id}">${label}のレシピ<span class="arrow">——→</span></a>`;
   }
 
   document.querySelectorAll<HTMLFormElement>('[data-region-form]').forEach((form) => {
@@ -145,11 +167,13 @@ import { regions } from '@data/regions';
       const v = input.value.trim();
       if (!v) return;
       const region = postalToRegion(v);
+      // 入力フィールドはすぐクリアして痕跡を残さない
+      input.value = '';
       if (!region) {
         status.textContent = '郵便番号から地域を特定できませんでした。上3桁をご確認ください。';
         return;
       }
-      setRegion(region, v);
+      setRegion(region);
     });
   });
 
@@ -160,17 +184,13 @@ import { regions } from '@data/regions';
     });
   });
 
-  // On load: hydrate saved state
-  try {
-    const saved = localStorage.getItem(REGION_KEY);
-    const postal = localStorage.getItem('shunrecipe.postal') || undefined;
-    if (saved) renderStatus(saved, postal);
-  } catch {}
+  document.querySelectorAll<HTMLElement>('[data-region-reset]').forEach((btn) => {
+    btn.addEventListener('click', clearRegion);
+  });
 
-  // Expose for other components
+  // 他コンポーネントから参照できるよう in-memory ゲッターのみ公開
   (window as any).__shunrecipe = {
     ...((window as any).__shunrecipe || {}),
-    getRegion: () => localStorage.getItem(REGION_KEY),
-    setRegion,
+    getRegion: () => memRegion,
   };
 </script>
