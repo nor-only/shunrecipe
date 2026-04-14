@@ -1,131 +1,136 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import RecipeCard from '@components/ui/RecipeCard.astro';
-import SectionHeading from '@components/ui/SectionHeading.astro';
-import { vegetables, seasonNames, getVegetableById } from '@data/vegetables';
-import { getRecipesForVegetable } from '@data/recipes';
-import { regions, getRegionById } from '@data/regions';
+import { getCollection } from 'astro:content';
+import { regionName } from '@data/regions';
 
-export function getStaticPaths() {
-  return vegetables.map(v => ({
-    params: { id: v.id },
-  }));
+export async function getStaticPaths() {
+  const vegetables = await getCollection('vegetables');
+  return vegetables.map((v) => ({ params: { id: v.data.slug }, props: { vegetable: v } }));
 }
 
-const { id } = Astro.params;
-const veg = getVegetableById(id!);
+const { vegetable } = Astro.props;
+const d = vegetable.data;
+const story = vegetable.body?.trim() || '';
+const allRecipes = await getCollection('recipes');
 
-if (!veg) {
-  return Astro.redirect('/seasonal/');
-}
-
-const seasonInfo = seasonNames[veg.season];
-const vegRecipes = getRecipesForVegetable(veg.id);
-
-const infoSections = [
-  { icon: 'nutrition', title: 'Nutrition · 栄養情報', content: veg.nutrition },
-  { icon: 'search', title: 'Selection · 選び方のコツ', content: veg.tips },
-  { icon: 'kitchen', title: 'Storage · 保存方法', content: veg.storage },
-  { icon: 'auto_awesome', title: 'Trivia · 豆知識', content: veg.facts },
-];
-
-const vegRegions = veg.regions
-  .map((r) => getRegionById(r))
-  .filter((r): r is NonNullable<typeof r> => Boolean(r));
+const related = allRecipes.filter((r) =>
+  r.data.vegetable.includes(d.slug) || d.related_recipes.includes(r.data.id)
+);
 ---
+<BaseLayout
+  title={`${d.name_ja} — ${d.name_en} — SHUNRECIPE`}
+  description={story.slice(0, 120) || `${d.name_ja}の旬・産地・在来種・関連レシピ。`}
+  ogImage={d.image}
+>
+  <article>
+    <div class="container-site">
+      <nav style="padding-top: clamp(6rem, 12vw, 9rem); display: flex; gap: 1.5rem; align-items: baseline;">
+        <a href="/seasonal/" class="ed-link" style="font-size: 0.8125rem;"><span class="arrow">←——</span> 四季の図鑑</a>
+        <span class="meta-inline">Vegetable · {d.name_en}</span>
+      </nav>
 
-<BaseLayout title={`${veg.name} | SHUNRECIPE`} darkHero={true}>
-  <!-- Hero -->
-  <section class="page-hero page-hero-dark">
-    <div class="container-site relative z-10">
-      <a
-        href="/seasonal/"
-        class="inline-flex items-center gap-2 text-[0.75rem] font-semibold text-white/60 hover:text-white transition-colors mb-10 tracking-wider uppercase font-outfit"
-      >
-        <span class="material-symbols-outlined" style="font-size:16px">arrow_back</span>
-        Back to encyclopedia
-      </a>
-
-      <div class="grid lg:grid-cols-12 gap-10 items-center">
-        <div class="lg:col-span-2 reveal">
-          <div class="w-32 h-32 lg:w-full lg:aspect-square rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-7xl backdrop-blur-md">
-            {veg.emoji}
-          </div>
-        </div>
-        <div class="lg:col-span-10">
-          <div class="flex items-center gap-3 mb-4 reveal">
-            <span class:list={['season-badge', `season-badge-${veg.season}`]}>
-              {seasonInfo.jp}
-            </span>
-            <span class="text-[0.75rem] text-white/40 font-outfit tracking-wide">
-              {veg.months.map(m => `${m}月`).join('・')}
-            </span>
-          </div>
-          <p class="font-outfit text-[0.6875rem] tracking-[0.2em] uppercase text-white/40 mb-2">
-            {veg.nameEn}
-          </p>
-          <h1 class="font-heading text-[var(--font-size-display)] text-white reveal leading-[1.25]">
-            {veg.name}
-          </h1>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Info Sections -->
-  <section class="section-padding">
-    <div class="container-narrow">
-      <div class="grid md:grid-cols-2 gap-5 mb-16 stagger-children">
-        {infoSections.map(section => (
-          <div class="detail-section">
-            <h3 class="detail-section-title">
-              <span class="material-symbols-outlined" style="font-size:16px">{section.icon}</span>
-              {section.title}
-            </h3>
-            <p class="text-text leading-relaxed text-[0.9375rem]">{section.content}</p>
-          </div>
-        ))}
-      </div>
-
-      <!-- Region Section -->
-      <div class="detail-section mb-20 reveal">
-        <h3 class="detail-section-title">
-          <span class="material-symbols-outlined" style="font-size:16px">location_on</span>
-          Producing Regions · 主な産地
-        </h3>
-        <div class="flex flex-wrap gap-2 mb-6">
-          {vegRegions.map((r) => (
-            <a href={`/seasonal/?region=${r.id}`} class="region-pill hover:border-accent transition-colors">
-              {r.name}
-            </a>
-          ))}
-        </div>
-        <div class="grid sm:grid-cols-2 gap-4">
-          {vegRegions.map((r) => (
-            <div class="border-l-2 border-border-strong pl-4">
-              <p class="font-heading text-[0.9375rem] mb-1">{r.name}</p>
-              <p class="text-[0.75rem] text-text-muted leading-relaxed">{r.description}</p>
-              <p class="text-[0.6875rem] text-text-subtle mt-1 font-outfit tracking-wide">{r.prefectures.slice(0, 4).join('・')}{r.prefectures.length > 4 ? '…' : ''}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recipes using this vegetable */}
-      {vegRecipes.length > 0 && (
+      <header class="recipe-hero">
         <div>
-          <SectionHeading
-            enTitle="Recipes"
-            title={`${veg.name}を使ったレシピ`}
-            subtitle="旬の美味しさを最大限に引き出すレシピをご紹介します。"
-          />
-          <div class="grid-recipes stagger-children">
-            {vegRecipes.map(r => (
-              <RecipeCard recipe={r} />
+          <p class="chapter-num">Volume I · {d.slug.toUpperCase()}</p>
+          <hr class="rule-accent" style="margin: 1rem 0;" />
+          <h1 class="display-2" style="margin-bottom: 0.75rem;">{d.name_ja}</h1>
+          <p class="caption-en" style="font-size: 1rem;">{d.name_en}</p>
+          {story && (
+            <p style="margin-top: 1.75rem; font-family: var(--font-serif-jp); line-height: 2; color: var(--color-ink-2); max-width: 52ch;">
+              {story}
+            </p>
+          )}
+        </div>
+        {d.image && (
+          <div class="media">
+            <img src={d.image} alt={d.name_ja} />
+          </div>
+        )}
+      </header>
+
+      <section class="spec-list" aria-label="旬諸元">
+        <div>
+          <p class="k">Season</p>
+          <p class="v">{d.seasons.map((s) => ({ spring:'春', summer:'夏', autumn:'秋', winter:'冬' }[s])).join('・')}</p>
+        </div>
+        <div>
+          <p class="k">Peak</p>
+          <p class="v">{d.peak_months.join('・')}月</p>
+        </div>
+        <div>
+          <p class="k">Regions</p>
+          <p class="v">{d.regions.slice(0, 3).map((r) => regionName(r)).join('・')}</p>
+        </div>
+        <div>
+          <p class="k">Nutrition</p>
+          <p class="v" style="font-size: 0.9375rem;">{d.nutrition.slice(0, 3).join('・')}</p>
+        </div>
+      </section>
+
+      <section class="ed-body" style="padding-block: clamp(2.5rem, 6vw, 5rem);">
+        <div>
+          {d.notable_cultivars.length > 0 && (
+            <div>
+              <h2 class="h-section" style="margin-bottom: 1.25rem;">在来種・ブランド産地</h2>
+              <hr class="rule-accent" style="margin-bottom: 1.5rem;" />
+              <ul style="list-style:none; padding:0; margin:0; display:grid; gap: 1rem;">
+                {d.notable_cultivars.map((c) => (
+                  <li style="display:grid; grid-template-columns: auto 1fr; gap: 1rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--color-line);">
+                    <p style="font-family: var(--font-serif-jp); font-weight: 500;">{c.name}</p>
+                    <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem;">{c.region}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {d.pairings && d.pairings.length > 0 && (
+            <div style="margin-top: 2.5rem;">
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Pairings</p>
+              <p style="font-family: var(--font-serif-jp); line-height: 1.9;">{d.pairings.join(' / ')}</p>
+            </div>
+          )}
+        </div>
+
+        <aside>
+          {d.storage && (
+            <div>
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Storage</p>
+              <p style="font-family: var(--font-serif-jp); line-height: 1.95;">{d.storage}</p>
+            </div>
+          )}
+          {d.aliases && d.aliases.length > 0 && (
+            <div style="margin-top: 2rem;">
+              <p class="chapter-num" style="margin-bottom: 0.75rem;">Aliases</p>
+              <p style="font-family: var(--font-serif-jp);">{d.aliases.join(' / ')}</p>
+            </div>
+          )}
+        </aside>
+      </section>
+    </div>
+
+    {related.length > 0 && (
+      <section class="section-pad-sm" style="background: var(--color-bg-warm);">
+        <div class="container-site">
+          <p class="chapter-num">Recipes using {d.name_en}</p>
+          <hr class="rule-accent" style="margin: 0.75rem 0 2rem;" />
+          <h2 class="h-section" style="margin-bottom: 2rem;">{d.name_ja}を使う献立</h2>
+          <div class="ed-grid">
+            {related.map((r) => (
+              <RecipeCard
+                id={r.data.id}
+                title={r.data.title}
+                season={r.data.season}
+                region={r.data.region}
+                genre={r.data.genre}
+                time_min={r.data.time_min}
+                hero_image={r.data.hero_image}
+              />
             ))}
           </div>
         </div>
-      )}
-    </div>
-  </section>
+      </section>
+    )}
+  </article>
 </BaseLayout>
