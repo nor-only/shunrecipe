@@ -22,14 +22,30 @@ export const prerender = true;
   </header>
 
   <section class="container-narrow">
-    <form id="suggest-form" class="suggest-form" aria-label="レシピ提案フォーム">
+    <form id="suggest-form" class="suggest-form" aria-label="レシピ提案フォーム" enctype="multipart/form-data">
       <div class="suggest-row">
-        <label for="ingredients" class="suggest-label">冷蔵庫の食材（自由記述）</label>
+        <label for="image" class="suggest-label">冷蔵庫の写真（任意 — Claude Vision が食材を認識します）</label>
+        <div class="image-upload">
+          <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+          <label for="image" class="image-drop" id="image-drop">
+            <span class="image-drop-label" id="image-drop-label">
+              クリックまたはドロップで画像を選択（JPEG/PNG/WebP, 〜5MB）
+            </span>
+          </label>
+          <div class="image-preview-wrap">
+            <img id="image-preview" alt="" hidden />
+            <button type="button" id="image-clear" class="ed-btn" style="display:none;">画像を外す</button>
+          </div>
+          <p class="suggest-note" id="image-status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="suggest-row">
+        <label for="ingredients" class="suggest-label">冷蔵庫の食材（自由記述・画像認識結果を編集可）</label>
         <textarea
           id="ingredients"
           name="ingredients"
           rows="4"
-          required
           placeholder="例: 豚ばら、卵、ごま油、白菜の残り、豆腐、生姜"
         ></textarea>
       </div>
@@ -170,6 +186,37 @@ export const prerender = true;
       color: var(--color-ink-2);
       text-transform: uppercase;
     }
+    .image-upload { display: grid; gap: 0.75rem; }
+    .image-drop {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 120px;
+      padding: 1.5rem;
+      border: 1px dashed var(--color-line);
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 200ms, background 200ms;
+    }
+    .image-drop:hover,
+    .image-drop.is-drag {
+      border-color: var(--color-ink);
+      background: var(--color-bg-warm);
+    }
+    .image-drop-label {
+      font-family: var(--font-serif-jp);
+      font-size: 0.9375rem;
+      color: var(--color-ink-2);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .image-preview-wrap {
+      display: flex; gap: 1rem; align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    #image-preview {
+      max-width: 220px;
+      max-height: 220px;
+      border: 1px solid var(--color-line);
+    }
   </style>
 
   <script>
@@ -181,6 +228,93 @@ export const prerender = true;
         if (saved) regionSelect.value = saved;
       } catch {}
     }
+
+    // === 画像アップロード + Vision API ===
+    const imageInput = document.getElementById('image') as HTMLInputElement | null;
+    const imagePreview = document.getElementById('image-preview') as HTMLImageElement | null;
+    const imageClear = document.getElementById('image-clear') as HTMLButtonElement | null;
+    const imageDrop = document.getElementById('image-drop') as HTMLElement | null;
+    const imageDropLabel = document.getElementById('image-drop-label') as HTMLElement | null;
+    const imageStatus = document.getElementById('image-status') as HTMLElement | null;
+    const ingredientsArea = document.getElementById('ingredients') as HTMLTextAreaElement | null;
+
+    function previewImage(file: File) {
+      if (!imagePreview || !imageClear || !imageDropLabel) return;
+      const url = URL.createObjectURL(file);
+      imagePreview.src = url;
+      imagePreview.hidden = false;
+      imageClear.style.display = '';
+      imageDropLabel.textContent = `${file.name}（${(file.size / 1024).toFixed(0)}KB）— 別の画像に差し替え`;
+    }
+
+    async function detectFromImage(file: File) {
+      if (!imageStatus || !ingredientsArea) return;
+      imageStatus.textContent = '画像を認識中…（最大15秒）';
+      const fd = new FormData();
+      fd.append('image', file);
+      try {
+        const res = await fetch('/api/detect-ingredients', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) {
+          imageStatus.textContent = `エラー: ${data.error || res.statusText}`;
+          return;
+        }
+        if (data.ingredients_text) {
+          const existing = ingredientsArea.value.trim();
+          ingredientsArea.value = existing
+            ? `${existing}、${data.ingredients_text}`
+            : data.ingredients_text;
+          imageStatus.textContent = data.notes
+            ? `${data.items.length}件認識（${data.notes}）`
+            : `${data.items.length}件認識しました。必要に応じて編集してください。`;
+        } else {
+          imageStatus.textContent = '食材を認識できませんでした。手入力で補ってください。';
+        }
+      } catch {
+        imageStatus.textContent = 'ネットワークエラー。画像サイズを確認してください。';
+      }
+    }
+
+    imageInput?.addEventListener('change', () => {
+      const file = imageInput.files?.[0];
+      if (!file) return;
+      previewImage(file);
+      void detectFromImage(file);
+    });
+
+    imageClear?.addEventListener('click', () => {
+      if (!imageInput || !imagePreview || !imageDropLabel || !imageStatus) return;
+      imageInput.value = '';
+      imagePreview.hidden = true;
+      imagePreview.src = '';
+      imageClear.style.display = 'none';
+      imageDropLabel.textContent = 'クリックまたはドロップで画像を選択（JPEG/PNG/WebP, 〜5MB）';
+      imageStatus.textContent = '';
+    });
+
+    // Drag & drop
+    ['dragenter', 'dragover'].forEach((ev) => {
+      imageDrop?.addEventListener(ev, (e) => {
+        e.preventDefault();
+        imageDrop?.classList.add('is-drag');
+      });
+    });
+    ['dragleave', 'drop'].forEach((ev) => {
+      imageDrop?.addEventListener(ev, (e) => {
+        e.preventDefault();
+        imageDrop?.classList.remove('is-drag');
+      });
+    });
+    imageDrop?.addEventListener('drop', (e) => {
+      const dt = (e as DragEvent).dataTransfer;
+      const file = dt?.files?.[0];
+      if (!file || !imageInput) return;
+      const dtx = new DataTransfer();
+      dtx.items.add(file);
+      imageInput.files = dtx.files;
+      previewImage(file);
+      void detectFromImage(file);
+    });
 
     const form = document.getElementById('suggest-form') as HTMLFormElement | null;
     const submit = document.getElementById('suggest-submit') as HTMLButtonElement | null;
