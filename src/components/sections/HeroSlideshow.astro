@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { wafuLabel } from '@/lib/date';
 
 interface Props {
   images?: string[];
@@ -30,7 +31,7 @@ const {
   ],
   title = '旬を知る、\n食を編み直す。',
   lede = '全国八地域と四季が育む野菜を、\n編集者の眼で選び、一冊の誌面のように綴じました。',
-  edition = `Edition · ${now.getFullYear()} / ${String(monthIdx).padStart(2, '0')} — No. 002`,
+  edition = wafuLabel(now),
 } = Astro.props;
 
 const featured = vegetables

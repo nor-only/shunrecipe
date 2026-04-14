@@ -16,7 +16,7 @@ const m = now.getMonth() + 1;
 const currentSeason: 'spring'|'summer'|'autumn'|'winter' =
   (m >= 3 && m <= 5) ? 'spring' : (m >= 6 && m <= 8) ? 'summer' : (m >= 9 && m <= 11) ? 'autumn' : 'winter';
 const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }[currentSeason];
-const chapterNum = { spring: 'Chapter 01', summer: 'Chapter 02', autumn: 'Chapter 03', winter: 'Chapter 04' }[currentSeason];
+const seasonEn = { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' }[currentSeason];
 
 const seasonVeg = vegetables
   .filter((v) => v.data.seasons.includes(currentSeason))
@@ -38,7 +38,7 @@ const editorsPicks = recipes
   <section class="section-pad">
     <div class="container-site">
       <ChapterHeading
-        num={`${chapterNum} — ${seasonJp}の旬`}
+        num={`In Season — ${seasonEn}`}
         title={`いま、${seasonJp}の畑から。`}
         caption="In season — today"
         lede={`${seasonJp}のあいだ、日本の各地域が育てる野菜を特集します。産地ごとの風土、在来種、家庭の仕立て方までを一冊の誌面に綴じていきます。`}

@@ -1,13 +1,14 @@
 ---
+import { wafuLabel } from '@/lib/date';
 const year = new Date().getFullYear();
-const month = String(new Date().getMonth() + 1).padStart(2, '0');
+const wafu = wafuLabel();
 ---
 <footer class="ed-footer">
   <div class="container-site">
     <hr class="rule-hair" />
     <div style="display:grid; gap:2rem; padding-top:2.5rem;" class="footer-grid">
       <div>
-        <p class="edition">Edition · {year} / {month} — No. 002</p>
+        <p class="edition">{wafu}</p>
         <p style="font-family: var(--font-serif-jp); font-size: 1.125rem; letter-spacing: 0.12em; margin-top:0.4rem;">
           SHUNRECIPE <span class="caption-en">— a seasonal recipe journal</span>
         </p>
@@ -17,11 +18,15 @@ const month = String(new Date().getMonth() + 1).padStart(2, '0');
           <li><a href="/" class="small" style="color: var(--color-ink); text-decoration:none;">Home</a></li>
           <li><a href="/seasonal/" class="small" style="color: var(--color-ink); text-decoration:none;">四季の図鑑</a></li>
           <li><a href="/recipes/" class="small" style="color: var(--color-ink); text-decoration:none;">レシピ</a></li>
+          <li><a href="/suggest/" class="small" style="color: var(--color-ink); text-decoration:none;">冷蔵庫から</a></li>
+          <li><a href="/shopping/" class="small" style="color: var(--color-ink); text-decoration:none;">買い物</a></li>
+          <li><a href="/community/" class="small" style="color: var(--color-ink); text-decoration:none;">コミュニティ</a></li>
           <li><a href="/favorites/" class="small" style="color: var(--color-ink); text-decoration:none;">お気に入り</a></li>
         </ul>
       </nav>
       <p class="small" style="color: var(--color-ink-3);">
-        © {year} AIさんいんプロジェクト / フューチャーテック株式会社.
+        © {year} AIさんいんプロジェクト.
+        <br />
         掲載内容は季節・産地によって変動します。
       </p>
     </div>
