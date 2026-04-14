@@ -56,10 +56,17 @@
 /* =========================================
    Base
    ========================================= */
-html { background: var(--color-bg); color: var(--color-ink); }
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  overflow-x: clip;
+  /* 画面幅に応じてルートを 14.5〜17px で滑らかに伸縮 */
+  font-size: clamp(14.5px, 0.82rem + 0.35vw, 17px);
+}
 body {
   font-family: var(--font-serif-jp);
-  font-size: 17px;
+  /* 本文は 15〜18px の範囲で連続的に伸縮 */
+  font-size: clamp(15px, 0.9rem + 0.4vw, 18px);
   line-height: 1.9;
   letter-spacing: 0.04em;
   font-feature-settings: "palt" 1;
@@ -68,11 +75,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   background: var(--color-bg);
 }
-@media (min-width: 768px) { body { font-size: 18px; } }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; min-width: 0; }
+
+img, video, svg, iframe, canvas, picture, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+p, li, dd, dt, a, span, h1, h2, h3, h4, h5, h6, blockquote, figcaption, button, label, input, textarea {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
 
 ::selection { background: var(--color-ink); color: var(--color-bg); }
 
@@ -405,6 +424,9 @@ body {
   text-transform: uppercase;
   color: var(--color-ink-3);
   min-width: 68px;
+}
+@media (max-width: 520px) {
+  .filter-bar .label { min-width: auto; }
 }
 .filter-count {
   font-family: var(--font-mono);
