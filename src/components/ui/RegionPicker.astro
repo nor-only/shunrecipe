@@ -22,7 +22,7 @@ import { regions } from '@data/regions';
           autocomplete="off"
           data-region-input
         />
-        <button type="submit" class="ed-btn" data-region-submit>判定</button>
+        <button type="submit" class="ed-btn" data-region-submit>検索</button>
         <button type="button" class="ed-btn" data-region-reset>リセット</button>
       </div>
       <p class="region-note" style="font-family: var(--font-serif-jp); font-size: 0.8125rem; color: var(--color-ink-3); margin-top: 0.5rem;">
@@ -155,7 +155,7 @@ import { regions } from '@data/regions';
     const el = document.querySelector<HTMLElement>('[data-region-status]');
     if (!el) return;
     const label = regionLabels[id] || id;
-    el.innerHTML = `判定: ${label}　<a class="ed-link" href="/seasonal/?region=${id}">${label}の旬を見る<span class="arrow">——→</span></a>　<a class="ed-link" href="/recipes/?region=${id}">${label}のレシピ<span class="arrow">——→</span></a>`;
+    el.innerHTML = `検索結果: ${label}　<a class="ed-link" href="/seasonal/?region=${id}">${label}の旬を見る<span class="arrow">——→</span></a>　<a class="ed-link" href="/recipes/?region=${id}">${label}のレシピ<span class="arrow">——→</span></a>`;
   }
 
   document.querySelectorAll<HTMLFormElement>('[data-region-form]').forEach((form) => {
