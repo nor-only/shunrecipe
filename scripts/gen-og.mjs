@@ -75,15 +75,16 @@ async function render(opts, filename) {
 }
 
 const d = new Date();
-const edition = `Edition · ${d.getFullYear()} / ${String(d.getMonth() + 1).padStart(2, '0')} — No. 002`;
+const wafuMonths = ['睦月','如月','弥生','卯月','皐月','水無月','文月','葉月','長月','神無月','霜月','師走'];
+const edition = `令和${d.getFullYear() - 2018}年　${wafuMonths[d.getMonth()]}`;
 const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' };
 
 // --- Static pages ---
 const staticPages = [
-  { file: 'default.png', chapterNo: 'Volume · 00', chapterLabel: 'A Seasonal Recipe Journal', title: '旬を知る、食を編み直す。', subtitle: '全国八地域と四季が育む野菜と、その魅力を最大限に引き出すレシピ。', edition },
-  { file: 'seasonal.png', chapterNo: 'Volume · I', chapterLabel: '四季の図鑑', title: '全国八地域と、四季の旬野菜。', subtitle: '', edition },
-  { file: 'recipes.png', chapterNo: 'Volume · II', chapterLabel: 'All recipes', title: '季節と地域で、献立を編む。', subtitle: '', edition },
-  { file: 'favorites.png', chapterNo: 'Volume · III', chapterLabel: 'Your personal shelf', title: 'あなたの手元に、一冊のレシピ本を。', subtitle: '', edition },
+  { file: 'default.png', chapterNo: 'Shun · Recipe', chapterLabel: 'A Seasonal Recipe Journal', title: '旬を知る、食を編み直す。', subtitle: '全国八地域と四季が育む野菜と、その魅力を最大限に引き出すレシピ。', edition },
+  { file: 'seasonal.png', chapterNo: 'The Directory', chapterLabel: 'A directory of seasonal vegetables', title: '全国八地域と、四季の旬野菜。', subtitle: '', edition },
+  { file: 'recipes.png', chapterNo: 'All Recipes', chapterLabel: 'Filter by season, region, genre', title: '季節と地域で、献立を編む。', subtitle: '', edition },
+  { file: 'favorites.png', chapterNo: 'Your Shelf', chapterLabel: 'Your personal shelf', title: 'あなたの手元に、一冊のレシピ本を。', subtitle: '', edition },
 ];
 
 for (const p of staticPages) {
