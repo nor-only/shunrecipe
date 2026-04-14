@@ -4,6 +4,7 @@ import HeroSlideshow from '@components/sections/HeroSlideshow.astro';
 import ChapterHeading from '@components/ui/ChapterHeading.astro';
 import RecipeCard from '@components/ui/RecipeCard.astro';
 import VegCard from '@components/ui/VegCard.astro';
+import RegionPicker from '@components/ui/RegionPicker.astro';
 import { getCollection } from 'astro:content';
 
 const recipes = await getCollection('recipes');
@@ -28,8 +29,10 @@ const editorsPicks = recipes
   .filter((r) => r.data.tags && r.data.tags.length > 0)
   .slice(0, 6);
 ---
-<BaseLayout title="SHUNRECIPE — 旬野菜の編纂誌" darkHero={true}>
+<BaseLayout title="SHUNRECIPE — 旬野菜の編纂誌" darkHero={true} ogImage="/og/default.png">
   <HeroSlideshow />
+
+  <RegionPicker />
 
   <section class="section-pad">
     <div class="container-site">

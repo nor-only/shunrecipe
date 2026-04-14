@@ -778,6 +778,27 @@ body {
 }
 
 /* =========================================
+   A11y
+   ========================================= */
+.skip-link {
+  position: absolute;
+  top: -40px; left: 8px;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  padding: 8px 14px;
+  font-family: var(--font-serif-jp);
+  font-size: 0.8125rem;
+  z-index: 999;
+  transition: top 180ms;
+}
+.skip-link:focus { top: 8px; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-2);
+  outline-offset: 3px;
+}
+
+/* =========================================
    Utility
    ========================================= */
 .no-scroll { overflow: hidden; }

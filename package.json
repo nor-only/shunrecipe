@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/gen-og.mjs",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "gen:og": "node scripts/gen-og.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
@@ -23,5 +25,9 @@
   },
   "overrides": {
     "vite": "^7"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "satori": "^0.26.0"
   }
 }

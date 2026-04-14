@@ -44,7 +44,7 @@ void featured; // reserved for a future in-hero overlay
   <div class="bg" data-hero-bg>
     {images.map((src, i) => (
       <div class={`slide ${i === 0 ? 'is-active' : ''}`} data-slide>
-        <img src={src} alt="" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+        <img src={src} alt="" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" width="2560" height="1440" />
       </div>
     ))}
     <div class="veil"></div>
