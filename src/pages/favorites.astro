@@ -1,66 +1,73 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import PageHero from '@components/ui/PageHero.astro';
-import RecipeCard from '@components/ui/RecipeCard.astro';
-import { recipes } from '@data/recipes';
+import ChapterHeading from '@components/ui/ChapterHeading.astro';
+import { getCollection } from 'astro:content';
+
+const recipes = await getCollection('recipes');
+const serialized = recipes.map((r) => ({
+  id: r.data.id,
+  title: r.data.title,
+  season: r.data.season,
+  region: r.data.region,
+  genre: r.data.genre,
+  time_min: r.data.time_min,
+  hero_image: r.data.hero_image,
+}));
 ---
-
-<BaseLayout title="お気に入り | SHUNRECIPE" darkHero={true}>
-  <PageHero
-    title="お気に入りレシピ"
-    subtitle="あなたが気になったレシピをここに保存できます。気軽にコレクションしてください。"
-    enTitle="Favorites"
-    variant="dark"
-  />
-
-  <section class="section-padding">
+<BaseLayout title="お気に入り — SHUNRECIPE" description="ブラウザに保存された、あなたのレシピ本。">
+  <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">
     <div class="container-site">
-      <p class="text-[0.8125rem] text-text-muted mb-8 font-mono-num" id="favCount">
-        — 件のお気に入り
-      </p>
+      <ChapterHeading
+        num="Volume III — お気に入り"
+        title="あなたの手元に、一冊のレシピ本を。"
+        caption="Your personal shelf"
+        lede="ブラウザに保存された、あなたが選んだ献立を並べます。保存先はこの端末のみです。"
+      />
+    </div>
+  </header>
 
-      <div class="grid-recipes stagger-children" id="favGrid">
-        {recipes.map(r => (
-          <div class="fav-item" data-id={r.id} style="display:none">
-            <RecipeCard recipe={r} />
-          </div>
-        ))}
-      </div>
-
-      <div class="empty-state text-center py-24 hidden" id="emptyState">
-        <span class="material-symbols-outlined text-5xl text-text-subtle mb-4 inline-block">favorite_border</span>
-        <p class="font-heading text-xl mb-3">まだお気に入りがありません</p>
-        <p class="text-[0.875rem] text-text-muted mb-8">気になるレシピのハートマークから追加してください。</p>
-        <a href="/recipes/" class="btn-primary">
-          <span>レシピを探す</span>
-          <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
-        </a>
+  <section class="section-pad-sm">
+    <div class="container-site">
+      <div id="fav-grid" class="ed-grid"></div>
+      <div id="fav-empty" style="padding: 3rem 0;">
+        <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2);">
+          まだ何も選ばれていません。各レシピのページで、お気に入りに追加してください。
+        </p>
+        <a href="/recipes/" class="ed-link" style="margin-top: 1.25rem; display: inline-block;">レシピ総覧へ<span class="arrow">——→</span></a>
       </div>
     </div>
   </section>
 
-  <script>
+  <script define:vars={{ serialized }}>
+    const recipesById = new Map(serialized.map((r) => [r.id, r]));
+    const grid = document.getElementById('fav-grid');
+    const empty = document.getElementById('fav-empty');
     function render() {
-      const favs = new Set(((window as any).__shunrecipe?.getFavorites?.() || []) as string[]);
-      const items = document.querySelectorAll<HTMLElement>('.fav-item');
-      const countEl = document.getElementById('favCount');
-      const emptyEl = document.getElementById('emptyState');
-      let visible = 0;
-      items.forEach((item) => {
-        const id = item.dataset.id || '';
-        const show = favs.has(id);
-        item.style.display = show ? '' : 'none';
-        if (show) visible++;
-      });
-      if (countEl) countEl.textContent = `${visible} 件のお気に入り`;
-      if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0);
+      let favs = [];
+      try { favs = JSON.parse(localStorage.getItem('shunrecipe.favorites') || '[]'); } catch {}
+      grid.innerHTML = '';
+      const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' };
+      const available = favs.filter((id) => recipesById.has(id));
+      if (available.length === 0) { empty.style.display = ''; return; }
+      empty.style.display = 'none';
+      for (const id of available) {
+        const r = recipesById.get(id);
+        const a = document.createElement('a');
+        a.href = `/recipes/${r.id}/`;
+        a.className = 'ed-card';
+        a.innerHTML = `
+          <div class="media"><img src="${r.hero_image}" alt="${r.title}" loading="lazy"/></div>
+          <div class="rule"></div>
+          <div class="meta">
+            <span class="genre">${r.genre} · ${r.time_min}min</span>
+            <span class="genre accent-${r.season}"><span class="season-dot"></span>${seasonJp[r.season]}</span>
+          </div>
+          <h3 class="title">${r.title}</h3>
+        `;
+        grid.appendChild(a);
+      }
     }
-
+    render();
     document.addEventListener('favorites:change', render);
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', render);
-    } else {
-      render();
-    }
   </script>
 </BaseLayout>

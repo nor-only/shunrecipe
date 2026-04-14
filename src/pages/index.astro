@@ -1,16 +1,114 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Hero from '@components/sections/Hero.astro';
-import SeasonalShowcase from '@components/sections/SeasonalShowcase.astro';
-import FeaturedRecipes from '@components/sections/FeaturedRecipes.astro';
-import SeasonOverview from '@components/sections/SeasonOverview.astro';
-import CTA from '@components/sections/CTA.astro';
----
+import HeroSlideshow from '@components/sections/HeroSlideshow.astro';
+import ChapterHeading from '@components/ui/ChapterHeading.astro';
+import RecipeCard from '@components/ui/RecipeCard.astro';
+import VegCard from '@components/ui/VegCard.astro';
+import { getCollection } from 'astro:content';
 
-<BaseLayout title="SHUNRECIPE — 旬野菜のプレミアムレシピ" darkHero={true}>
-  <Hero />
-  <SeasonalShowcase />
-  <FeaturedRecipes />
-  <SeasonOverview />
-  <CTA />
+const recipes = await getCollection('recipes');
+const vegetables = await getCollection('vegetables');
+
+const now = new Date();
+const m = now.getMonth() + 1;
+const currentSeason: 'spring'|'summer'|'autumn'|'winter' =
+  (m >= 3 && m <= 5) ? 'spring' : (m >= 6 && m <= 8) ? 'summer' : (m >= 9 && m <= 11) ? 'autumn' : 'winter';
+const seasonJp = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' }[currentSeason];
+const chapterNum = { spring: 'Chapter 01', summer: 'Chapter 02', autumn: 'Chapter 03', winter: 'Chapter 04' }[currentSeason];
+
+const seasonVeg = vegetables
+  .filter((v) => v.data.seasons.includes(currentSeason))
+  .slice(0, 8);
+
+const seasonRecipes = recipes
+  .filter((r) => r.data.season === currentSeason)
+  .slice(0, 8);
+
+const editorsPicks = recipes
+  .filter((r) => r.data.tags && r.data.tags.length > 0)
+  .slice(0, 6);
+---
+<BaseLayout title="SHUNRECIPE — 旬野菜の編纂誌" darkHero={true}>
+  <HeroSlideshow />
+
+  <section class="section-pad">
+    <div class="container-site">
+      <ChapterHeading
+        num={`${chapterNum} — ${seasonJp}の旬`}
+        title={`いま、${seasonJp}の畑から。`}
+        caption="In season — today"
+        lede={`${seasonJp}のあいだ、日本の各地域が育てる野菜を特集します。産地ごとの風土、在来種、家庭の仕立て方までを一冊の誌面に綴じていきます。`}
+      />
+      <div class="ed-grid reveal" style="margin-top: 2.5rem;">
+        {seasonVeg.map((v) => (
+          <VegCard
+            slug={v.data.slug}
+            name_ja={v.data.name_ja}
+            name_en={v.data.name_en}
+            seasons={v.data.seasons}
+            image={v.data.image}
+            region={v.data.notable_cultivars[0]?.region}
+          />
+        ))}
+      </div>
+      <div style="padding-top: 2rem;">
+        <a href="/seasonal/" class="ed-link">四季の図鑑を見る<span class="arrow">——→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule-hair" style="max-width: var(--container-max); margin-inline: auto;" />
+
+  <section class="section-pad">
+    <div class="container-site">
+      <ChapterHeading
+        num="Selection"
+        title="編集部が薦める、今月のひと皿。"
+        caption="Editor's selection"
+        lede="季節と産地を織り込んだ、プレミアムレシピ。素材の物語から、仕立てまで。"
+      />
+      <div class="ed-grid ed-grid-asym reveal" style="margin-top: 2.5rem;">
+        {editorsPicks.map((r, i) => (
+          <RecipeCard
+            id={r.data.id}
+            title={r.data.title}
+            season={r.data.season}
+            region={r.data.region}
+            genre={r.data.genre}
+            time_min={r.data.time_min}
+            hero_image={r.data.hero_image}
+            wide={i === 0}
+          />
+        ))}
+      </div>
+      <div style="padding-top: 2rem;">
+        <a href="/recipes/" class="ed-link">レシピ総覧へ<span class="arrow">——→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule-hair" style="max-width: var(--container-max); margin-inline: auto;" />
+
+  <section class="section-pad">
+    <div class="container-site">
+      <ChapterHeading
+        num="Seasonal Recipes"
+        title={`${seasonJp}に仕立てたい、八献立。`}
+        caption={`Recipes for ${seasonJp}`}
+      />
+      <div class="ed-grid reveal" style="margin-top: 2.5rem;">
+        {seasonRecipes.map((r) => (
+          <RecipeCard
+            id={r.data.id}
+            title={r.data.title}
+            season={r.data.season}
+            region={r.data.region}
+            genre={r.data.genre}
+            time_min={r.data.time_min}
+            hero_image={r.data.hero_image}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
 </BaseLayout>
