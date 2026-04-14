@@ -19,7 +19,7 @@ export const premiumRecipes: PremiumRecipe[] = [
     subtitle: '和歌山の春を、透き通る一杯に',
     season: 'spring', region: 'kinki', genre: '和',
     time: 25, servings: 2, difficulty: 'ふつう', mainVegetable: 'usui_endou', calories: 140,
-    image: '/assets/images/asparagus_soup.png',
+    image: '/assets/images/usui_endou_soup.png',
     tags: ['春', '前菜', '冷製可'],
     story: '関西の春は、この翡翠色から始まる。和歌山の畑で育った薄皮のうすい豆を、出汁だけで炊き、漉して仕立てる。濃い緑を薄める水は加えず、皿に落ちた春の色をそのまま供する。',
     ingredients: [
@@ -103,7 +103,7 @@ export const premiumRecipes: PremiumRecipe[] = [
     subtitle: '沖縄の夏を、一枚のフライパンに',
     season: 'summer', region: 'kyushu_okinawa', genre: 'エスニック',
     time: 15, servings: 2, difficulty: 'かんたん', mainVegetable: 'goya', calories: 360,
-    image: '/assets/images/ratatouille.png',
+    image: '/assets/images/goya_champloo_new.png',
     tags: ['沖縄', '夏バテ対策', '主菜'],
     story: '苦味は塩で角を落とす。豚の脂で火を入れ、木綿豆腐の水気を飛ばし、最後に卵で止める。沖縄の夏の長さは、この一皿を覚えておくと越えやすい。',
     ingredients: [
@@ -132,7 +132,7 @@ export const premiumRecipes: PremiumRecipe[] = [
     subtitle: '山形の夜を、銀の匙で一口',
     season: 'summer', region: 'tohoku', genre: '洋',
     time: 20, servings: 2, difficulty: 'かんたん', mainVegetable: 'dadachamame', calories: 180,
-    image: '/assets/images/edamame_rice.png',
+    image: '/assets/images/dadachamame_potage.png',
     tags: ['前菜', '冷製', '鶴岡'],
     story: '鶴岡で育っただだちゃ豆は、さやを開けた瞬間にとうもろこしを思わせる香りが立つ。茹でて莢から外し、牛乳で伸ばし、氷で締める。夏の夜の最初の一匙に。',
     ingredients: [

@@ -13,6 +13,7 @@ nutrition: ["ポリフェノール", "食物繊維", "カリウム"]
 pairings: ["味噌", "天ぷら粉", "くるみ"]
 storage: "泥を落として湿らせた紙で包み、ポリ袋で冷蔵。早めに使う。"
 related_recipes: []
+image: "/assets/images/fukinotou.png"
 ---
 
 雪を割って最初に顔を出す芽。ほろ苦さは、冬の終わりを告げる便りそのもの。
