@@ -6,24 +6,38 @@ const info = seasonNames[season];
 const seasonalVegs = getVegetablesBySeason(season).slice(0, 4);
 const today = new Date();
 const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padStart(2, '0')} / ${String(today.getDate()).padStart(2, '0')}`;
+
+// Crossfade slideshow — images cycle creating a video-like ambient motion
+const heroImages = [
+  '/assets/images/pumpkin_soup.png',
+  '/assets/images/asparagus_cheese.png',
+  '/assets/images/ratatouille.png',
+  '/assets/images/nasu_miso.png',
+];
 ---
 
 <section class="hero-section relative min-h-[100svh] flex flex-col overflow-hidden bg-primary">
-  <!-- Background (cinematic pan + zoom) -->
+  <!-- Background: cinematic crossfade slideshow -->
   <div class="absolute inset-0 z-0 parallax-wrap">
-    <div class="hero-bg absolute inset-0">
-      <img
-        src="/assets/images/pumpkin_soup.png"
-        alt=""
-        class="w-full h-full object-cover"
-        style="object-position: center 50%;"
-      />
+    <div class="hero-slideshow absolute inset-0">
+      {heroImages.map((src, i) => (
+        <div class="hero-slide" style={`animation-delay: ${i * 6}s;`}>
+          <img
+            src={src}
+            alt=""
+            class="w-full h-full object-cover"
+            style="object-position: center 50%;"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </div>
+      ))}
     </div>
-    <!-- Ambient light overlay (animated) -->
+    <!-- Ambient light overlay -->
     <div class="hero-light absolute inset-0 pointer-events-none"></div>
-    <!-- Tone gradient -->
-    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(15,20,25,0.75) 0%, rgba(15,20,25,0.4) 35%, rgba(15,20,25,0.96) 100%);"></div>
-    <div class="absolute inset-0 hidden md:block" style="background: linear-gradient(90deg, rgba(15,20,25,0.6) 0%, transparent 55%);"></div>
+    <!-- Vignette + tone -->
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(15,20,25,0.78) 0%, rgba(15,20,25,0.42) 35%, rgba(15,20,25,0.97) 100%);"></div>
+    <div class="absolute inset-0 hidden md:block" style="background: linear-gradient(90deg, rgba(15,20,25,0.62) 0%, transparent 55%);"></div>
   </div>
 
   <!-- Subtle Grid -->
@@ -34,7 +48,7 @@ const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padSt
   <div class="relative z-10 flex-1 flex flex-col w-full pt-[clamp(6.5rem,15vh,10rem)] pb-[clamp(4rem,10vh,7rem)]">
     <!-- Top date strip -->
     <div class="container-site">
-      <div class="flex items-center justify-between text-white/45 text-[0.625rem] sm:text-[0.6875rem] tracking-[0.18em] sm:tracking-[0.2em] uppercase font-outfit gap-4">
+      <div class="flex items-center justify-between text-white/45 text-[0.625rem] sm:text-[0.6875rem] tracking-[0.18em] sm:tracking-[0.2em] uppercase font-outfit gap-4 reveal">
         <span class="truncate">Edition · {dateLabel}</span>
         <span class="hidden lg:inline whitespace-nowrap">No. 001 — A Seasonal Recipe Journal</span>
       </div>
@@ -52,8 +66,8 @@ const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padSt
           </div>
 
           <h1 class="font-heading text-white leading-[1.15] tracking-tight mb-6 sm:mb-8 text-[clamp(2rem,8vw,4.75rem)]">
-            <span class="char-reveal block">旬を知る、</span>
-            <span class="char-reveal block">食を編み直す。</span>
+            <span class="char-reveal block" data-char-scrub="false">旬を知る、</span>
+            <span class="char-reveal block" data-char-scrub="false">食を編み直す。</span>
           </h1>
 
           <p class="text-[0.9375rem] sm:text-base md:text-lg text-white/65 max-w-lg leading-relaxed mb-8 sm:mb-10 reveal-blur">
@@ -74,7 +88,7 @@ const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padSt
         </div>
 
         <!-- Right info card -->
-        <div class="lg:col-span-5 xl:col-span-4 reveal">
+        <div class="lg:col-span-5 xl:col-span-4 reveal-blur">
           <div class="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-[var(--radius-lg)] p-6 sm:p-7">
             <p class="text-[0.625rem] sm:text-[0.6875rem] font-outfit tracking-[0.2em] uppercase text-white/40 mb-3">In Season Now</p>
             <p class="font-heading text-xl sm:text-2xl text-white mb-1">{info.jp}の旬</p>
@@ -110,20 +124,37 @@ const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padSt
 </section>
 
 <style>
-  /* Cinematic Ken Burns with multi-axis motion — feels like subtle video */
-  .hero-bg {
+  /* === Slideshow: each slide fades in/out, combined with Ken Burns === */
+  .hero-slideshow { position: absolute; inset: 0; }
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: heroCrossfade 24s infinite;
+    will-change: opacity, transform;
+  }
+
+  .hero-slide img {
     transform-origin: 55% 50%;
-    animation: heroKenBurns 32s ease-in-out infinite alternate;
+    animation: heroKenBurns 24s ease-in-out infinite;
     will-change: transform;
+  }
+
+  /* 4 slides × 6s each = 24s cycle. Each slide fades up 0-5%, holds, fades out 25%-30% */
+  @keyframes heroCrossfade {
+    0%, 25%   { opacity: 1; }
+    30%, 95%  { opacity: 0; }
+    100%      { opacity: 1; }
   }
 
   @keyframes heroKenBurns {
     0%   { transform: scale(1.04) translate3d(0, 0, 0); }
-    50%  { transform: scale(1.12) translate3d(-1.5%, -1%, 0); }
+    50%  { transform: scale(1.14) translate3d(-1.5%, -1%, 0); }
     100% { transform: scale(1.08) translate3d(1%, 1.5%, 0); }
   }
 
-  /* Ambient light sweep */
+  /* Ambient light */
   .hero-light {
     background:
       radial-gradient(ellipse 60% 40% at 30% 20%, rgba(255, 220, 170, 0.12), transparent 70%),
@@ -138,6 +169,7 @@ const dateLabel = `${today.getFullYear()} / ${String(today.getMonth() + 1).padSt
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-bg, .hero-light { animation: none; }
+    .hero-slide, .hero-slide img, .hero-light { animation: none; }
+    .hero-slide:first-child { opacity: 1; }
   }
 </style>
