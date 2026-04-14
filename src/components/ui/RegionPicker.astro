@@ -10,15 +10,15 @@ import { regions } from '@data/regions';
     </div>
 
     <form class="region-form" data-region-form>
-      <label for="postal" class="region-label">郵便番号（上3桁でも可）</label>
+      <label for="postal" class="region-label">郵便番号 上3桁</label>
       <div class="region-input-row">
         <input
           type="text"
           inputmode="numeric"
-          pattern="[0-9\-]{3,8}"
+          pattern="[0-9]{3}"
           id="postal"
-          placeholder="例: 100-0001 / 830"
-          maxlength="8"
+          placeholder="例: 100 / 830"
+          maxlength="3"
           autocomplete="off"
           data-region-input
         />
@@ -35,7 +35,7 @@ import { regions } from '@data/regions';
       <summary>地域から選択</summary>
       <div class="region-manual-grid" data-region-manual>
         {regions.map((r) => (
-          <button type="button" class="pill" data-region-pick={r.id}>{r.name}</button>
+          <button type="button" class="pill" data-region-pick={r.id}>{r.name}地方</button>
         ))}
       </div>
     </details>
@@ -132,8 +132,8 @@ import { regions } from '@data/regions';
   let memRegion: string | null = null;
 
   const regionLabels: Record<string, string> = {
-    hokkaido: '北海道', tohoku: '東北', kanto: '関東', chubu: '中部',
-    kinki: '近畿', chugoku: '中国', shikoku: '四国', kyushu_okinawa: '九州・沖縄',
+    hokkaido: '北海道地方', tohoku: '東北地方', kanto: '関東地方', chubu: '中部地方',
+    kinki: '近畿地方', chugoku: '中国地方', shikoku: '四国地方', kyushu_okinawa: '九州・沖縄地方',
   };
 
   function setRegion(id: string) {
