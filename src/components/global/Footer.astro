@@ -3,47 +3,56 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="bg-primary text-white">
-  <div class="container-site py-24">
-    <div class="grid md:grid-cols-12 gap-12 mb-16">
-      <!-- Brand -->
-      <div class="md:col-span-5">
-        <a href="/" class="brand-mark mb-6">
-          <span class="brand-mark-icon">SR</span>
-          <span class="brand-mark-text">SHUNRECIPE</span>
-        </a>
-        <p class="font-heading text-[1.375rem] leading-relaxed mb-4">
-          旬の力を、毎日の食卓へ。
-        </p>
-        <p class="text-[0.8125rem] text-white/50 leading-relaxed max-w-sm">
-          日本の四季と地域が育む旬野菜と、その魅力を最大限に引き出すレシピを編集者の目線でお届けします。
-        </p>
-      </div>
+  <div class="container-site py-16 sm:py-20 md:py-24">
+    <!-- Brand -->
+    <div class="max-w-md mb-12 md:mb-16">
+      <a href="/" class="brand-mark mb-5">
+        <span class="brand-mark-icon">SR</span>
+        <span class="brand-mark-text">SHUNRECIPE</span>
+      </a>
+      <p class="font-heading text-[1.25rem] sm:text-[1.375rem] leading-relaxed mb-3">
+        旬の力を、毎日の食卓へ。
+      </p>
+      <p class="text-[0.8125rem] text-white/50 leading-relaxed">
+        日本の四季と地域が育む旬野菜と、その魅力を最大限に引き出すレシピを編集者の目線でお届けします。
+      </p>
+    </div>
 
+    <!-- Link Groups -->
+    <div class="grid sm:grid-cols-2 md:grid-cols-12 gap-y-10 gap-x-8 pt-10 border-t border-white/10">
       <!-- Navigation -->
-      <div class="md:col-span-3">
-        <h4 class="font-outfit text-[0.6875rem] tracking-[0.2em] text-white/40 mb-6 uppercase">Navigation</h4>
-        <nav class="flex flex-col gap-3">
-          <a href="/" class="text-[0.875rem] text-white/75 hover:text-accent transition-colors">ホーム</a>
-          <a href="/seasonal/" class="text-[0.875rem] text-white/75 hover:text-accent transition-colors">四季の図鑑</a>
-          <a href="/recipes/" class="text-[0.875rem] text-white/75 hover:text-accent transition-colors">レシピ</a>
-          <a href="/favorites/" class="text-[0.875rem] text-white/75 hover:text-accent transition-colors">お気に入り</a>
-        </nav>
-      </div>
+      <nav class="md:col-span-4">
+        <h4 class="font-outfit text-[0.625rem] tracking-[0.24em] text-white/35 mb-5 uppercase">Navigation</h4>
+        <ul class="flex flex-col gap-3.5">
+          <li><a href="/" class="text-[0.875rem] text-white/75 hover:text-accent-glow transition-colors">ホーム</a></li>
+          <li><a href="/seasonal/" class="text-[0.875rem] text-white/75 hover:text-accent-glow transition-colors">四季の図鑑</a></li>
+          <li><a href="/recipes/" class="text-[0.875rem] text-white/75 hover:text-accent-glow transition-colors">レシピ</a></li>
+          <li><a href="/favorites/" class="text-[0.875rem] text-white/75 hover:text-accent-glow transition-colors">お気に入り</a></li>
+        </ul>
+      </nav>
 
       <!-- Seasons -->
+      <nav class="md:col-span-4">
+        <h4 class="font-outfit text-[0.625rem] tracking-[0.24em] text-white/35 mb-5 uppercase">Four Seasons</h4>
+        <ul class="grid grid-cols-2 gap-x-4 gap-y-3.5">
+          <li><a href="/seasonal/?season=spring" class="text-[0.875rem] text-white/75 hover:text-spring transition-colors">春の野菜</a></li>
+          <li><a href="/seasonal/?season=summer" class="text-[0.875rem] text-white/75 hover:text-summer transition-colors">夏の野菜</a></li>
+          <li><a href="/seasonal/?season=autumn" class="text-[0.875rem] text-white/75 hover:text-autumn transition-colors">秋の野菜</a></li>
+          <li><a href="/seasonal/?season=winter" class="text-[0.875rem] text-white/75 hover:text-winter transition-colors">冬の野菜</a></li>
+        </ul>
+      </nav>
+
+      <!-- About / Project -->
       <div class="md:col-span-4">
-        <h4 class="font-outfit text-[0.6875rem] tracking-[0.2em] text-white/40 mb-6 uppercase">Four Seasons</h4>
-        <nav class="grid grid-cols-2 gap-3">
-          <a href="/seasonal/?season=spring" class="text-[0.875rem] text-white/75 hover:text-spring transition-colors">春の野菜</a>
-          <a href="/seasonal/?season=summer" class="text-[0.875rem] text-white/75 hover:text-summer transition-colors">夏の野菜</a>
-          <a href="/seasonal/?season=autumn" class="text-[0.875rem] text-white/75 hover:text-autumn transition-colors">秋の野菜</a>
-          <a href="/seasonal/?season=winter" class="text-[0.875rem] text-white/75 hover:text-winter transition-colors">冬の野菜</a>
-        </nav>
+        <h4 class="font-outfit text-[0.625rem] tracking-[0.24em] text-white/35 mb-5 uppercase">Project</h4>
+        <p class="text-[0.8125rem] text-white/60 leading-relaxed">
+          AIさんいんプロジェクトが山陰地方の食と農業に向き合い、旬と地域の力を届けるために運営しています。
+        </p>
       </div>
     </div>
 
-    <!-- Bottom -->
-    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <!-- Bottom Strip -->
+    <div class="border-t border-white/10 mt-14 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <p class="text-[0.6875rem] text-white/30 font-outfit tracking-[0.1em]">
         © {currentYear} SHUNRECIPE — All rights reserved.
       </p>

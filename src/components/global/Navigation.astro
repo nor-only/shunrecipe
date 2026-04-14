@@ -9,37 +9,39 @@ const links = [
 ];
 ---
 
-<div class="nav-overlay">
-  <div class="container-site h-full flex flex-col justify-between py-24">
-    <div>
-      <a href="/" class="brand-mark mb-16">
-        <span class="brand-mark-icon">SR</span>
-        <span class="brand-mark-text">SHUNRECIPE</span>
-      </a>
-
-      <nav class="flex flex-col gap-8 mt-12">
-        {links.map((link, i) => (
-          <a
-            href={link.href}
-            class="nav-link group flex items-baseline gap-6"
-            style={`transition-delay: ${(i + 1) * 0.08}s`}
-          >
-            <span class="font-outfit text-xs tracking-[0.3em] text-white/30 w-8">
-              0{i + 1}
-            </span>
-            <span class="font-heading">{link.label}</span>
-            <span class="font-outfit text-xs tracking-[0.2em] text-white/30 ml-2">
-              {link.en}
-            </span>
-          </a>
-        ))}
-      </nav>
+<div class="nav-overlay" aria-hidden="true">
+  <div class="container-site h-full flex flex-col pt-[5.5rem] pb-10 overflow-y-auto">
+    <!-- Nav Main -->
+    <div class="flex-1 flex items-center">
+      <div class="w-full">
+        <p class="font-outfit text-[0.625rem] tracking-[0.28em] uppercase text-white/35 mb-6">
+          Menu
+        </p>
+        <nav class="flex flex-col gap-3 sm:gap-4">
+          {links.map((link, i) => (
+            <a
+              href={link.href}
+              class="nav-link group flex items-baseline gap-4 sm:gap-6 border-b border-white/10 pb-3 sm:pb-4"
+              style={`transition-delay: ${0.2 + (i * 0.08)}s`}
+            >
+              <span class="font-outfit text-[0.6875rem] tracking-[0.2em] text-white/30 w-6 shrink-0 font-mono-num">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="nav-label font-heading flex-1">{link.label}</span>
+              <span class="font-outfit text-[0.6875rem] tracking-[0.18em] text-white/25 self-center hidden sm:inline">
+                {link.en}
+              </span>
+              <span class="material-symbols-outlined nav-arrow self-center" style="font-size:20px">arrow_forward</span>
+            </a>
+          ))}
+        </nav>
+      </div>
     </div>
 
     <!-- Mobile Region Picker -->
-    <div class="border-t border-white/10 pt-8 mt-12 md:hidden">
-      <p class="text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-white/40 mb-3">
-        Your region
+    <div class="border-t border-white/10 pt-6 mt-10">
+      <p class="text-[0.625rem] font-outfit tracking-[0.24em] uppercase text-white/35 mb-4">
+        Your Region
       </p>
       <div class="flex flex-wrap gap-2" id="mobileRegionList">
         <button type="button" class="region-pill" data-mobile-region="all">全国</button>

@@ -101,32 +101,125 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       });
       gsap.ticker.lagSmoothing(0);
 
+      function splitChars(el: HTMLElement): HTMLSpanElement[] {
+        if (el.dataset.charSplit === 'done') {
+          return Array.from(el.querySelectorAll<HTMLSpanElement>('.char'));
+        }
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const textNodes: Text[] = [];
+        let node: Node | null;
+        while ((node = walker.nextNode())) textNodes.push(node as Text);
+        const chars: HTMLSpanElement[] = [];
+        textNodes.forEach((tn) => {
+          const text = tn.textContent || '';
+          if (!text.trim()) return;
+          const frag = document.createDocumentFragment();
+          for (const ch of text) {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = ch;
+            if (ch === ' ') span.style.whiteSpace = 'pre';
+            frag.appendChild(span);
+            chars.push(span);
+          }
+          tn.parentNode?.replaceChild(frag, tn);
+        });
+        el.dataset.charSplit = 'done';
+        return chars;
+      }
+
       function initReveals() {
         gsap.utils.toArray<HTMLElement>('.reveal').forEach((el) => {
           gsap.to(el, {
             opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          });
+        });
+
+        gsap.utils.toArray<HTMLElement>('.reveal-blur').forEach((el) => {
+          gsap.to(el, {
+            opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
           });
         });
 
         gsap.utils.toArray<HTMLElement>('.stagger-children').forEach((container) => {
           gsap.to(container.children, {
-            opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12,
-            scrollTrigger: { trigger: container, start: 'top 80%', once: true },
+            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.09,
+            scrollTrigger: { trigger: container, start: 'top 85%', once: true },
           });
         });
 
         gsap.utils.toArray<HTMLElement>('.clip-reveal').forEach((el) => {
           gsap.to(el, {
             clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: 'power3.inOut',
-            scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
           });
         });
 
         gsap.utils.toArray<HTMLElement>('.reveal-left').forEach((el) => {
           gsap.to(el, {
             opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          });
+        });
+
+        // Character-by-character scroll reveal (scrubbed)
+        gsap.utils.toArray<HTMLElement>('.char-reveal').forEach((el) => {
+          const chars = splitChars(el);
+          const scrub = el.dataset.charScrub !== 'false';
+          if (scrub) {
+            gsap.to(chars, {
+              opacity: 1,
+              ease: 'none',
+              stagger: { each: 0.04, from: 'start' },
+              scrollTrigger: {
+                trigger: el,
+                start: 'top 90%',
+                end: 'top 20%',
+                scrub: 0.8,
+              },
+            });
+          } else {
+            gsap.to(chars, {
+              opacity: 1,
+              duration: 0.6,
+              ease: 'power2.out',
+              stagger: 0.03,
+              scrollTrigger: {
+                trigger: el,
+                start: 'top 90%',
+                once: true,
+              },
+            });
+          }
+        });
+
+        // Line-by-line reveal
+        gsap.utils.toArray<HTMLElement>('.line-reveal').forEach((el) => {
+          const inners = el.querySelectorAll<HTMLElement>('.line-inner');
+          gsap.to(inners, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out',
+            stagger: 0.12,
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          });
+        });
+
+        // Parallax on images
+        gsap.utils.toArray<HTMLElement>('.parallax-img').forEach((img) => {
+          const speed = parseFloat(img.dataset.parallaxSpeed || '0.3');
+          gsap.to(img, {
+            yPercent: -speed * 30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: img.closest('.parallax-wrap') || img,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
           });
         });
       }
