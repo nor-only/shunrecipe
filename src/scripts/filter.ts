@@ -212,4 +212,17 @@ function setupFilter(bar: HTMLElement) {
   apply();
 }
 
-document.querySelectorAll<HTMLElement>('[data-filter-bar]').forEach(setupFilter);
+function bootFilter() {
+  try {
+    const bars = document.querySelectorAll<HTMLElement>('[data-filter-bar]');
+    console.debug('[filter] init:', bars.length, 'filter bar(s)');
+    bars.forEach(setupFilter);
+  } catch (err) {
+    console.error('[filter] boot error:', err);
+  }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootFilter);
+} else {
+  bootFilter();
+}

@@ -83,35 +83,43 @@ void featured; // reserved for a future in-hero overlay
 </section>
 
 <script>
-  (() => {
-    const section = document.querySelector<HTMLElement>('.hero-ed');
-    if (!section) return;
-    const slides = Array.from(section.querySelectorAll<HTMLElement>('[data-slide]'));
-    if (slides.length < 2) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
+  function initHeroSlideshow() {
+    try {
+      const section = document.querySelector<HTMLElement>('.hero-ed');
+      if (!section) { console.debug('[hero] no section'); return; }
+      const slides = Array.from(section.querySelectorAll<HTMLElement>('[data-slide]'));
+      if (slides.length < 2) { console.debug('[hero] < 2 slides'); return; }
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) { console.debug('[hero] reduced motion'); return; }
 
-    // Random order without repeats
-    const order = slides.map((_, i) => i);
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [order[i], order[j]] = [order[j], order[i]];
-    }
+      const order = slides.map((_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
 
-    // Start with random first slide
-    slides.forEach((s) => s.classList.remove('is-active'));
-    slides[order[0]].classList.add('is-active');
+      slides.forEach((s) => s.classList.remove('is-active'));
+      slides[order[0]].classList.add('is-active');
 
-    let idx = 0;
-    const hold = () => 7000 + Math.random() * 2000; // 7-9s
-    const tick = () => {
-      const prev = order[idx];
-      idx = (idx + 1) % order.length;
-      const next = order[idx];
-      slides[prev].classList.remove('is-active');
-      slides[next].classList.add('is-active');
+      let idx = 0;
+      const hold = () => 7000 + Math.random() * 2000;
+      const tick = () => {
+        const prev = order[idx];
+        idx = (idx + 1) % order.length;
+        const next = order[idx];
+        slides[prev].classList.remove('is-active');
+        slides[next].classList.add('is-active');
+        window.setTimeout(tick, hold());
+      };
       window.setTimeout(tick, hold());
-    };
-    window.setTimeout(tick, hold());
-  })();
+      console.debug('[hero] slideshow started with', slides.length, 'slides');
+    } catch (err) {
+      console.error('[hero] error:', err);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroSlideshow);
+  } else {
+    initHeroSlideshow();
+  }
 </script>
