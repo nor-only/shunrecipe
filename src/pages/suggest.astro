@@ -220,13 +220,16 @@ export const prerender = true;
   </style>
 
   <script>
-    const REGION_KEY = 'shunrecipe.region';
+    // 旧バージョンが残した個人情報の念のためのクリーンアップ
+    try {
+      localStorage.removeItem('shunrecipe.region');
+      localStorage.removeItem('shunrecipe.postal');
+    } catch {}
+    // in-memory の地域 (RegionPicker などから設定された場合) を初期値に
     const regionSelect = document.getElementById('region') as HTMLSelectElement | null;
     if (regionSelect) {
-      try {
-        const saved = localStorage.getItem(REGION_KEY);
-        if (saved) regionSelect.value = saved;
-      } catch {}
+      const mem = (window as any).__shunrecipe?.getRegion?.();
+      if (mem) regionSelect.value = mem;
     }
 
     // === 画像アップロード + Vision API ===
