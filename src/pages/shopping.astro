@@ -1,0 +1,237 @@
+---
+export const prerender = true;
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ChapterHeading from '@components/ui/ChapterHeading.astro';
+---
+<BaseLayout
+  title="買い物リスト — SHUNRECIPE"
+  description="レシピから追加した食材の一覧と、各ECサイトへの検索リンク。"
+  ogImage="/og/default.png"
+>
+  <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">
+    <div class="container-site">
+      <ChapterHeading
+        num="Volume V — 買い物"
+        title="お買い物は、きっとお近くの八百屋さんで。"
+        caption="Shopping list & curated storefronts"
+        lede="レシピから追加した食材と、まとめて検索できるオンラインストアへのリンク。このリストは端末内にのみ保存されます。"
+      />
+    </div>
+  </header>
+
+  <section class="container-narrow section-pad-sm">
+    <div style="display:flex; gap: 0.75rem; flex-wrap: wrap; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--color-line);">
+      <button type="button" class="ed-btn" id="shop-clear-checked">購入済みを削除</button>
+      <button type="button" class="ed-btn" id="shop-clear-all">リストを空にする</button>
+      <button type="button" class="ed-btn" id="shop-print">印刷する</button>
+    </div>
+
+    <div id="shop-empty" style="padding: 3rem 0;">
+      <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2);">
+        まだ買い物リストは空です。各レシピページの材料欄「＋」ボタンで追加できます。
+      </p>
+      <a href="/recipes/" class="ed-link" style="display: inline-block; margin-top: 1rem;">レシピ総覧へ<span class="arrow">——→</span></a>
+    </div>
+
+    <div id="shop-list" class="shop-list"></div>
+
+    <section id="shop-search-all" class="shop-search-all" hidden>
+      <p class="chapter-num">まとめて検索</p>
+      <hr class="rule-accent" style="margin: 0.75rem 0 1rem;" />
+      <p style="font-family: var(--font-serif-jp); color: var(--color-ink-2); font-size: 0.9375rem; margin-bottom: 1rem;">
+        リストの食材を、各ECサイトで検索します。クリックで新しいタブが開きます。
+      </p>
+      <div id="shop-search-links" style="display:flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+    </section>
+  </section>
+
+  <style>
+    .shop-list {
+      display: grid; gap: 1rem;
+      padding-block: 1.5rem;
+    }
+    .shop-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem; align-items: center;
+      padding: 1rem 0;
+      border-bottom: 0.5px solid var(--color-line);
+    }
+    .shop-row.is-checked .shop-name,
+    .shop-row.is-checked .shop-meta {
+      text-decoration: line-through;
+      color: var(--color-ink-3);
+    }
+    .shop-check {
+      width: 22px; height: 22px;
+      border: 1px solid var(--color-line);
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    .shop-check.is-on {
+      background: var(--color-ink);
+      color: var(--color-bg);
+      border-color: var(--color-ink);
+    }
+    .shop-name {
+      font-family: var(--font-serif-jp);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .shop-meta {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+      margin-top: 0.3rem;
+    }
+    .shop-ec-row {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .shop-ec-pill {
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--color-line);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-ink-2);
+      text-decoration: none;
+      transition: background 180ms, color 180ms, border-color 180ms;
+    }
+    .shop-ec-pill:hover {
+      background: var(--color-ink);
+      color: var(--color-bg);
+      border-color: var(--color-ink);
+    }
+    .shop-remove {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-ink-3);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+    }
+    .shop-remove:hover { color: var(--color-accent-2); }
+    .shop-search-all {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+    }
+    @media print {
+      .ed-btn, .shop-ec-row, .shop-remove, #shop-search-all { display: none !important; }
+      .ed-header, .ed-footer, .ed-toast { display: none !important; }
+      .shop-row { break-inside: avoid; }
+      main { padding-top: 0 !important; }
+    }
+  </style>
+
+  <script>
+    import {
+      loadShopping, removeFromShopping, toggleChecked,
+      clearChecked, clearAll, EC_PROVIDERS, ecSearchUrl,
+      type ShoppingItem,
+    } from '@/lib/shopping';
+
+    const listEl = document.getElementById('shop-list') as HTMLElement | null;
+    const emptyEl = document.getElementById('shop-empty') as HTMLElement | null;
+    const searchAllEl = document.getElementById('shop-search-all') as HTMLElement | null;
+    const searchLinksEl = document.getElementById('shop-search-links') as HTMLElement | null;
+
+    function esc(s: string) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      }[c]!));
+    }
+
+    function render() {
+      const items = loadShopping();
+      if (!listEl || !emptyEl) return;
+      if (items.length === 0) {
+        emptyEl.style.display = '';
+        listEl.innerHTML = '';
+        if (searchAllEl) searchAllEl.hidden = true;
+        return;
+      }
+      emptyEl.style.display = 'none';
+
+      // Group by recipe
+      const groups = new Map<string, ShoppingItem[]>();
+      for (const it of items) {
+        const key = it.recipe_title || '(単発追加)';
+        const arr = groups.get(key) ?? [];
+        arr.push(it);
+        groups.set(key, arr);
+      }
+
+      listEl.innerHTML = Array.from(groups.entries()).map(([title, arr]) => {
+        const rows = arr.map((it) => {
+          const ecLinks = EC_PROVIDERS.map((p) =>
+            `<a class="shop-ec-pill" target="_blank" rel="noopener" href="${esc(ecSearchUrl(p.id, it.name))}">${esc(p.label)}</a>`,
+          ).join('');
+          return `
+            <div class="shop-row ${it.checked ? 'is-checked' : ''}" data-id="${esc(it.id)}">
+              <button type="button" class="shop-check ${it.checked ? 'is-on' : ''}" data-toggle="${esc(it.id)}" aria-label="購入済み切り替え">${it.checked ? '✓' : ''}</button>
+              <div>
+                <div class="shop-name">${esc(it.name)}${it.amount ? ` <span style="color: var(--color-ink-3); font-size: 0.875rem;">（${esc(it.amount)}）</span>` : ''}</div>
+                <div class="shop-meta">${esc(title)}</div>
+                <div class="shop-ec-row">${ecLinks}</div>
+              </div>
+              <button type="button" class="shop-remove" data-remove="${esc(it.id)}">外す</button>
+            </div>
+          `;
+        }).join('');
+        return `
+          <div class="shop-group">
+            <p class="chapter-num" style="margin-top: 1rem; margin-bottom: 0.25rem;">From / ${esc(title)}</p>
+            ${rows}
+          </div>
+        `;
+      }).join('');
+
+      // Bulk search links
+      if (searchAllEl && searchLinksEl) {
+        const names = Array.from(new Set(items.filter((i) => !i.checked).map((i) => i.name)));
+        if (names.length === 0) {
+          searchAllEl.hidden = true;
+        } else {
+          searchAllEl.hidden = false;
+          searchLinksEl.innerHTML = EC_PROVIDERS.map((p) => {
+            const q = names.join(' ');
+            return `<a class="ed-btn" target="_blank" rel="noopener" href="${esc(ecSearchUrl(p.id, q))}">${esc(p.name)} で検索</a>`;
+          }).join('');
+        }
+      }
+
+      // Wire row actions
+      listEl.querySelectorAll<HTMLElement>('[data-toggle]').forEach((el) => {
+        el.addEventListener('click', () => {
+          toggleChecked(el.dataset.toggle!);
+        });
+      });
+      listEl.querySelectorAll<HTMLElement>('[data-remove]').forEach((el) => {
+        el.addEventListener('click', () => {
+          removeFromShopping(el.dataset.remove!);
+        });
+      });
+    }
+
+    document.addEventListener('shopping:change', render);
+    render();
+
+    document.getElementById('shop-clear-checked')?.addEventListener('click', () => {
+      clearChecked();
+    });
+    document.getElementById('shop-clear-all')?.addEventListener('click', () => {
+      if (confirm('買い物リストをすべて削除しますか？')) clearAll();
+    });
+    document.getElementById('shop-print')?.addEventListener('click', () => {
+      window.print();
+    });
+  </script>
+</BaseLayout>

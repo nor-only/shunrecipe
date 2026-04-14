@@ -114,10 +114,29 @@ const recipeLd = {
                 <tr>
                   <td>{i.name}</td>
                   <td>{i.amount}</td>
+                  <td style="width: 48px; text-align: right;">
+                    <button
+                      type="button"
+                      class="shop-add"
+                      data-shop-add
+                      data-shop-name={i.name}
+                      data-shop-amount={i.amount}
+                      data-shop-recipe-id={d.id}
+                      data-shop-recipe-title={d.title}
+                      aria-label={`${i.name} を買い物リストへ追加`}
+                      title="買い物リストへ追加"
+                    >
+                      +
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <div style="margin-top: 1rem; display:flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="ed-btn" data-shop-add-all>すべて買い物リストへ</button>
+            <a href="/shopping/" class="ed-link" style="align-self:center;">買い物リストを開く<span class="arrow">——→</span></a>
+          </div>
 
           {d.pairing_wine && d.pairing_wine.length > 0 && (
             <div style="margin-top: 2.5rem;">
@@ -167,4 +186,64 @@ const recipeLd = {
       </section>
     )}
   </article>
+
+  <style>
+    .shop-add {
+      width: 28px; height: 28px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--color-line);
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-ink-2);
+      transition: background 180ms, color 180ms, border-color 180ms;
+    }
+    .shop-add:hover { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+    .shop-add.is-added { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+  </style>
+
+  <script>
+    import { addToShopping } from '@/lib/shopping';
+
+    function flash(btn: HTMLElement) {
+      btn.classList.add('is-added');
+      const old = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => {
+        btn.classList.remove('is-added');
+        btn.textContent = old || '+';
+      }, 900);
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('[data-shop-add]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        addToShopping({
+          name: btn.dataset.shopName!,
+          amount: btn.dataset.shopAmount,
+          recipe_id: btn.dataset.shopRecipeId,
+          recipe_title: btn.dataset.shopRecipeTitle,
+        });
+        flash(btn);
+        (window as any).__shunrecipe?.toast?.('買い物リストへ追加しました');
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-shop-add-all]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const rows = document.querySelectorAll<HTMLButtonElement>('[data-shop-add]');
+        let n = 0;
+        rows.forEach((r) => {
+          addToShopping({
+            name: r.dataset.shopName!,
+            amount: r.dataset.shopAmount,
+            recipe_id: r.dataset.shopRecipeId,
+            recipe_title: r.dataset.shopRecipeTitle,
+          });
+          n++;
+        });
+        (window as any).__shunrecipe?.toast?.(`${n}件を買い物リストへ追加`);
+      });
+    });
+  </script>
 </BaseLayout>
