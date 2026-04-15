@@ -3,12 +3,18 @@ import Fuse from 'fuse.js';
 interface RecipeEntry {
   id: string;
   title: string;
+  subtitle?: string;
   season: string;
   region?: string;
+  region_name?: string;
+  prefectures?: string[];
+  prefecture?: string;
   vegetable: string[];
+  vegetable_names?: string[];
   time_min: number;
   genre: string;
   tags: string[];
+  story?: string;
   el: HTMLElement;
 }
 
@@ -19,7 +25,10 @@ interface VegEntry {
   aliases: string[];
   seasons: string[];
   regions: string[];
+  region_names?: string[];
+  prefectures?: string[];
   cultivars: string[];
+  cultivar_regions?: string[];
   el: HTMLElement;
 }
 
@@ -33,6 +42,31 @@ function debounce<T extends (...a: any[]) => void>(fn: T, ms: number) {
   };
 }
 
+// カタカナ → ひらがなに正規化（検索の部分一致を日本語に優しく）
+function normalizeQuery(s: string): string {
+  return s
+    .trim()
+    .toLowerCase()
+    .replace(/[\u30A1-\u30F6]/g, (ch) =>
+      String.fromCharCode(ch.charCodeAt(0) - 0x60)
+    );
+}
+function normalizeEntryText(e: any): string {
+  const parts: string[] = [];
+  const push = (v: unknown) => {
+    if (!v) return;
+    if (Array.isArray(v)) v.forEach(push);
+    else if (typeof v === 'string') parts.push(v);
+  };
+  push(e.title); push(e.subtitle); push(e.name_ja); push(e.name_en);
+  push(e.aliases); push(e.cultivars); push(e.cultivar_regions);
+  push(e.tags); push(e.story); push(e.genre);
+  push(e.region); push(e.region_name); push(e.region_names);
+  push(e.prefecture); push(e.prefectures);
+  push(e.vegetable); push(e.vegetable_names);
+  return normalizeQuery(parts.join(' '));
+}
+
 function setupFilter(bar: HTMLElement) {
   const mode = (bar.dataset.mode as 'recipes' | 'vegetables') || 'recipes';
   const resultGrid = document.querySelector<HTMLElement>('[data-filter-grid]');
@@ -42,22 +76,25 @@ function setupFilter(bar: HTMLElement) {
   if (!resultGrid || !qInput) return;
 
   const cards = Array.from(resultGrid.children) as HTMLElement[];
-  const entries: Entry[] = cards.map((el) => {
+  const entries: (Entry & { _search: string })[] = cards.map((el) => {
     const raw = el.dataset.filterData || '{}';
     try {
       const d = JSON.parse(raw);
-      return { ...d, el } as Entry;
+      const merged = { ...d, el } as Entry;
+      return { ...merged, _search: normalizeEntryText(merged) } as Entry & { _search: string };
     } catch {
-      return { el } as Entry;
+      return { el, _search: '' } as Entry & { _search: string };
     }
   });
 
+  // Fuse はあいまい検索のフォールバックとして使用（アルファベット・綴り違いに有効）
   const fuse = new Fuse(entries, {
     keys: mode === 'recipes'
-      ? ['title', 'tags', 'vegetable', 'region', 'genre']
-      : ['name_ja', 'name_en', 'aliases', 'cultivars', 'regions'],
-    threshold: 0.38,
+      ? ['title', 'subtitle', 'tags', 'vegetable', 'vegetable_names', 'region', 'region_name', 'prefecture', 'prefectures', 'genre', 'story']
+      : ['name_ja', 'name_en', 'aliases', 'cultivars', 'cultivar_regions', 'regions', 'region_names', 'prefectures'],
+    threshold: 0.45,
     ignoreLocation: true,
+    minMatchCharLength: 1,
     includeScore: true,
     useExtendedSearch: false,
   });
@@ -117,14 +154,25 @@ function setupFilter(bar: HTMLElement) {
 
   function apply() {
     let pool = entries as any[];
-    if (state.q.trim()) {
-      const res = fuse.search(state.q.trim());
-      pool = res.map((r) => r.item);
+    const rawQ = state.q.trim();
+    if (rawQ) {
+      // 1) 部分一致（日本語に優しい）：クエリをスペースで分割し、全トークンを含むエントリを抽出
+      const tokens = normalizeQuery(rawQ).split(/\s+/).filter(Boolean);
+      const substringMatches = entries.filter((e) =>
+        tokens.every((t) => e._search.includes(t))
+      );
+      // 2) 0 件ならあいまい検索にフォールバック
+      if (substringMatches.length > 0) {
+        pool = substringMatches;
+      } else {
+        const res = fuse.search(rawQ);
+        pool = res.map((r) => r.item);
+      }
     }
     let visible = 0;
     const poolSet = new Set(pool.map((e: any) => e.id || e.el));
     entries.forEach((e: any) => {
-      const passQ = state.q.trim() ? poolSet.has(e.id || e.el) : true;
+      const passQ = rawQ ? poolSet.has(e.id || e.el) : true;
       const passS = matchesStructured(e);
       const show = passQ && passS;
       e.el.style.display = show ? '' : 'none';

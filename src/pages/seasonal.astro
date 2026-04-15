@@ -5,18 +5,32 @@ import ChapterHeading from '@components/ui/ChapterHeading.astro';
 import VegCard from '@components/ui/VegCard.astro';
 import FilterBar from '@components/ui/FilterBar.astro';
 import { getCollection } from 'astro:content';
+import { regionName, prefecturesOfRegion } from '@/data/regions';
 
 const vegetables = await getCollection('vegetables');
 
-const entries = vegetables.map((v) => ({
-  id: v.data.slug,
-  name_ja: v.data.name_ja,
-  name_en: v.data.name_en,
-  aliases: v.data.aliases,
-  seasons: v.data.seasons,
-  regions: v.data.regions,
-  cultivars: v.data.notable_cultivars.map((c) => c.name),
-}));
+const entries = vegetables.map((v) => {
+  const regionIds = v.data.regions;
+  const region_names = regionIds.map((id) => regionName(id));
+  const prefectures = Array.from(
+    new Set([
+      ...regionIds.flatMap((id) => prefecturesOfRegion(id)),
+      ...v.data.notable_cultivars.map((c) => c.region),
+    ].filter(Boolean))
+  );
+  return {
+    id: v.data.slug,
+    name_ja: v.data.name_ja,
+    name_en: v.data.name_en,
+    aliases: v.data.aliases,
+    seasons: v.data.seasons,
+    regions: regionIds,
+    region_names,
+    prefectures,
+    cultivars: v.data.notable_cultivars.map((c) => c.name),
+    cultivar_regions: v.data.notable_cultivars.map((c) => c.region).filter(Boolean),
+  };
+});
 ---
 <BaseLayout title="四季の図鑑 — SHUNRECIPE" description="全国八地域と四季で編纂した旬野菜の図鑑。" ogImage="/og/seasonal.png">
   <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">

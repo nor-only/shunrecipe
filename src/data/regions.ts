@@ -36,3 +36,24 @@ export function getRegion(id: string): Region | undefined {
 export function regionName(id: string): string {
   return getRegion(id)?.name ?? id;
 }
+
+// 都道府県名 → 地域ID の逆引きマップ
+const prefectureToRegion: Record<string, RegionId> = (() => {
+  const map: Record<string, RegionId> = {};
+  for (const r of regions) {
+    for (const p of r.prefectures) {
+      map[p] = r.id;
+    }
+  }
+  return map;
+})();
+
+export function regionFromPrefecture(prefecture: string): RegionId | undefined {
+  return prefectureToRegion[prefecture];
+}
+
+export function prefecturesOfRegion(id: string): string[] {
+  return getRegion(id)?.prefectures ?? [];
+}
+
+export const allPrefectures: string[] = regions.flatMap((r) => r.prefectures);

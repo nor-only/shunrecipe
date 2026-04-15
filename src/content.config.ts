@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
 import { recipes as recipesData } from './data/recipes';
 import { premiumRecipes } from './data/recipes-v2';
+import { prefectureRecipes } from './data/recipes-prefectures';
 import { getRecipeMeta } from './data/recipe-meta';
 
 const regionEnum = z.enum([
@@ -48,7 +49,9 @@ const recipeLoader: Loader = {
   load: async ({ store, parseData }) => {
     store.clear();
     const seen = new Set<string>();
-    for (const r of premiumRecipes) {
+    const allPremium = [...premiumRecipes, ...prefectureRecipes];
+    for (const r of allPremium) {
+      if (seen.has(r.id)) continue;
       seen.add(r.id);
       const data = await parseData({
         id: r.id,
@@ -58,6 +61,7 @@ const recipeLoader: Loader = {
           subtitle: r.subtitle,
           season: r.season,
           region: r.region,
+          prefecture: r.prefecture,
           vegetable: [r.mainVegetable],
           time_min: r.time,
           calories: r.calories,
@@ -114,6 +118,7 @@ const recipes = defineCollection({
     subtitle: z.string().default(''),
     season: seasonEnum,
     region: regionEnum.optional(),
+    prefecture: z.string().optional(),
     vegetable: z.array(z.string()).default([]),
     time_min: z.number().int(),
     calories: z.number().int().optional(),
