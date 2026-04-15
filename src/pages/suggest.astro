@@ -12,17 +12,21 @@ export const prerender = true;
 >
   <header class="section-pad-sm" style="padding-top: clamp(6rem, 14vw, 10rem);">
     <div class="container-site">
+      <div style="display:flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+        <span class="soon-badge">Coming soon</span>
+        <span class="caption-en">2026 — forthcoming</span>
+      </div>
       <ChapterHeading
         num="Pantry &amp; Season"
-        title="冷蔵庫から、旬の一皿を。"
+        title="献立AI ― 冷蔵庫から、旬の一皿を。"
         caption="Pantry, season, and you"
-        lede="冷蔵庫にあるものと、お住まいの地域の旬を組み合わせて、編集部が3件の献立をお届けします。追加で買うべき旬の素材も併せてご案内します。"
+        lede="冷蔵庫にあるものと、お住まいの地域の旬を組み合わせ、編集部が3件の献立をお届けする機能を近日公開予定です。Claude Vision による食材認識、地域の旬との照合、追加で買うべき素材のご案内まで——現在開発中。"
       />
     </div>
   </header>
 
   <section class="container-narrow">
-    <form id="suggest-form" class="suggest-form" aria-label="レシピ提案フォーム" enctype="multipart/form-data">
+    <form id="suggest-form" class="suggest-form soon-disabled" aria-label="レシピ提案フォーム（準備中）" enctype="multipart/form-data" aria-disabled="true">
       <div class="suggest-row">
         <label for="image" class="suggest-label">冷蔵庫の写真（任意 — Claude Vision が食材を認識します）</label>
         <div class="image-upload">
@@ -71,8 +75,8 @@ export const prerender = true;
       </div>
 
       <div class="suggest-actions">
-        <button type="submit" class="ed-btn" id="suggest-submit">編集部に相談する</button>
-        <span class="suggest-note" id="suggest-status" aria-live="polite"></span>
+        <button type="submit" class="ed-btn" id="suggest-submit" disabled>準備中</button>
+        <span class="suggest-note" id="suggest-status" aria-live="polite">この機能は近日公開予定です。現在は体験操作のみ可能です。</span>
       </div>
     </form>
 
