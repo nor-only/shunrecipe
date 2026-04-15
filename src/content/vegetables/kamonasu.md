@@ -13,7 +13,7 @@ nutrition: ["ナスニン", "カリウム"]
 pairings: ["赤味噌", "木の芽", "白味噌", "ごま油"]
 storage: "冷蔵庫野菜室、一本ずつ紙に包んで。"
 related_recipes: []
-image: "/assets/images/kamonasu.png"
+image: "/assets/images/veg_kamonasu.png"
 ---
 
 ぽってりと丸い、京都上賀茂の夏の象徴。厚切りにして田楽にすれば、その重量感が意味を持つ。

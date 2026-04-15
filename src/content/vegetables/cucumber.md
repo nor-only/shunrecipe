@@ -13,7 +13,7 @@ nutrition: ["カリウム", "ビタミンK"]
 pairings: ["梅", "みょうが", "生姜", "豚薄切り"]
 storage: "水気を拭いてラップで包み、ヘタを上にして立てて冷蔵。"
 related_recipes: ["r_cucumber_salad", "r_cucumber_sunomono", "r_cucumber_pork_fry"]
-image: "/assets/images/cucumber_salad.png"
+image: "/assets/images/veg_cucumber.png"
 ---
 
 九割以上が水。それ以外はすべて香り。叩いて割ると、その香りが解き放たれる。

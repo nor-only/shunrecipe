@@ -15,7 +15,7 @@ nutrition: ["ビタミンC", "ビタミンU", "食物繊維"]
 pairings: ["あさり", "ベーコン", "アンチョビ", "桜えび"]
 storage: "芯をくり抜き、湿らせたキッチンペーパーを詰めてポリ袋へ。冷蔵庫野菜室で一週間。"
 related_recipes: ["r_cabbage_clam", "r_cabbage_roll", "r_cabbage_peperoncino"]
-image: "/assets/images/cabbage_clam.png"
+image: "/assets/images/veg_cabbage.png"
 ---
 
 葉の巻きはゆるく、芯までみずみずしい。冬のしっかり詰まった玉とは別種と呼んでも差し支えない、春の菜。

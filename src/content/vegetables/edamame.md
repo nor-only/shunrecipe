@@ -15,7 +15,7 @@ nutrition: ["植物性タンパク", "葉酸", "メチオニン"]
 pairings: ["塩", "ガーリック", "ビール"]
 storage: "購入後すぐ茹でる。塩を強めに振って冷ましてから保存。"
 related_recipes: ["r_edamame_rice", "r_edamame_garlic", "r_edamame_salad"]
-image: "/assets/images/edamame_rice.png"
+image: "/assets/images/veg_edamame.png"
 ---
 
 鶴岡のだだちゃ豆は、湯がきたての香りで嗅ぎ分けられる。夏の夜の、もっとも正しい肴。

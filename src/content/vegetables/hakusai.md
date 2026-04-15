@@ -13,7 +13,7 @@ nutrition: ["ビタミンC", "カリウム", "食物繊維"]
 pairings: ["豚ばら", "昆布出汁", "柚子", "胡麻油"]
 storage: "丸ごとなら新聞紙で包み冷暗所で二〜三週間。カット後は切り口をラップ。"
 related_recipes: ["r_hakusai_cream", "r_hakusai_mapo", "r_millefeuille_nabe"]
-image: "/assets/images/millefeuille_nabe.png"
+image: "/assets/images/veg_hakusai.png"
 ---
 
 霜に当たるほど甘くなる。重ねて煮るだけで、鍋は主役を手にする。
