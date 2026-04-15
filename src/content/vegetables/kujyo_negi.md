@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_kujyo_negi.png"
 slug: kujyo_negi
 name_ja: "九条ねぎ"
 name_en: "Kujyo Leek"

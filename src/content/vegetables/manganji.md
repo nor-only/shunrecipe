@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_manganji.png"
 slug: manganji
 name_ja: "万願寺とうがらし"
 name_en: "Manganji Pepper"

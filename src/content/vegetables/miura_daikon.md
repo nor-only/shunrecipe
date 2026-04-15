@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_miura_daikon.png"
 slug: miura_daikon
 name_ja: "三浦大根"
 name_en: "Miura Daikon"

@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_kintoki_ninjin.png"
 slug: kintoki_ninjin
 name_ja: "金時にんじん"
 name_en: "Kintoki Carrot"

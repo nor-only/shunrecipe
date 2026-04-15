@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_maitake.png"
 slug: maitake
 name_ja: "舞茸"
 name_en: "Maitake Mushroom"

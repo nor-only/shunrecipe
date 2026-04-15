@@ -17,7 +17,7 @@ nutrition: ["糖質", "食物繊維", "ビタミンB1"]
 pairings: ["バター", "醤油", "塩", "青のり"]
 storage: "鮮度が命。届いたらその日のうちに茹でる。茹でてから冷蔵・冷凍。"
 related_recipes: ["r_corn_rice", "r_corn_soup", "r_corn_kakiage"]
-image: "/assets/images/corn_rice.png"
+image: "/assets/images/veg_corn.png"
 ---
 
 朝採れがすべて。畑から釜まで十五分で移せるなら、砂糖はいらない。

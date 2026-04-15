@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_minden_nasu.png"
 slug: minden_nasu
 name_ja: "民田なす"
 name_en: "Minden Eggplant"

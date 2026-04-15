@@ -15,7 +15,7 @@ nutrition: ["ビタミンD", "食物繊維", "β-グルカン"]
 pairings: ["バター", "にんにく", "醤油", "白ワイン"]
 storage: "洗わず、キッチンペーパーに包んでポリ袋で冷蔵。冷凍で旨味が増す。"
 related_recipes: ["r_kinoko_ahijo", "r_mushroom_pasta", "r_kinoko_gratin"]
-image: "/assets/images/kinoko_ahijo.png"
+image: "/assets/images/veg_kinoko.png"
 ---
 
 秋の森は、見えない旨味で満ちている。数種を束ねて火を入れるほど、風味は層を増す。

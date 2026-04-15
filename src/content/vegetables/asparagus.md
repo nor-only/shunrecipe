@@ -15,7 +15,7 @@ nutrition: ["アスパラギン酸", "葉酸", "ルチン"]
 pairings: ["ベーコン", "バター", "半熟卵", "パルミジャーノ"]
 storage: "濡れた新聞紙で包み、穂先を上にして立てて冷蔵。二〜三日で使い切る。"
 related_recipes: ["r_asparagus_cheese", "r_asparagus_soup", "r_asparagus_bacon"]
-image: "/assets/images/asparagus_cheese.png"
+image: "/assets/images/veg_asparagus.png"
 ---
 
 土を割って真っすぐ伸び上がる芽の力強さは、ほかの野菜にない。太いほど甘く、畑の朝摘みは皮ごと美味い。

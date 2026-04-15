@@ -13,7 +13,7 @@ nutrition: ["ビタミンC", "モモルデシン", "食物繊維"]
 pairings: ["豚肉", "豆腐", "卵", "鰹節"]
 storage: "種とワタを除き、ポリ袋で冷蔵。"
 related_recipes: []
-image: "/assets/images/goya.png"
+image: "/assets/images/veg_goya.png"
 ---
 
 沖縄の夏を支えてきた苦味。塩揉みで角を丸め、チャンプルーで一気に食卓の中心へ。

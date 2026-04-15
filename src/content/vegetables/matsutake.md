@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_matsutake.png"
 slug: matsutake
 name_ja: "松茸"
 name_en: "Matsutake"

@@ -1,4 +1,5 @@
 ---
+image: "/assets/images/veg_kyou_mizuna.png"
 slug: kyou_mizuna
 name_ja: "京水菜"
 name_en: "Kyoto Mizuna"
