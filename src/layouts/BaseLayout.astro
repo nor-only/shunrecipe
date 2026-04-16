@@ -81,6 +81,11 @@ const ldArray = Array.isArray(jsonLd)
 
     <div id="globalToast" role="status" aria-live="polite" class="ed-toast"></div>
 
+    <script is:inline>
+      // 全ページで右クリックメニューを抑止（画像の無断保存の簡易抑制）
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+    </script>
+
     <script>
       import Lenis from 'lenis';
 
