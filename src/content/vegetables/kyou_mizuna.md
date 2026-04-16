@@ -1,5 +1,4 @@
 ---
-image: "/assets/images/veg_kyou_mizuna.png"
 slug: kyou_mizuna
 name_ja: "京水菜"
 name_en: "Kyoto Mizuna"
@@ -14,6 +13,7 @@ nutrition: ["ビタミンC", "β-カロテン", "カルシウム"]
 pairings: ["豚しゃぶ", "揚げ", "豆腐", "柚子"]
 storage: "湿らせた紙で根元を包み立てて冷蔵。"
 related_recipes: []
+image: "/assets/images/veg_kyou_mizuna.png"
 ---
 
 千年続く京都の畑菜。生でも、くたくたに煮ても。はりはり鍋の主役はこの水菜でなくてはならない。

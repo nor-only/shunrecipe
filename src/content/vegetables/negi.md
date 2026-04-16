@@ -17,7 +17,7 @@ nutrition: ["硫化アリル", "ビタミンC", "葉酸"]
 pairings: ["鴨", "鶏", "味噌", "生姜"]
 storage: "新聞紙で包み冷暗所へ。カット後は小口切りで冷凍も可。"
 related_recipes: ["r_negi_chicken_soup", "r_negi_pork", "r_negi_ahijo"]
-image: "/assets/images/negi_chicken_soup.png"
+image: "/assets/images/veg_negi.png"
 ---
 
 下仁田の太ねぎは、じっくり焼けば甘露に変わる。冬の鍋の主役級。

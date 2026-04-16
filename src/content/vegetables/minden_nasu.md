@@ -1,5 +1,4 @@
 ---
-image: "/assets/images/veg_minden_nasu.png"
 slug: minden_nasu
 name_ja: "民田なす"
 name_en: "Minden Eggplant"
@@ -14,6 +13,7 @@ nutrition: ["ナスニン", "カリウム"]
 pairings: ["塩", "赤しそ", "鰹節"]
 storage: "一本ずつ紙に包み冷蔵庫野菜室へ。"
 related_recipes: []
+image: "/assets/images/veg_minden_nasu.png"
 ---
 
 山形鶴岡で四百年伝わる、一口大の小茄子。硬めの皮がぬか漬けの歯切れを支える、在来の夏。

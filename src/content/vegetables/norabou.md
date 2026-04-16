@@ -13,7 +13,7 @@ nutrition: ["β-カロテン", "ビタミンC", "食物繊維"]
 pairings: ["オイル", "ベーコン", "卵"]
 storage: "湿らせた新聞紙で包み立てて冷蔵。早めに使う。"
 related_recipes: []
-image: "/assets/images/norabou.png"
+image: "/assets/images/veg_norabou.png"
 ---
 
 東京多摩の春の顔。菜花より苦みが淡く、炒めると甘みが立ち上がる在来種。

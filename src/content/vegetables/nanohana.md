@@ -13,7 +13,7 @@ nutrition: ["β-カロテン", "ビタミンC", "鉄分"]
 pairings: ["辛子", "からすみ", "白味噌", "ベーコン"]
 storage: "湿らせた新聞紙で包みポリ袋へ。立てて冷蔵、できるだけ早く使い切る。"
 related_recipes: ["r_nanohana_karashi", "r_nanohana_pasta", "r_nanohana_tamagotoji"]
-image: "/assets/images/nanohana_karashi.png"
+image: "/assets/images/veg_nanohana.png"
 ---
 
 蕾がほころぶ前のほろ苦さが身上。一年で最初に食卓に乗せたい、春の到来を告げる菜。

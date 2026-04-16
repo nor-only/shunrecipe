@@ -13,6 +13,7 @@ nutrition: ["食物繊維", "ビタミンC", "カリウム"]
 pairings: ["バター", "生クリーム", "シナモン"]
 storage: "新聞紙で包み常温の冷暗所へ。"
 related_recipes: []
+image: "/assets/images/veg_naruto_kintoki.png"
 ---
 
 鳴門の砂地で育つ、ほくほくと黄金の身。グラタンでも、焼き芋でも、甘さが崩れない。

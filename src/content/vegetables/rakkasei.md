@@ -13,6 +13,7 @@ nutrition: ["植物性タンパク", "ビタミンE", "食物繊維"]
 pairings: ["塩", "味噌", "蜂蜜"]
 storage: "さやのまま乾燥させ、密閉して冷暗所。"
 related_recipes: []
+image: "/assets/images/veg_rakkasei.png"
 ---
 
 生落花生を塩茹でした時の、乳のような甘さ。収穫地でしか味わえない秋の味。

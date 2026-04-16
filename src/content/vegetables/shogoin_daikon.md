@@ -13,6 +13,7 @@ nutrition: ["ジアスターゼ", "ビタミンC"]
 pairings: ["柚子味噌", "昆布", "出汁"]
 storage: "新聞紙で包み冷暗所。"
 related_recipes: ["r_daikon_furofuki"]
+image: "/assets/images/veg_shogoin_daikon.png"
 ---
 
 丸々と重い、京都の冬の象徴。ふろふきにすれば、昆布と柚子味噌だけで名品になる。

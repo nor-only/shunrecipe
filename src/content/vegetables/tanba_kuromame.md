@@ -13,6 +13,7 @@ nutrition: ["植物性タンパク", "アントシアニン", "葉酸"]
 pairings: ["塩", "冷酒", "白ワイン"]
 storage: "届いたらすぐに塩茹で。"
 related_recipes: []
+image: "/assets/images/veg_tanba_kuromame.png"
 ---
 
 黒大豆の未熟な姿。粒の大きさと深い甘みは、十月の十日ほどにしか許されない。

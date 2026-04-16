@@ -17,7 +17,7 @@ nutrition: ["ナスニン", "カリウム", "食物繊維"]
 pairings: ["味噌", "ごま油", "大葉", "みょうが"]
 storage: "低温障害に注意。一本ずつラップで包み野菜室へ。"
 related_recipes: ["r_nasu_miso", "r_nasu_agebitashi", "r_ratatouille"]
-image: "/assets/images/nasu_miso.png"
+image: "/assets/images/veg_nasu.png"
 ---
 
 油と相性のよさは随一。素揚げしただけで、皮の艶と身のとろみが一皿の主役になる。

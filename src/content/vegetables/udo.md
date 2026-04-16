@@ -15,6 +15,7 @@ nutrition: ["カリウム", "食物繊維"]
 pairings: ["酢味噌", "わかめ", "練り辛子"]
 storage: "新聞紙で包み冷暗所へ。皮は捨てずにきんぴらに。"
 related_recipes: []
+image: "/assets/images/veg_udo.png"
 ---
 
 穂先、中間、皮。一本で三つの食感が楽しめる、春の山の贅沢。

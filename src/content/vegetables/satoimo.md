@@ -15,7 +15,7 @@ nutrition: ["カリウム", "食物繊維", "ガラクタン"]
 pairings: ["柚子", "味噌", "いかの塩辛", "出汁"]
 storage: "泥付きのまま新聞紙に包み、冷暗所で。洗ったものは早めに使う。"
 related_recipes: ["r_satoimo_soboro", "r_satoimo_croquette", "r_satoimo_gratin"]
-image: "/assets/images/satoimo_soboro.png"
+image: "/assets/images/veg_satoimo.png"
 ---
 
 縄文の頃から日本列島の主食のひとつだったとも言われる。ぬめりは、旨味そのもの。

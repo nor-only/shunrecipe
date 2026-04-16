@@ -13,6 +13,7 @@ nutrition: ["ビタミンC", "β-カロテン"]
 pairings: ["鰹節", "醤油", "塩", "胡麻油"]
 storage: "ヘタ付きのままポリ袋で冷蔵。"
 related_recipes: []
+image: "/assets/images/veg_shishito.png"
 ---
 
 十本に一本は辛い、というロシアンルーレット。焼いて塩だけで、夏の肴は仕上がる。
