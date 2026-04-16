@@ -10,7 +10,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '北海道の冬を、一鍋で背負う',
     season: 'winter', region: 'hokkaido', prefecture: '北海道', genre: '和',
     time: 40, servings: 3, difficulty: 'ふつう', mainVegetable: 'hakusai', calories: 420,
-    image: '/assets/images/millefeuille_nabe.png',
+    image: '/assets/images/recipe_pref_hokkaido_ishikari_nabe.png',
     tags: ['北海道', '石狩', '鍋', '鮭', '冬の主菜'],
     story: '石狩川を遡る鮭を、地元の白菜・大根・長ねぎ・じゃがいもと共に、白味噌仕立てのだしで炊く。北海道の猟師町では、冬の夕暮れに火を囲んでこの鍋を分け合ってきた。',
     ingredients: [
@@ -50,7 +50,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '青森の冬を、香ばしく割り込ませる',
     season: 'winter', region: 'tohoku', prefecture: '青森', genre: '和',
     time: 30, servings: 3, difficulty: 'かんたん', mainVegetable: 'negi', calories: 320,
-    image: '/assets/images/negi_chicken_soup.png',
+    image: '/assets/images/recipe_pref_aomori_senbei_jiru.png',
     tags: ['青森', '八戸', '郷土汁', 'せんべい'],
     story: '八戸を中心に、南部せんべいを汁に割り入れて食べる文化が受け継がれてきた。煮崩れず、だしを吸って餅のようにとろけるのは、南部せんべい「おつゆせんべい」だけ。',
     ingredients: [
@@ -88,7 +88,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '北上川の冬、家ごとに違うちぎり方',
     season: 'winter', region: 'tohoku', prefecture: '岩手', genre: '和',
     time: 45, servings: 3, difficulty: 'ふつう', mainVegetable: 'daikon', calories: 340,
-    image: '/assets/images/daikon_furofuki.png',
+    image: '/assets/images/recipe_pref_iwate_hittsumi.png',
     tags: ['岩手', '盛岡', '粉もん', 'すいとん'],
     story: '「ひっつまむ」が語源。こねた小麦粉を薄く手で引きちぎり、しょうゆ仕立ての汁に落とす。岩手の山里では、寒い夜に家族みなで鍋を囲み、手を動かしながら話すのがひっつみの時間だった。',
     ingredients: [
