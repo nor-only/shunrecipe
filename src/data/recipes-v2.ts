@@ -281,7 +281,7 @@ export const premiumRecipes: PremiumRecipe[] = [
     subtitle: '群馬の太ねぎと鴨脂の、冬の蕎麦',
     season: 'winter', region: 'kanto', prefecture: '群馬', genre: '和',
     time: 35, servings: 2, difficulty: 'ふつう', mainVegetable: 'shimonita_negi', calories: 550,
-    image: '/assets/images/negi_chicken_soup.png',
+    image: '/assets/images/recipe_shimonita_kamo_nanban.png',
     tags: ['蕎麦', '鍋前蕎麦', '冬の主食'],
     story: '太く短い下仁田ねぎを、鴨の脂で焼き付ける。焦げ目がついた頃合いで、出汁に合流させる。蕎麦を手繰れば、冬の群馬の畑の匂いが立つ。',
     ingredients: [

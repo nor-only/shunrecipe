@@ -13,6 +13,7 @@ nutrition: ["β-カロテン", "カルシウム", "ビタミンK"]
 pairings: ["鰹節", "醤油", "豆腐", "オクラ"]
 storage: "湿らせた紙で包み冷蔵。茹でて冷凍も可。"
 related_recipes: []
+image: "/assets/images/veg_moroheiya.png"
 ---
 
 エジプトの王家が愛したと伝わる、栄養価の極地。刻むほどに粘りが立ち、夏バテの体を持ち上げる。

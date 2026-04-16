@@ -13,6 +13,7 @@ nutrition: ["糖質", "カリウム", "ビタミンC"]
 pairings: ["米", "砂糖", "醤油", "バター"]
 storage: "鬼皮のまま冷蔵。冷水に浸けて沈むものを選ぶ。"
 related_recipes: []
+image: "/assets/images/veg_tanba_kuri.png"
 ---
 
 粒が大きく、甘みが濃い。丹波の秋は、この栗と黒枝豆で完結すると地元の誰もが口を揃える。

@@ -15,6 +15,7 @@ nutrition: ["ビタミンC", "ヘスペリジン"]
 pairings: ["大根", "白味噌", "七味", "蜂蜜"]
 storage: "冷蔵で一〜二週間。皮は刻んで冷凍保存。"
 related_recipes: ["r_shogoin_furofuki"]
+image: "/assets/images/veg_yuzu.png"
 ---
 
 秋から冬への橋渡し役。皮を散らすだけで、煮物も汁物も一段位が上がる、香りの名脇役。

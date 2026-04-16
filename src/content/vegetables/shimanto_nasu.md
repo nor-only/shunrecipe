@@ -13,6 +13,7 @@ nutrition: ["ナスニン", "カリウム", "食物繊維"]
 pairings: ["ごま油", "味噌", "大葉", "みょうが"]
 storage: "一本ずつ紙に包み、野菜室で。"
 related_recipes: []
+image: "/assets/images/veg_shimanto_nasu.png"
 ---
 
 四万十川の陽と水が育てる、艶のある長なす。皮が薄く、焼きなすにすると甘みが立ちのぼる。

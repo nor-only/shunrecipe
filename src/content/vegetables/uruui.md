@@ -13,6 +13,7 @@ nutrition: ["ビタミンC", "β-カロテン", "カリウム"]
 pairings: ["酢味噌", "鰹節", "からし"]
 storage: "湿らせた紙で包み冷蔵。さっと茹でて保存も可。"
 related_recipes: []
+image: "/assets/images/veg_uruui.png"
 ---
 
 ぬめりと歯切れが同居する、山形の春菜。アクが少なく、生でも食べられる数少ない山菜。

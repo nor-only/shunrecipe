@@ -13,6 +13,7 @@ nutrition: ["β-カロテン", "ビタミンE", "食物繊維"]
 pairings: ["天ぷら粉", "塩", "酢味噌"]
 storage: "湿らせた紙に包み、立てて冷蔵。二日以内に。"
 related_recipes: []
+image: "/assets/images/veg_tarano_me.png"
 ---
 
 山菜の王と称される、春の渓谷の宝。衣を薄くつけて揚げれば、ほろ苦さが塩で整う。

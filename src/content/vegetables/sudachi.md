@@ -13,6 +13,7 @@ nutrition: ["ビタミンC", "クエン酸"]
 pairings: ["焼き魚", "松茸", "蕎麦", "焼酎"]
 storage: "冷蔵で二週間。絞って氷キューブで冷凍も可。"
 related_recipes: []
+image: "/assets/images/veg_sudachi.png"
 ---
 
 徳島の秋の柑橘。一滴落とすだけで、焼き魚の皿の上に四国の山河が広がる。

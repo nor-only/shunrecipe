@@ -13,6 +13,7 @@ nutrition: ["植物性タンパク", "ビタミンB1", "葉酸"]
 pairings: ["塩", "ペコリーノ", "レモン"]
 storage: "さやのまま保存。剥いたらその日のうちに。"
 related_recipes: []
+image: "/assets/images/veg_soramame.png"
 ---
 
 さやを割った瞬間の、あの緑の匂い。塩茹でだけで、春の一本は片付く。

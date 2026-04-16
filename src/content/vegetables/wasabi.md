@@ -15,6 +15,7 @@ nutrition: ["アリルイソチオシアネート", "ビタミンC"]
 pairings: ["刺身", "蕎麦", "塩", "鰹節"]
 storage: "湿らせた紙に包み冷蔵。鮫皮で下ろしたてが本領。"
 related_recipes: []
+image: "/assets/images/veg_wasabi.png"
 ---
 
 清流でしか育たない、日本固有の辛味。鋸歯のある茎は花わさびとして、醤油漬けで春の肴に。
