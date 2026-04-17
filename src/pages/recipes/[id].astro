@@ -54,6 +54,7 @@ const recipeLd = {
     '@type': 'HowToStep',
     position: idx + 1,
     text: s,
+    url: new URL(`${Astro.url.pathname}#step-${idx + 1}`, Astro.site).href,
   })),
   nutrition: d.calories ? { '@type': 'NutritionInformation', calories: `${d.calories} kcal` } : undefined,
 };
@@ -112,7 +113,7 @@ const recipeLd = {
           <h2 class="h-section" style="margin-bottom: 1.25rem;">手順</h2>
           <hr class="rule-accent" style="margin-bottom: 1.75rem;" />
           <ol class="steps-list">
-            {d.steps.map((s) => <li><p>{s}</p></li>)}
+            {d.steps.map((s, i) => <li id={`step-${i + 1}`}><p>{s}</p></li>)}
           </ol>
 
           {d.tips && (
