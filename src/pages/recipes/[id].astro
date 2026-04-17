@@ -20,14 +20,32 @@ const related = all
   .filter((r) => r.data.id !== d.id && (r.data.season === d.season || r.data.region === d.region))
   .slice(0, 4);
 
+const cuisineMap: Record<string, string> = {
+  '和': 'Japanese',
+  '洋': 'Western',
+  '中': 'Chinese',
+  'エスニック': 'Ethnic',
+  '創作': 'Fusion',
+};
+
+const ldDescription = d.story || d.subtitle || '';
+const metaDescription = d.subtitle || (d.story ? d.story.slice(0, 120) : '');
+// Prefecture recipes have no templated OG; fall back to the hero photo.
+const ogImage = d.id.startsWith('r_pref_') ? d.hero_image : `/og/recipe-${d.id}.png`;
+
 const recipeLd = {
   '@context': 'https://schema.org',
   '@type': 'Recipe',
   name: d.title,
-  description: d.story || d.subtitle,
+  description: ldDescription,
   image: [new URL(d.hero_image, Astro.site).href],
+  author: {
+    '@type': 'Organization',
+    name: 'SHUNRECIPE',
+    url: new URL('/', Astro.site).href,
+  },
   recipeCategory: d.genre,
-  recipeCuisine: d.genre === '和' ? 'Japanese' : d.genre,
+  recipeCuisine: cuisineMap[d.genre] ?? d.genre,
   totalTime: `PT${d.time_min}M`,
   recipeYield: `${d.servings}人前`,
   keywords: d.tags?.join(', '),
@@ -42,8 +60,8 @@ const recipeLd = {
 ---
 <BaseLayout
   title={`${d.title} — SHUNRECIPE`}
-  description={d.subtitle || d.story.slice(0, 120)}
-  ogImage={`/og/recipe-${d.id}.png`}
+  description={metaDescription}
+  ogImage={ogImage}
   jsonLd={recipeLd}
 >
   <article>
