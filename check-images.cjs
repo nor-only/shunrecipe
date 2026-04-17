@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const content = fs.readFileSync('src/data/recipes-v2.ts', 'utf8');
+const content = fs.readFileSync('src/data/recipes-prefectures.ts', 'utf8');
 
 // The file might export a variable, let's just parse it manually to avoid executing it
 // We search for `id: "r_something"` or `id: 'r_something'`

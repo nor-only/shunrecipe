@@ -192,7 +192,7 @@ const data = [
     notable_cultivars: [{ name:'陵西一寸', region:'愛媛県' }],
     nutrition: ['植物性タンパク','ビタミンB1','葉酸'], pairings: ['塩','ペコリーノ','レモン'],
     storage: 'さやのまま保存。剥いたらその日のうちに。',
-    related: [], image: '',
+    related: [], image: '/assets/images/veg_soramame.png',
     story: 'さやを割った瞬間の、あの緑の匂い。塩茹でだけで、春の一本は片付く。' },
   // 夏
   { slug: 'kamonasu', name_ja: '賀茂なす', name_en: 'Kamo Eggplant', aliases: [],
@@ -300,7 +300,7 @@ const data = [
     notable_cultivars: [{ name:'下仁田ねぎ', region:'群馬県下仁田' }],
     nutrition: ['硫化アリル','ビタミンC','食物繊維'], pairings: ['鴨','鶏','牛すじ','味噌'],
     storage: '新聞紙で包み冷暗所へ。',
-    related: ['r_negi_chicken_soup'], image: '',
+    related: ['r_negi_chicken_soup'], image: '/assets/images/veg_shimonita_negi.png',
     story: '太く短く、火を入れれば甘露に変わる。殿様ねぎの異名は、伊達ではない。' },
 ];
 
