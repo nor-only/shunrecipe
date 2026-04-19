@@ -124,7 +124,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '青い香りと粒感を、搗きたての餅に',
     season: 'summer', region: 'tohoku', prefecture: '宮城', genre: '和',
     time: 40, servings: 3, difficulty: 'ふつう', mainVegetable: 'edamame', calories: 380,
-    image: '/assets/images/edamame_rice.png',
+    image: '/assets/images/recipe_pref_miyagi_zunda_mochi.png',
     tags: ['宮城', '仙台', 'ずんだ', 'お盆'],
     story: '仙台の夏、枝豆を塩茹でしたら薄皮まで丁寧にむき、擂って砂糖と塩で調味する。搗きたての餅に絡めて食べれば、青い香りが口いっぱいに広がる。お盆の供え物としても愛されてきた。',
     ingredients: [
@@ -155,7 +155,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '秋田の山の夜、薪の香りと共に',
     season: 'winter', region: 'tohoku', prefecture: '秋田', genre: '和',
     time: 50, servings: 3, difficulty: 'ふつう', mainVegetable: 'maitake', calories: 460,
-    image: '/assets/images/kinoko_ahijo.png',
+    image: '/assets/images/recipe_pref_akita_kiritanpo_nabe.png',
     tags: ['秋田', '比内地鶏', 'きりたんぽ', '鍋'],
     story: '秋田の山里では、炊きたてのご飯を擂り潰して杉の棒に巻き付け、炭火で焼く。きりたんぽだ。比内地鶏の出汁と舞茸の香り、せりの青い風——猟師料理が食卓の主役に変わる瞬間。',
     ingredients: [
@@ -191,7 +191,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '最上川の河原で、鍋を囲む秋',
     season: 'autumn', region: 'tohoku', prefecture: '山形', genre: '和',
     time: 60, servings: 4, difficulty: 'ふつう', mainVegetable: 'satoimo', calories: 380,
-    image: '/assets/images/satoimo_soboro.png',
+    image: '/assets/images/recipe_pref_yamagata_imoni.png',
     tags: ['山形', '芋煮', '最上川', '秋の風物詩'],
     story: '九月下旬から十一月、山形では河原に巨大な鍋を据え、里芋と牛肉を炊き込む「芋煮会」が始まる。内陸・庄内でレシピは二分するが、牛肉・醤油・里芋の組み合わせが山形内陸の基本形。',
     ingredients: [
@@ -227,7 +227,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '貝柱とほたてが奏でる、薄口の透明',
     season: 'winter', region: 'tohoku', prefecture: '福島', genre: '和',
     time: 40, servings: 4, difficulty: 'ふつう', mainVegetable: 'satoimo', calories: 180,
-    image: '/assets/images/satoimo_gratin.png',
+    image: '/assets/images/recipe_pref_fukushima_kozuyu.png',
     tags: ['福島', '会津', 'ハレの日', '祝い膳'],
     story: '会津では正月や婚礼の席に、朱塗りの小さな椀でこづゆが供される。干し貝柱の出汁に里芋・きくらげ・糸こんにゃく・人参・豆麩。質素な素材を、丁寧な下ごしらえで祝いの一椀に仕立てる。',
     ingredients: [
@@ -265,7 +265,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '肝を溶かし、水を使わず野菜の水分だけで',
     season: 'winter', region: 'kanto', prefecture: '茨城', genre: '和',
     time: 50, servings: 3, difficulty: 'むずかしい', mainVegetable: 'hakusai', calories: 420,
-    image: '/assets/images/hakusai_cream.png',
+    image: '/assets/images/recipe_pref_ibaraki_ankou_nabe.png',
     tags: ['茨城', '大洗', 'あんこう', '冬の鍋'],
     story: '大洗のあんこうは、大きな体を吊るし切りで捌く。肝を鍋で炒って溶かし、野菜の水分で煮る「どぶ汁」は、漁師たちが船上で体を温める知恵から生まれた。',
     ingredients: [
@@ -305,7 +305,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '鬼おろしで荒く削る、冬の保存食',
     season: 'winter', region: 'kanto', prefecture: '栃木', genre: '和',
     time: 90, servings: 4, difficulty: 'ふつう', mainVegetable: 'daikon', calories: 180,
-    image: '/assets/images/daikon_furofuki.png',
+    image: '/assets/images/recipe_pref_tochigi_shimotsukare.png',
     tags: ['栃木', '宇都宮', '初午', '郷土食'],
     story: '二月の初午の日、栃木では各家でしもつかれを作り、稲荷神社に奉納してきた。大根とにんじんを鬼おろしで粗く削り、塩鮭の頭・大豆・油揚げ・酒粕と共にゆっくり煮込む。素朴だが深い、冬の終わりの味。',
     ingredients: [
@@ -340,7 +340,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '塩なし麺を、味噌仕立てで煮込む',
     season: 'winter', region: 'kanto', prefecture: '群馬', genre: '和',
     time: 50, servings: 3, difficulty: 'ふつう', mainVegetable: 'daikon', calories: 460,
-    image: '/assets/images/daikon_pork.png',
+    image: '/assets/images/recipe_pref_gunma_okkirikomi.png',
     tags: ['群馬', '上州', '手打ち麺', '煮込み'],
     story: '群馬の養蚕家では、夕食にうどんを打ち、塩を入れず打ち粉も落とさないまま、具だくさんの味噌汁に「引き切り込む」。小麦粉の粘性がそのまま汁にとろみをつけ、体の芯まで温める。',
     ingredients: [
@@ -377,7 +377,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: 'ねぎの甘みを、一鍋に封じ込める',
     season: 'winter', region: 'kanto', prefecture: '埼玉', genre: '和',
     time: 45, servings: 3, difficulty: 'ふつう', mainVegetable: 'negi', calories: 440,
-    image: '/assets/images/negi_chicken_soup.png',
+    image: '/assets/images/recipe_pref_saitama_fukaya_negi_nibouto.png',
     tags: ['埼玉', '深谷', '煮ぼうとう', '幅広麺'],
     story: '渋沢栄一の郷・深谷で育つねぎは、白く太く、甘みが濃い。群馬のおっきりこみと兄弟の「煮ぼうとう」は、その深谷ねぎを主役に据え、幅広麺と共に味噌・醤油仕立てでくたくたに炊き込む。',
     ingredients: [
@@ -413,7 +413,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '切ったとき花が咲く、千葉の祝い寿司',
     season: 'summer', region: 'kanto', prefecture: '千葉', genre: '和',
     time: 80, servings: 2, difficulty: 'むずかしい', mainVegetable: 'cucumber', calories: 480,
-    image: '/assets/images/cucumber_sunomono.png',
+    image: '/assets/images/recipe_pref_chiba_futomaki_matsuri.png',
     tags: ['千葉', '山武', '太巻き', '祝い寿司'],
     story: '房総半島の農村では、大きな太巻きの断面に花や蝶を描く寿司文化が育まれてきた。きゅうり・卵・かんぴょう・桜でんぶを色よく巻き上げ、切り分けた瞬間の驚きが、祝いの席の華となる。',
     ingredients: [
@@ -448,7 +448,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '運河の町の、漁師の即席ご飯',
     season: 'winter', region: 'kanto', prefecture: '東京', genre: '和',
     time: 70, servings: 3, difficulty: 'ふつう', mainVegetable: 'negi', calories: 370,
-    image: '/assets/images/corn_rice.png',
+    image: '/assets/images/recipe_pref_tokyo_fukagawa_meshi.png',
     tags: ['東京', '江戸前', '深川', '炊き込みご飯'],
     story: '江戸時代、深川の漁師たちは獲れたてのあさりをさっと煮込み、熱々のご飯にぶっかけて食べた。その後、炊き込み式に進化し、今ではねぎと生姜の香りが主張する、江戸下町の定番に。',
     ingredients: [
@@ -485,7 +485,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: 'キャベツともやしのシャキシャキを、餡で留める',
     season: 'autumn', region: 'kanto', prefecture: '神奈川', genre: '中',
     time: 30, servings: 2, difficulty: 'ふつう', mainVegetable: 'cabbage', calories: 520,
-    image: '/assets/images/cabbage_peperoncino.png',
+    image: '/assets/images/recipe_pref_kanagawa_sanma_men.png',
     tags: ['神奈川', '横浜', '中華街', 'あんかけ麺'],
     story: '横浜中華街で戦後に生まれた神奈川独自のラーメン。シャキシャキのもやしとキャベツをたっぷり使い、醤油味のあんでとじる。「生馬麺」とも書き、「シャキシャキした馬のたてがみのよう」という名の由来を持つ。',
     ingredients: [
@@ -526,7 +526,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '里芋のとろみを、出汁で冷たく味わう',
     season: 'winter', region: 'chubu', prefecture: '新潟', genre: '和',
     time: 50, servings: 4, difficulty: 'ふつう', mainVegetable: 'satoimo', calories: 160,
-    image: '/assets/images/satoimo_gratin.png',
+    image: '/assets/images/recipe_pref_niigata_noppe.png',
     tags: ['新潟', 'のっぺ', '冷やし', '家庭料理'],
     story: '新潟では正月や祝いの席に、家ごとの具で作る「のっぺ」が欠かせない。里芋のでんぷんが自然にとろみをつけ、よく冷やして供されるのが新潟流。熱々も美味、冷たくはさらに旨味が際立つ。',
     ingredients: [
@@ -565,7 +565,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '富山湾の宝石を、衣で透かし揚げに',
     season: 'spring', region: 'chubu', prefecture: '富山', genre: '和',
     time: 30, servings: 2, difficulty: 'ふつう', mainVegetable: 'soramame', calories: 340,
-    image: '/assets/images/corn_kakiage.png',
+    image: '/assets/images/recipe_pref_toyama_shiraebi_kakiage.png',
     tags: ['富山', '白えび', '富山湾', '春'],
     story: '富山湾でしか獲れない白えびは、生で食べると驚くほど甘い。春の空豆と合わせてサッと揚げれば、薄い衣の向こうに透ける白と緑——富山の春がそのまま皿に落ちる。',
     ingredients: [
@@ -601,7 +601,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '鴨と金沢すだれ麩の、汁ごといただく',
     season: 'winter', region: 'chubu', prefecture: '石川', genre: '和',
     time: 40, servings: 2, difficulty: 'ふつう', mainVegetable: 'seri', calories: 320,
-    image: '/assets/images/negi_ahijo.png',
+    image: '/assets/images/recipe_pref_ishikawa_jibu_ni.png',
     tags: ['石川', '金沢', '加賀料理', '武家料理'],
     story: '加賀百万石の武家料理・治部煮は、鴨肉または鶏肉に小麦粉をまぶして出汁で煮る。小麦粉が自然にとろみをつけ、汁ごと器でいただく。金沢のすだれ麩、芹、生わさびが主役を引き立てる。',
     ingredients: [
@@ -639,7 +639,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '福井の蕎麦を、辛味大根で引き締める',
     season: 'autumn', region: 'chubu', prefecture: '福井', genre: '和',
     time: 20, servings: 2, difficulty: 'かんたん', mainVegetable: 'daikon', calories: 380,
-    image: '/assets/images/daikon_scallop_salad.png',
+    image: '/assets/images/recipe_pref_fukui_echizen_oroshi_soba.png',
     tags: ['福井', '越前', '蕎麦', '辛味大根'],
     story: '福井の越前おろしそばは、辛味大根を使うのが絶対条件。鬼おろしで粗くおろし、きりっと冷たい出汁と合わせて蕎麦にかける。秋の新蕎麦と辛味大根が出会う瞬間、福井の寒さが甘みに変わる。',
     ingredients: [
@@ -676,7 +676,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: 'かぼちゃの甘み、平打ち麺の滋味',
     season: 'winter', region: 'chubu', prefecture: '山梨', genre: '和',
     time: 50, servings: 3, difficulty: 'ふつう', mainVegetable: 'kabocha', calories: 520,
-    image: '/assets/images/pumpkin_soup.png',
+    image: '/assets/images/recipe_pref_yamanashi_houtou.png',
     tags: ['山梨', '甲州', 'ほうとう', '武田'],
     story: '甲斐の武田信玄が陣中食として用いたと伝わるほうとう。幅広の平打ち麺を、塩を入れずに茹でないまま味噌仕立ての汁にそのまま投入する。かぼちゃのホクホクした甘みが、冬山の冷えを溶かしていく。',
     ingredients: [
@@ -714,7 +714,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '皮はもちっと、中は漬物の塩気',
     season: 'winter', region: 'chubu', prefecture: '長野', genre: '和',
     time: 75, servings: 3, difficulty: 'ふつう', mainVegetable: 'nozawana', calories: 260,
-    image: '/assets/images/hourensou_bacon.png',
+    image: '/assets/images/recipe_pref_nagano_nozawana_oyaki.png',
     tags: ['長野', '信州', 'おやき', '野沢菜'],
     story: '信州の山村では、囲炉裏で焼いた「おやき」が冬の保存食・間食として重宝された。中身は野沢菜・かぼちゃ・あんこと様々。野沢菜の塩気と、もちもち皮の組み合わせは、長野の冬の基本形。',
     ingredients: [
@@ -751,7 +751,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '焼き味噌の上で、野菜と卵を煮込む',
     season: 'spring', region: 'chubu', prefecture: '岐阜', genre: '和',
     time: 20, servings: 2, difficulty: 'かんたん', mainVegetable: 'shin_tamanegi', calories: 280,
-    image: '/assets/images/nasu_miso.png',
+    image: '/assets/images/recipe_pref_gifu_houba_miso.png',
     tags: ['岐阜', '飛騨', '朴葉', '焼き味噌'],
     story: '飛騨高山の旅館の朝食には、小さな七輪に朴葉が乗り、その上で味噌とねぎ・きのこ・卵が炙られる。朴葉の芳香が味噌にうつり、ほかでは真似できない山の香りを立てる。',
     ingredients: [
@@ -787,7 +787,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '駿河湾と伊豆の山を、茶で一つに',
     season: 'spring', region: 'chubu', prefecture: '静岡', genre: '和',
     time: 55, servings: 2, difficulty: 'かんたん', mainVegetable: 'wasabi', calories: 340,
-    image: '/assets/images/corn_rice.png',
+    image: '/assets/images/recipe_pref_shizuoka_wasabi_chameshi.png',
     tags: ['静岡', '本わさび', '桜えび', '緑茶'],
     story: '静岡の伊豆・天城で採れる本わさび、駿河湾の桜えび、そして深蒸し茶——静岡の三大名物を炊き込みご飯で一つにする。茶葉の香りと桜えびの甘み、仕上げの本わさびが口の中で層になる。',
     ingredients: [
@@ -822,7 +822,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '硬めのうどんを、土鍋でぐつぐつ',
     season: 'winter', region: 'chubu', prefecture: '愛知', genre: '和',
     time: 35, servings: 2, difficulty: 'ふつう', mainVegetable: 'negi', calories: 540,
-    image: '/assets/images/negi_chicken_soup.png',
+    image: '/assets/images/recipe_pref_aichi_miso_nikomi_udon.png',
     tags: ['愛知', '名古屋', '八丁味噌', '土鍋'],
     story: '名古屋の味噌煮込みうどんは、塩を入れないコシの強いうどんを、八丁味噌の濃い汁で土鍋ごと煮込む。グツグツの鍋蓋を取ると、湯気と深い味噌の香りが立ちのぼる——名古屋の冬の儀式。',
     ingredients: [
@@ -859,7 +859,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '極太コシなしを、黒い濃縮つゆで絡める',
     season: 'autumn', region: 'kinki', prefecture: '三重', genre: '和',
     time: 30, servings: 2, difficulty: 'かんたん', mainVegetable: 'negi', calories: 440,
-    image: '/assets/images/negi_pork.png',
+    image: '/assets/images/recipe_pref_mie_ise_udon.png',
     tags: ['三重', '伊勢', 'うどん', 'たまり醤油'],
     story: '伊勢神宮参拝の旅人を速く食べさせるために生まれたと伝わる伊勢うどん。讃岐のコシとは対照的に、極太の軟らか麺に、たまり醤油の濃い黒つゆを絡めて食べる——「コシなし極太、つゆ絡め」が伊勢の流儀。',
     ingredients: [
@@ -895,7 +895,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '琵琶湖の冬を、一枚の肉と一房の青菜で',
     season: 'winter', region: 'kinki', prefecture: '滋賀', genre: '和',
     time: 30, servings: 2, difficulty: 'かんたん', mainVegetable: 'kyou_mizuna', calories: 480,
-    image: '/assets/images/millefeuille_nabe.png',
+    image: '/assets/images/recipe_pref_shiga_omi_gyu_shabu.png',
     tags: ['滋賀', '近江', '近江牛', 'しゃぶしゃぶ'],
     story: '近江牛は霜降りの入り方が繊細で、さっと湯に通すだけでとろける。京都・滋賀で育つ水菜とあわせれば、湖国の冬の食卓が完成する。ごまだれは家で擦るのが近江流。',
     ingredients: [
@@ -940,7 +940,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '鉄板の油で、甘みを引き出す',
     season: 'winter', region: 'kinki', prefecture: '京都', genre: '和',
     time: 20, servings: 2, difficulty: 'かんたん', mainVegetable: 'kujyo_negi', calories: 220,
-    image: '/assets/images/negi_ahijo.png',
+    image: '/assets/images/recipe_pref_kyoto_kujyo_negi_yaki.png',
     tags: ['京都', '九条ねぎ', '鉄板焼き', '青ねぎ'],
     story: '京都・九条のねぎは、白い部分よりも青い部分の甘みと香りが珠玉。太く柔らかく、焼けば焼くほど甘くなる。粗く切って鉄板で油焼きすれば、ねぎだけで酒の肴になる。',
     ingredients: [
@@ -973,7 +973,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '混ぜて焼くだけ、でも極めれば至芸',
     season: 'winter', region: 'kinki', prefecture: '大阪', genre: '和',
     time: 30, servings: 2, difficulty: 'ふつう', mainVegetable: 'cabbage', calories: 620,
-    image: '/assets/images/cabbage_roll.png',
+    image: '/assets/images/recipe_pref_osaka_okonomiyaki.png',
     tags: ['大阪', '粉もん', '鉄板', 'お好み焼き'],
     story: '大阪のお好み焼きは「混ぜ焼き」。キャベツをたっぷり、山芋のすりおろしをたっぷり、卵と小麦粉でふんわりと焼き上げる。ひっくり返すときに押さえない——ふわっとしたまま焼くのが大阪流。',
     ingredients: [
@@ -1012,7 +1012,7 @@ export const prefectureRecipes: PremiumRecipe[] = [
     subtitle: '外ふわ中とろ、出汁の優しい抱擁',
     season: 'spring', region: 'kinki', prefecture: '兵庫', genre: '和',
     time: 40, servings: 2, difficulty: 'ふつう', mainVegetable: 'negi', calories: 380,
-    image: '/assets/images/negi_chicken_soup.png',
+    image: '/assets/images/recipe_pref_hyogo_akashiyaki.png',
     tags: ['兵庫', '明石', '明石焼き', '玉子焼き'],
     story: '明石の「玉子焼き」は、大阪のたこ焼きの原型とも言われる。卵がたっぷりで、外はふわり、中はとろり。焼き上がったら皿に並べ、温かい昆布出汁につけていただく——これが本場の流儀。',
     ingredients: [
